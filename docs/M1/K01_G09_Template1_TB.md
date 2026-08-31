@@ -64,6 +64,7 @@ Batasan:
 2. Hanya mengambil dan mengelola informasi berbasis teks atau data, bukan gambar.
 3. Kelompok ini tidak memiliki wewenang hukum untuk melakukan penangkapan atau agen penyamar yang dapat membahayakan keselamatan pribadi ataupun melanggar hukum.
 
+
 ---
 
 # BAB 3: Spesifikasi Kebutuhan dan Proses Bisnis
