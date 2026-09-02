@@ -38,9 +38,8 @@
 | *02-09-2026* | *Matthew Allen Reynaldo* | *finalisasi business model flow (3.4)* | *2* | *On Going* | *-* |
 | *02-09-2026* | *Hugo Daniel J N* | *mengisi form assistensi, finalisasi bab 2* | *2* | *Done* | *-* |
 | *04-05-2026* | *[Nama Mahasiswa]* | *[Jelaskan Pekerjaan secara Singkat]* | *[Durasi Pengerjaan]* | *[On Progress/Done]* | [Kendala yang dialami, jika tidak ada cukup tandai "-"] | 
-| *05-05-2026* | *John Doe* | *Mendesain diagram kelas* | *3* | *Done* | *-* |
-| *01-09-2026* | *David Christian* | *Membuat draf bab 3.1 3.2 3.3* | *2* | *on progress* | *-* |
-| *02-09-2026* | *David Christian* | *Finalisasi bab 3.1 3.2 3.3* | *1* | *done* | *-* |  
+| *04-05-2026* | *Markus Christiano Simanjuntak* | *Mengerjakan gambaran dan struktur kasar dari bab 1 versi awal* | *1* | *Done* | *Masih belum yakin akan ide awal kami* | 
+| *05-05-2026* | *Markus Christiano Simanjuntak* | *Mengerjakan keseluruhan bab 1 versi akhir dengan topik utama SDG 4* | *2* | *Done* | *-* | 
 | | | | | | | |
 
 **Catatan/Evaluasi Milestone 1:**
