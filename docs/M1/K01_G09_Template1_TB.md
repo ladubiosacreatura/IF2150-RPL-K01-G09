@@ -44,21 +44,21 @@ Pendekatan learning-by-teaching telah diakui dapat meningkatkan penyerapan mater
 
 Di zaman yang sangat maju ini, para pelajar memiliki banyak metode yang dapat mereka pakai untuk belajar. Berikut adalah beberapa situasi metode pembelajaran yang paling sering digunakan oleh para pelajar di zaman sekarang.
 
-# 1.2.1 Ketergantungan pada Kecerdasan Buatan (AI)
+### 1.2.1 Ketergantungan pada Kecerdasan Buatan (AI)
 
 Banyak pelajar kini memanfaatkan AI berbayar maupun gratis sebagai tutor pribadi mereka. Sebenarnya, pemanfaatan AI sebagai tutor belajar itu sangat bagus karena teknologi ini membuat para pelajar memiliki tutor pribadi pintar yang mudah digunakan, dapat dipakai siapa saja, dan relatif murah.
 
 Akan tetapi, hal ini juga menimbulkan sebuah gap yang kritis. Berinteraksi secara eksklusif dengan mesin menghilangkan komponen interaksi sosial dan bahasa tubuh yang krusial untuk melancarkan komunikasi kognitif antarmanusia. Selain itu, belajar dengan AI tidak memberikan kesempatan kepada pengguna untuk merasakan "efek protégé", yaitu dorongan motivasi dan retensi memori tingkat tinggi yang hanya didapatkan ketika seseorang berusaha keras menjelaskan sebuah konsep kepada orang lain.
 
-# 1.2.2 Platform EdTech Berbasis Subskripsi
+### 1.2.2 Platform EdTech Berbasis Subskripsi
 
 Solusi seperti platform EdTech (Skuling, Pahamify, atau Zenius) menggunakan model bisnis berlangganan yang diskriminatif secara ekonomi yang membuat para pelajar dengan anggaran yang terbatas sulit untuk mengakses platform-platform ini. Sistem ini juga lebih banyak berjalan satu arah. Hal ini juga berarti para pelajar tidak mendapatkan koneksi ataupun sosialisasi yang cukup untuk memaksimalkan potensi dan pembelajaran mereka. Metode belajar ini gagal mewadahi kebutuhan pelajar yang membutuhkan komunikasi dua arah secara real-time dengan tutor ataupun teman sebaya.
 
-# 1.2.3 Pencarian Teman Belajar secara Manual
+### 1.2.3 Pencarian Teman Belajar secara Manual
 
 Pelajar sering mencari teman belajar secara acak di media sosial, mau itu dari group WhatsApp, Line, ataupun saat diajak. Situasi ini sangat bagus karena mendorong interaksi yang natural dan mendorong kolaborasi yang memang disetujui dan diinginkan oleh semua orang yang terlibat dalam kelompok belajarnya. Akan tetapi, kondisi semacam ini memiliki gap yang cukup besar juga. Banyak pelajar yang memiliki kesulitan dalam bertemu dan berbicara dengan orang baru, mau itu untuk berkomunikasi maupun untuk membuat kelompok belajar. Hal ini diperparah lagi dengan maraknya digitalisasi dan kecanduan sosial media yang dapat menghambat kemampuan sosialisasi para pelajar dan membuat mereka terisolasi dari dunia nyata. Gap-nya juga terletak pada tidak adanya struktur atau sistem pencarian grup belajar yang jelas. Sering kali jadwal mereka berbenturan atau mereka terjebak pada kelompok yang tingkat pemahamannya sama-sama rendah, sehingga tidak terjadi transfer ilmu dari sosok mentor ke protégé.
 
-# Kesenjangan yang Akan Diselesaikan:
+### Kesenjangan yang Akan Diselesaikan:
 
 Perangkat lunak yang kami kembangkan hadir untuk membantu mengisi celah ini melalui platform matching study group. Platform ini bertindak seperti fasilitator otomatis yang mencocokkan pengguna berdasarkan metrik yang jelas: tingkat penguasaan materi, ketersediaan waktu, dan topik/pelajaran yang ingin didiskusikan. Dengan memfasilitasi terbentuknya kelompok belajar yang lebih jelas dan terstruktur, aplikasi ini menghadirkan solusi berbiaya rendah dan terukur untuk meningkatkan pengalaman pendidikan pelajar.
 
@@ -108,7 +108,7 @@ Buatlah daftar seluruh aktor (pengguna) yang akan berinteraksi langsung dengan s
 | :----- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Tutor  | _User yang mendaftarkan materi, Menentukan ketersediaan waktu dan kapasitas peserta per sesi, lalu memberi materi pada sesi yang terbentuk. Satu orang dapat berperan sebagai Tutor sekaligus Mentee untuk materi yang berbeda_ |
 | Mentee | _User yang mendaftarkan materi yang ingin dipelajarinya beserta ketersediaan waktunya, lalu mengikuti sesi belajar bersama Tutor atau sesama Mentee_                                                                            |
-| Sistem | _Menjalankan pencocokan untuk study group secara terjadwal berdasarkan materi dan waktu, serta mencatat keterlaksanaan sesi_                                                                                                     |
+| Sistem | _Menjalankan pencocokan tutor dan mentee secara terjadwal berdasarkan materi dan waktu, serta mencatat keterlaksanaan sesi_                                                                                                     |
 
 ## 3.2 Kebutuhan Pengguna Awal
 
@@ -151,7 +151,7 @@ Buatlah daftar seluruh aktor (pengguna) yang akan berinteraksi langsung dengan s
 
 ## 3.4 Model Proses Bisnis
 
-Buatlah Activity Diagram atau Swimlane Diagram yang menunjukkan alur kerja proses bisnis dari sistem solusi. Diagram ini harus memvisualisasikan bagaimana alur operasional di dunia nyata berjalan lebih efisien dengan adanya interaksi antara aktor (yang didefinisikan pada poin 3.1) dan sistem perangkat lunak. Perhatikan notasi yang digunakan dalam pembuatannya.
+[PDF Model Proses bisnis](IF2150-RPL-K01-G09/docs/M1/assets/diagram/BMD.drawio.pdf)
 <br>
 
 # Referensi
