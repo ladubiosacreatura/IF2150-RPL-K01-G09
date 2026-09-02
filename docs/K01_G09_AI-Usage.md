@@ -55,8 +55,8 @@ Kami yang bertanda tangan di bawah ini menyatakan bahwa seluruh log penggunaan A
 
 | Tanda Tangan | Nama Anggota |
 | :---: | :--- |
-| <img src="./assets/ttd-Hugo_Daniel_Johansen_Napitupulu.png" width="100"> | **[NIM - Nama Anggota 1]** |
-| <img src="./assets/ttd-Matthew_Allen_Reynaldo.png" width="100"> | **[NIM - Nama Anggota 2]** |
-| <img src="./assets/ttd-Fabian_Amzar_Susanto.png" width="100"> | **[NIM - Nama Anggota 3]** |
-| <img src="./assets/ttd-David_Christian.png" width="100"> | **[NIM - Nama Anggota 4]** |
-| <img src="./assets/ttd-Markus_Christiano_Simanjuntak.png" width="100"> | **[NIM - Nama Anggota 5]** |
+| <img src="./assets/ttd-Hugo_Daniel_Johansen_Napitupulu.png" width="100"> | **[13525049 - Hugo Daniel Johansen Napitupulu]** |
+| <img src="./assets/ttd-Matthew_Allen_Reynaldo.png" width="100"> | **[13525001 - Matthew Allen Reynaldo]** |
+| <img src="./assets/ttd-Fabian_Amzar_Susanto.png" width="100"> | **[13525010 - Fabian Amzar Susanto]** |
+| <img src="./assets/ttd-David_Christian.png" width="100"> | **[13525025 - David Christian]** |
+| <img src="./assets/ttd-Markus_Christiano_Simanjuntak.png" width="100"> | **[13525028 - Markus Christiano Simanjutak]** |
