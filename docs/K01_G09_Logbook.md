@@ -34,7 +34,9 @@
 | Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* | 
 | :--- | :--- | :--- | :--- | :--- | :--- | 
 | *04-05-2026* | *[Nama Mahasiswa]* | *[Jelaskan Pekerjaan secara Singkat]* | *[Durasi Pengerjaan]* | *[On Progress/Done]* | [Kendala yang dialami, jika tidak ada cukup tandai "-"] | 
-| *05-05-2026* | *John Doe* | *Mendesain diagram kelas* | *3* | *Done* | *-* | 
+| *05-05-2026* | *John Doe* | *Mendesain diagram kelas* | *3* | *Done* | *-* |
+| *01-09-2026* | *David Christian* | *Membuat draf bab 3.1 3.2 3.3* | *2* | *on progress* | *-* |
+| *02-09-2026* | *David Christian* | *Finalisasi bab 3.1 3.2 3.3* | *1* | *done* | *-* |  
 | | | | | | | |
 
 **Catatan/Evaluasi Milestone 1:**
