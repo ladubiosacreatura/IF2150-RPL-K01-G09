@@ -108,7 +108,7 @@ Buatlah daftar seluruh aktor (pengguna) yang akan berinteraksi langsung dengan s
 | :----- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Tutor  | _User yang mendaftarkan materi, Menentukan ketersediaan waktu dan kapasitas peserta per sesi, lalu memberi materi pada sesi yang terbentuk. Satu orang dapat berperan sebagai Tutor sekaligus Mentee untuk materi yang berbeda_ |
 | Mentee | _User yang mendaftarkan materi yang ingin dipelajarinya beserta ketersediaan waktunya, lalu mengikuti sesi belajar bersama Tutor atau sesama Mentee_                                                                            |
-| Sistem | _Menjalankan pencocokan tutor dan mentee secara terjadwal berdasarkan materi dan waktu, serta mencatat keterlaksanaan sesi_                                                                                                     |
+| Sistem | _Menjalankan pencocokan untuk study group secara terjadwal berdasarkan materi dan waktu, serta mencatat keterlaksanaan sesi_                                                                                                     |
 
 ## 3.2 Kebutuhan Pengguna Awal
 
