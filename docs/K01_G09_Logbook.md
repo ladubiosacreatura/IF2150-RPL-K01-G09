@@ -29,18 +29,18 @@
 ---
 
 ### Milestone 1
-**Periode:** [Tanggal Mulai] - [Tanggal Selesai]
+**Periode:** [29-08-2026] - [02-09-2026]
 
 | Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | *30-08-2026* | *Hugo Daniel J N* | *draft bab 1.1 dan 2.1* | *2* | *Done* | *-* |
+| *30-08-2026* | *Markus Christiano Simanjuntak* | *Mengerjakan gambaran dan struktur kasar dari bab 1 versi awal* | *1* | *Done* | *Masih belum yakin akan ide awal kami* | 
 | *01-09-2026* | *Matthew Allen Reynaldo* | *Mengerjakan draft business model flow* | *2* | *Done* | *-* |
 | *02-09-2026* | *Matthew Allen Reynaldo* | *Finalisasi business model flow (3.4)* | *2* | *Done* | *-* |
 | *02-09-2026* | *Hugo Daniel J N* | *Mengisi form assistensi, finalisasi bab 2* | *2* | *Done* | *-* |
-| *02-05-2026* | *Fabian Amzar Susanto* | *Pengerjaan draft bab 3.1* | *0.5* | *Done* | *-* | 
-| *02-05-2026* | *Fabian Amzar Susanto* | *Membantu mengerjakan asumsi di bagian 2.2* | *0.25* | *Done* | *-* | 
-| *04-05-2026* | *Markus Christiano Simanjuntak* | *Mengerjakan gambaran dan struktur kasar dari bab 1 versi awal* | *1* | *Done* | *Masih belum yakin akan ide awal kami* | 
-| *05-05-2026* | *Markus Christiano Simanjuntak* | *Mengerjakan keseluruhan bab 1 versi akhir dengan topik utama SDG 4* | *1* | *Done* | *-* | 
+| *02-09-2026* | *Fabian Amzar Susanto* | *Pengerjaan draft bab 3.1* | *0.5* | *Done* | *-* | 
+| *02-09-2026* | *Fabian Amzar Susanto* | *Membantu mengerjakan asumsi di bagian 2.2* | *0.25* | *Done* | *-* | 
+| *05-09-2026* | *Markus Christiano Simanjuntak* | *Mengerjakan keseluruhan bab 1 versi akhir dengan topik utama SDG 4* | *1* | *Done* | *-* | 
 | | | | | | | |
 
 **Catatan/Evaluasi Milestone 1:**
