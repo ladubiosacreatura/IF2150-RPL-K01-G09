@@ -40,8 +40,7 @@
 | *02-09-2026* | *Hugo Daniel J N* | *Mengisi form assistensi, finalisasi bab 2* | *2* | *Done* | *-* |
 | *02-09-2026* | *Fabian Amzar Susanto* | *Pengerjaan draft bab 3.1* | *0.5* | *Done* | *-* | 
 | *02-09-2026* | *Fabian Amzar Susanto* | *Membantu mengerjakan asumsi di bagian 2.2* | *0.25* | *Done* | *-* | 
-| *05-09-2026* | *Markus Christiano Simanjuntak* | *Mengerjakan keseluruhan bab 1 versi akhir dengan topik utama SDG 4* | *1* | *Done* | *-* | 
-| | | | | | | |
+| *02-09-2026* | *Markus Christiano Simanjuntak* | *Mengerjakan keseluruhan bab 1 versi akhir dengan topik utama SDG 4* | *1* | *Done* | *-* | 
 
 **Catatan/Evaluasi Milestone 1:**
 * *(Isi jika ada catatan khusus untuk asisten atau evaluasi singkat kerja tim)*
