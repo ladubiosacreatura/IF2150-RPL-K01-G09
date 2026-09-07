@@ -42,7 +42,7 @@ _Catatan dapat dituliskan dalam bentuk paragraf atau poin-poin, disesuaikan saja
 
 <!-- ![](./assets/foto-asistensi.jpg) -->
 <p align="center">
-  <img src="./assets/foto-asistensi.jpg" width="100%">
+  <img src="./assets/foto-asistensi.png" width="100%">
 </p>
 
 <p align="center">
