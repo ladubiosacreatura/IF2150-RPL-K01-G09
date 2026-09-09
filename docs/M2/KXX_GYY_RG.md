@@ -32,9 +32,6 @@ Dipersiapkan oleh:
 
 | Revisi | Deskripsi |
 | :--- | :--- |
-| *A* | *Deskripsikan perubahan yang dilakukan dari dokumen sebelumnya pada dokumen ini. Jika tidak terdapat perubahan, harap kosongkan tabel.* |
-| *B* | |
-| *C* | |
 | ... | |
 
 <br>
@@ -43,10 +40,6 @@ Dipersiapkan oleh:
 # BAB 1: Deskripsi Umum
 
 ## 1.1 Deskripsi Umum Sistem
-
-Abstraksikan sistem solusi menurut sudut pandang pengguna yang telah ditentukan. Jelaskan secara ringkas mengenai apa saja ekspektasi pengguna terhadap sistem yang akan dikembangkan, alur kerja sistem yang diinginkan, serta harapan dari penerapan solusi dalam bentuk narasi.
-
-> *Sistem adalah kesatuan utuh antara perangkat lunak, pengguna, perangkat keras, dan proses bisnis (urutan langkah logis yang dilakukan di dunia nyata untuk menyelesaikan suatu pekerjaan atau mencapai tujuan tertentu).*
 
 PeerUP adalah sebuah perangkat lunak berbasis platform digital yang dirancang untuk memfasilitasi pembelajaran kolaboratif (peer-to-peer tutoring). PeerUp akan menjadi platform untu mempertemukan pelajar yang membutuhkan bantuan pemahaman materi tertentu dengan tutor sebaya yang memiliki penguasaan materi lebih baik, jadwal yang selaras, dan preferensi belajar yang cocok. Hal ini akan membuat kedua belah pihak dapat belajar bersama dan bahkan membuat study group sendriri  
 
@@ -60,7 +53,6 @@ Harapan dari penerapan solusi ini adalah platform ini mampu memfasilitasi para p
 
 ## 1.2 Deskripsi Pengguna Perangkat Lunak
 
-Buatlah daftar seluruh aktor (pengguna) yang akan berinteraksi langsung dengan sistem solusi yang kalian kembangkan. Berikan penjelasan singkat mengenai peran dan karakteristik dari masing-masing aktor tersebut.
 
 | Aktor | Deskripsi |
 | :--- | :--- |
@@ -115,23 +107,10 @@ Buatlah daftar seluruh aktor (pengguna) yang akan berinteraksi langsung dengan s
 
 ## 2.3 Pemetaan Kebutuhan
 
-Perhatikan kembali semua aktivitas yang telah didefinisikan pada tabel deskripsi aktivitas atau *activity diagram*. Jabarkan kebutuhan sistem yang akan dibuat dengan mengacu pada aktivitas-aktivitas tersebut. Setiap aktivitas (ID Aktivitas) dapat memiliki satu atau lebih kebutuhan yang berbeda. Pastikan untuk mengidentifikasi dan mengisi semua jenis kebutuhan yang relevan untuk setiap aktivitas, yaitu:
-
-- **User Requirement**, yaitu kebutuhan dari sudut pandang pengguna (apa yang dapat dilakukan pengguna).
-- **Business Requirement**, yaitu aturan, kebijakan, atau standar bisnis yang harus dipenuhi oleh sistem.
-- **System Requirement**, yaitu kebutuhan yang menjelaskan apa yang harus dilakukan sistem dan bagaimana sistem harus bekerja dari segi performa, keamanan, keandalan, dsb.
-
-Lengkapi juga dengan penjelasannya dan apakah keperluan tersebut perlu didukung oleh perangkat lunak atau tidak. Jenis kebutuhan tidak terbatas hanya dari tiga jenis di atas, dapat ditambahkan yang lain juga bila diperlukan, misalnya kebutuhan regulasi (*Legal*).
 
 | ID Kebutuhan | ID Aktivitas | Jenis Kebutuhan | Deskripsi Kebutuhan | P/L |
 | :--- | :--- | :--- | :--- | :--- |
-| *R01* | *A01* | *User* | *Pengguna dapat memilih metode pembayaran dan melakukan pembayaran secara digital.* | *Ya* |
-| *R02* | *A01* | *Business* | *Transaksi digital sesuai dengan ketentuan UU ITE yang berlaku.* | *Tidak* |
-| *R03* | *A01* | *System* | *Sistem harus mengintegrasikan API Payment Gateway dengan prinsip ACID (Atomicity, Consistency, Isolation, Durability), jika terjadi kegagalan jaringan saat saldo terpotong, sistem harus secara otomatis membatalkan transaksi atau meneruskan dana (reliable).* | *Ya* |
-| *R04* | *A01* | *System* | *Kata sandi (password) atau PIN pengguna saat otorisasi pembayaran harus di-hash menggunakan algoritma SHA-256 dan tidak disimpan dalam bentuk plain-text.* | *Ya* |
-| *R05* | *A02* | *Business* | *Toko harus memiliki rekening bank aktif dan valid untuk menerima pencairan dana dari sistem.* | *Tidak* |
-| ... | ... | ... | ... | ... |
-| R01 | A01| User | User dapat mendaftar menggunakan akun universitas | Ya |
+| R01 | A01 | User | User dapat mendaftar menggunakan akun universitas | Ya |
 | R02 | A01 | System | Sistem harus memvalidasi format dan domain email universitas saat registrasi, dan menolak akun yang tidak terdaftar | Ya |
 | R03 | A01 | System | Kata sandi user harus di-hash menggunakan algoritma kriptografi dan tidak disimpan dalam bentuk plain-text | Ya |
 | R04 | A01 | System | Pengumpulan data pribadi saat daftar harus disertai persetujuan user sesuai UU | Ya |
@@ -153,14 +132,9 @@ Lengkapi juga dengan penjelasannya dan apakah keperluan tersebut perlu didukung 
 | R20 | A12 | User | User memilih sesi yang ingin diikuti | Ya |
 
 
-
 ## 2.4 Kebutuhan Fungsional (KF)
 
-Untuk setiap kebutuhan yang telah diidentifikasi sebagai "didukung oleh perangkat lunak", buatlah daftar kebutuhan fungsional P/L, lengkap dengan ID Kebutuhan Fungsional (KF) dan penjelasannya. Hubungkan ID Kebutuhan Fungsional dengan ID Pemetaan Kebutuhan dari sistem.
 
-## 2.4 Kebutuhan Fungsional (KF)
-
-Untuk setiap kebutuhan yang telah diidentifikasi sebagai "didukung oleh perangkat lunak", buatlah daftar kebutuhan fungsional P/L, lengkap dengan ID Kebutuhan Fungsional (KF) dan penjelasannya. Hubungkan ID Kebutuhan Fungsional dengan ID Pemetaan Kebutuhan dari sistem[cite: 5].
 | ID KF | ID Kebutuhan | Penjelasan |
 | :--- | :--- | :--- |
 | *KF01* | *R01* | *Ketika pengguna ingin membuat akun baru, pengguna dapat memasukkan alamat email berdomain universitas yang belum terdaftar beserta data profilnya dan sistem harus memvalidasinya dan membuat akun baru.* |
@@ -178,15 +152,14 @@ Untuk setiap kebutuhan yang telah diidentifikasi sebagai "didukung oleh perangka
 
 ## 2.5 Kebutuhan Non-Fungsional (KNF)
 
-Uraikan dengan ringkas Kebutuhan Non-Fungsional dalam tabel sebagai berikut. Isilah kolom kebutuhan dengan kalimat yang jelas, spesifik, dan terukur (kelak dapat diuji untuk dipenuhi). Kolom ID KNF adalah nomor Kebutuhan Non-Fungsional yang harus ditelusuri pada saat pengujian. Hubungkan ID Kebutuhan Non-Fungsional dengan ID Pemetaan Kebutuhan Umum dari sistem.
-
 | ID KNF | ID Kebutuhan | Parameter | Deskripsi Kebutuhan |
 | :--- | :--- | :--- | :--- |
-| *KNF01* | *R03* | *Reliability* |ll *Proses transaksi pembayaran harus memenuhi prinsip ACID untuk mencegah terjadinya data tersangkut (lost update) apabila terjadi kegagalan jaringan di tengah proses.* |
-| *KNF02* | *R04* | *Security* | *Sistem harus mengenkripsi PIN atau password pengguna menggunakan algoritma SHA-256 sebelum data dikirimkan ke server, serta tidak menyimpannya dalam bentuk plain-text di database.* |
-| ... | ... | ... | ... |
+| *KNF01* | *R03* | *Security* | *Kata sandi pengguna harus di-hash menggunakan algoritma kriptografi yang aman (seperti bcrypt/Argon2) sebelum disimpan dalam basis data dan tidak disimpan dalam bentuk plain-text.* |
+| *KNF02* | *R19* | *Response Time* | *Sistem pencocokan jadwal (matchmaking) berdasarkan irisan materi dan waktu kosong pengguna harus menampilkan hasil rekomendasi dalam waktu kurang dari 3 detik.* |
+| *KNF03* | *R09* | *Reliability* | *Pengiriman notifikasi pengingat sesi (15 menit sebelum sesi dimulai) harus terkirim secara tepat waktu dengan tingkat keberhasilan minimal 99%.* |
+| *KNF04* | *R02* | *Reliability* | *Ketika pengguna meregistrasikan akun non universitas, sistem harus menolak registrasi akun.* |
+| *KNF05* | *R13* | *Response Time* | *Waktu loading saat membuka riwayat sesi pengguna tidak boleh lebih dari 3 detik.* |
 
-Silakan pilih yang relevan. Tidak perlu semua parameter menjadi kebutuhan non-fungsional. Berikut merupakan penjelasan dari setiap parameter. **Parameter dari Kebutuhan Non-Fungsional tidak terbatas hanya di bawah ini** karena hanya merupakan panduan sehingga dapat ditambah KNF yang lain, misalnya *constraint* dari sistem.
 
 | Parameter | Penjelasan |
 | :--- | :--- |
