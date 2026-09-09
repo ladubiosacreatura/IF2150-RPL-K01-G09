@@ -121,6 +121,22 @@ Lengkapi juga dengan penjelasannya dan apakah keperluan tersebut perlu didukung 
 | *R04* | *A01* | *System* | *Kata sandi (password) atau PIN pengguna saat otorisasi pembayaran harus di-hash menggunakan algoritma SHA-256 dan tidak disimpan dalam bentuk plain-text.* | *Ya* |
 | *R05* | *A02* | *Business* | *Toko harus memiliki rekening bank aktif dan valid untuk menerima pencairan dana dari sistem.* | *Tidak* |
 | ... | ... | ... | ... | ... |
+| R01 | A01| User | User dapat mendaftar menggunakan akun universitas | Ya |
+| R02 | A01 | System | Sistem harus memvalidasi format dan domain email universitas saat registrasi, dan menolak akun yang tidak terdaftar | Ya |
+| R03 | A01 | System | Kata sandi user harus di-hash menggunakan algoritma kriptografi dan tidak disimpan dalam bentuk plain-text | Ya |
+| R04 | A01 | System | Pengumpulan data pribadi saat daftar harus disertai persetujuan user sesuai UU | Ya |
+| R05 | A11 | User | User dapat masuk menggunakan email dan kata sandi yang terdaftar | Ya |
+| R06 | A04 | User | Tutor dapat membuat sesi baru dengan menentukan waktu, jumlah slot maksimum peserta, dan teknis sesi | Ya |
+| R07 | A04 | System | Sistem harus mencegah Tutor membuat dua sesi pada rentang waktu yang tabrakan | Ya |
+| R08 | A05 | User | User menerima informasi anggota kelompok belajar beserta materi dan waktu sesi | Ya |
+| R09 | A06 | System | Sistem mengirimkan notifikasi kepada seluruh pihak 15 menit sebelum sesi dimulai | Ya |
+| R10 | A06 | Business | Pelaksanaan sesi offline/online bebas, perangkat lunak tidak bertanggung jawab atas kejadian selama sesi berlangsung | Tidak |
+| R11 | A07 | User | User dapat mengonfirmasi apakah sesi benar-benar terlaksana | Ya |
+| R12 | A07 | System | Sistem mengirimkan pertanyaan konfirmasi keterlaksanaan sesi secara otomatis setelah sesi berakhir | Ya |
+| R13 | A08 | User | User dapat melihat history sesi yang pernah dijalani sebagai Tutor maupun Mentee | Ya |
+| R14 | A09 | User | User dapat memberi penilaian singkat dan catatan opsional terhadap sesi yang telah berlangsung. | Ya |
+| R15 | A10 | User | User dapat mengirim dan menerima pesan dalam grup chat sesinya | Ya |
+| R16 | A10 | System | Grup chat otomatis dinonaktifkan dan datanya dihapus 24 jam setelah sesi berakhir | Ya |
 
 ## 2.4 Kebutuhan Fungsional (KF)
 
