@@ -137,6 +137,12 @@ Lengkapi juga dengan penjelasannya dan apakah keperluan tersebut perlu didukung 
 | R14 | A09 | User | User dapat memberi penilaian singkat dan catatan opsional terhadap sesi yang telah berlangsung. | Ya |
 | R15 | A10 | User | User dapat mengirim dan menerima pesan dalam grup chat sesinya | Ya |
 | R16 | A10 | System | Grup chat otomatis dinonaktifkan dan datanya dihapus 24 jam setelah sesi berakhir | Ya |
+| R17 | A02 | User | User memilih kebutuhan materi yang dikuasai atau ingin dipelajari | Ya |
+| R18 | A03 | User | User memilih waktu yang kosong dan dapat mengikuti sesi | Ya |
+| R19 | A05 | System | Sistem melakukan pencocokan jadwal untuk user yang punya kebutuhan materi yang sama dan waktu kosong yang sama | Ya |
+| R20 | A12 | User | User memilih sesi yang ingin diikuti | Ya |
+
+
 
 ## 2.4 Kebutuhan Fungsional (KF)
 
