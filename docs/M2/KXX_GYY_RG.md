@@ -7,24 +7,24 @@ REQUIREMENT GATHERING
 </h1>
 <br>
 
-## *Nama Perangkat Lunak*
+## PeerUP
 
-### Untuk: *[Nama Asisten]*
+### Untuk: _Mikhael Andrian Yonatan_
 
 Dipersiapkan oleh:
 
 | Informasi | Keterangan |
 | --- | --- |
-| Kelas | *\[Kelas\]* |
-| Kelompok | *\[Nomor Kelompok\]* |
+| Kelas | _K01_ |
+| Kelompok | _G09_ |
 
-| NIM | Nama |
-| --- | --- |
-| *\[NIM 1\]* | *\[Nama Anggota 1\]* |
-| *\[NIM 2\]* | *\[Nama Anggota 2\]* |
-| *\[NIM 3\]* | *\[Nama Anggota 3\]* |
-| *\[NIM 4\]* | *\[Nama Anggota 4\]* |
-| *\[NIM 5\]* | *\[Nama Anggota 5\]* |
+| NIM        | Nama                              |
+| ---------- | --------------------------------- |
+| _13525049_ | _Hugo Daniel Johansen Napitupulu_ |
+| _13525001_ | _Matthew Allen Reynaldo_          |
+| _13525010_ | _Fabian Amzar Susanto_            |
+| _13525025_ | _David Christian_                 |
+| _13525028_ | _Markus Christiano Simanjutak_    |
 
 ---
 
@@ -48,14 +48,25 @@ Abstraksikan sistem solusi menurut sudut pandang pengguna yang telah ditentukan.
 
 > *Sistem adalah kesatuan utuh antara perangkat lunak, pengguna, perangkat keras, dan proses bisnis (urutan langkah logis yang dilakukan di dunia nyata untuk menyelesaikan suatu pekerjaan atau mencapai tujuan tertentu).*
 
+PeerUP adalah sebuah perangkat lunak berbasis platform digital yang dirancang untuk memfasilitasi pembelajaran kolaboratif (peer-to-peer tutoring). PeerUp akan menjadi platform untu mempertemukan pelajar yang membutuhkan bantuan pemahaman materi tertentu dengan tutor sebaya yang memiliki penguasaan materi lebih baik, jadwal yang selaras, dan preferensi belajar yang cocok. Hal ini akan membuat kedua belah pihak dapat belajar bersama dan bahkan membuat study group sendriri  
+
+Secara naratif, alur kerja sistem ini dimulai ketika pengguna (tutor ataupun pelajar) membuat sebuah akun dan mengatur profil mereka. Siswa (Mentee) kemudian dapat mengisi preferensi sesi tutoring (kebutuhan materi, ketersediaan waktu, sesi online offline) dan memilih sesi yang tersedia. Sementara itu tutor (mentor) dapat Membuat sesi dengan menyertakan keterangan (topik materi, jadwal sesi, sesi online/offline, kapasitas maksimum peserta). Sistem akan mencocokkan para mentee dengan mentor yang sesuai dengan preferensi satu sama lain. Selain itu, sebuh group chat sesi sementara akan dibuat oleh sistem untuk menjadi sarana mereka berkomunikasi tentang sesi mereka. Setelah ini, mereka dapat merencakanakan sesi belajar bersama mereka sesuai dengan persetujuan satu sama lain.
+
+Dari sisi mahasiswa atau peserta didik, mereka mengekspektasikan sebuah metode pembelajaran yang efektif dan mudah dibentuk. Selain itu, mereka juga mengekspektasikan sebuah lingkungan belajar yang lebih interaktif, organik, dan mudah dibentuk, bukan sekadar dipaparkan materi secara pasif satu arah. Mereka. Dengan adanya platform ini, mereka dapat dengan mudah membentuk study group sendiri dan mendapatkan pembelajaran yang naturan dari orang-orang sebaya mereka.
+
+Sementara itu, dari sisi tutor, ekspektasinya adalah mendapatkan wadah untuk menambah pengalaman mengajar (volunteering experience), memperluas relasi, dan berpotensi mendapatkan insentif tambahan secara mandiri.
+
+Harapan dari penerapan solusi ini adalah platform ini mampu memfasilitasi para pelajar untuk menemukan study buddy atau group belajar yang paling cocok dengan preferensi mereka masing-masing, menggantikan batasan biaya bimbingan dan subskripsi aplikasi pembelajaran yang mahal, demi mencapai menuntut ilmu bersama-sama.
+
 ## 1.2 Deskripsi Pengguna Perangkat Lunak
 
 Buatlah daftar seluruh aktor (pengguna) yang akan berinteraksi langsung dengan sistem solusi yang kalian kembangkan. Berikan penjelasan singkat mengenai peran dan karakteristik dari masing-masing aktor tersebut.
 
 | Aktor | Deskripsi |
 | :--- | :--- |
-| *Kasir* | *Pengguna ini bertindak sebagai pihak yang bertanggung jawab untuk memproses transaksi harian dan melayani pembayaran pelanggan. Karakteristik dari pengguna ini adalah mengutamakan kecepatan dan keakuratan saat bertransaksi.* |
-| ... | ... |
+| *Mentee* | *Pengguna ini adalah siswa/mahasiswa yang bertindak sebagai pihak yang membutuhkan bimbingan atau group belajar untuk materi dan jadwal tertentu. Karakteristik utama dari aktor ini adalah membutuhkan antarmuka yang intuitif dan enak dilihat, menginginkan respons yang cepat dalam matchmaking sesi, dan mencari kecocokan gaya belajar.* |
+| Mentor | Pengguna ini bertindak sebagai pihak pengajar sebaya yang menyediakan waktu dan tenaga untuk membagikan penguasaan materinya. Karakteristik aktor ini adalah membutuhkan antarmuka yang intuitif dan enak dilihat, fitur pengelolaan jadwal (ketersediaan waktu) yang fleksibel, manajemen kapasitas sesi (jumlah anggota), dan kemudahan dalam mengonfirmasi atau menolak sesi. |
+| Administrator | Pengguna ini bertindak sebagai pengelola back-end dari platform. Karakteristik aktor ini berfokus pada manajemen data, seperti mengelola daftar mata pelajaran/topik valid yang bisa dipilih oleh pengguna, serta menangani laporan pengguna jika terjadi pelanggaran ataupun masalah di dalam platform. |
 
 ---
 
