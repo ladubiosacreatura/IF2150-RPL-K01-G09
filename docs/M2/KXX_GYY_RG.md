@@ -65,8 +65,7 @@ Buatlah daftar seluruh aktor (pengguna) yang akan berinteraksi langsung dengan s
 | Aktor | Deskripsi |
 | :--- | :--- |
 | *Mentee* | *Pengguna ini adalah siswa/mahasiswa yang bertindak sebagai pihak yang membutuhkan bimbingan atau group belajar untuk materi dan jadwal tertentu. Karakteristik utama dari aktor ini adalah membutuhkan antarmuka yang intuitif dan enak dilihat, menginginkan respons yang cepat dalam matchmaking sesi, dan mencari kecocokan gaya belajar.* |
-| Mentor | Pengguna ini bertindak sebagai pihak pengajar sebaya yang menyediakan waktu dan tenaga untuk membagikan penguasaan materinya. Karakteristik aktor ini adalah membutuhkan antarmuka yang intuitif dan enak dilihat, fitur pengelolaan jadwal (ketersediaan waktu) yang fleksibel, manajemen kapasitas sesi (jumlah anggota), dan kemudahan dalam mengonfirmasi atau menolak sesi. |
-| Administrator | Pengguna ini bertindak sebagai pengelola back-end dari platform. Karakteristik aktor ini berfokus pada manajemen data, seperti mengelola daftar mata pelajaran/topik valid yang bisa dipilih oleh pengguna, serta menangani laporan pengguna jika terjadi pelanggaran ataupun masalah di dalam platform. |
+| *Mentor* | *Pengguna ini bertindak sebagai pihak pengajar sebaya yang menyediakan waktu dan tenaga untuk membagikan penguasaan materinya. Karakteristik aktor ini adalah membutuhkan antarmuka yang intuitif dan enak dilihat, fitur pengelolaan jadwal (ketersediaan waktu) yang fleksibel, manajemen kapasitas sesi (jumlah anggota), dan kemudahan dalam mengonfirmasi atau menolak sesi.* |
 
 ---
 
@@ -137,11 +136,23 @@ Lengkapi juga dengan penjelasannya dan apakah keperluan tersebut perlu didukung 
 
 Untuk setiap kebutuhan yang telah diidentifikasi sebagai "didukung oleh perangkat lunak", buatlah daftar kebutuhan fungsional P/L, lengkap dengan ID Kebutuhan Fungsional (KF) dan penjelasannya. Hubungkan ID Kebutuhan Fungsional dengan ID Pemetaan Kebutuhan dari sistem.
 
+## 2.4 Kebutuhan Fungsional (KF)
+
+Untuk setiap kebutuhan yang telah diidentifikasi sebagai "didukung oleh perangkat lunak", buatlah daftar kebutuhan fungsional P/L, lengkap dengan ID Kebutuhan Fungsional (KF) dan penjelasannya. Hubungkan ID Kebutuhan Fungsional dengan ID Pemetaan Kebutuhan dari sistem[cite: 5].
 | ID KF | ID Kebutuhan | Penjelasan |
 | :--- | :--- | :--- |
-| *KF01* | *R01* | *Perangkat lunak dapat menampilkan pilihan antarmuka metode pembayaran (transfer bank, e-wallet, kartu kredit) setelah pengguna melakukan checkout.* |
-| *KF02* | *R01* | *Perangkat lunak dapat mengirimkan permintaan otorisasi transaksi ke API Payment Gateway beserta nominal tagihan dan ID Pesanan.* |
-| ... | ... | ... |
+| *KF01* | *R01* | *Ketika pengguna ingin membuat akun baru, pengguna dapat memasukkan alamat email berdomain universitas yang belum terdaftar beserta data profilnya dan sistem harus memvalidasinya dan membuat akun baru.* |
+| *KF02* | *R03* | *Ketika pengguna memasukkan kredensial yang sesuai dengan basis data sistem, sistem harus memberikan hak akses akun pengguna dan mengarahkan pengguna ke beranda.* |
+| *KF03* | *R04* | *Sistem harus menyediakan antarmuka bagi pengguna untuk menyimpan dan memodifikasi tag materi pelajaran pada profil mereka.* |
+| *KF04* | *R05* | *Sistem harus menyimpan data ketersediaan waktu yang dipilih pengguna ke dalam kalender internal sistem.* |
+| *KF05* | *R06* | *Ketika Tutor menyimpan sesi baru, sistem harus merekam detail sesi yang meliputi topik, jadwal, format (daring/luring), dan batas peserta.* |
+| *KF06* | *R07* | *Ketika Tutor memasukkan jumlah peserta melebihi batas maksimal aturan bisnis, sistem harus menolak masukan dan menampilkan pesan kesalahan.* |
+| *KF07* | *R08* | *Ketika Mentee memilih opsi untuk bergabung ke suatu sesi, sistem harus menambahkan Mentee tersebut ke dalam daftar partisipan sesi terkait.* |
+| *KF08* | *R09* | *Sistem harus menampilkan daftar rekomendasi sesi kepada Mentee berdasarkan irisan kecocokan materi dan jadwal ketersediaan waktu.* |
+| *KF09* | *R11* | *Ketika waktu sesi telah terlewati, sistem harus menampilkan tombol konfirmasi bagi pengguna untuk menandai status terlaksananya sesi tersebut.* |
+| *KF10* | *R12* | *Sistem harus menampilkan daftar riwayat sesi yang sedang berlangsung, telah selesai, maupun dibatalkan pada halaman profil masing-masing pengguna.* |
+| *KF11* | *R13* | *Setelah status sesi dikonfirmasi selesai, sistem harus menampilkan formulir penilaian berskala (rating) untuk diisi oleh partisipan sesi.* |
+| *KF12* | *R14* | *Ketika sebuah sesi berhasil dibentuk dan disetujui, sistem harus secara otomatis membuat group chat sementara bagi untuk pesertaranya.* |
 
 ## 2.5 Kebutuhan Non-Fungsional (KNF)
 
@@ -149,7 +160,7 @@ Uraikan dengan ringkas Kebutuhan Non-Fungsional dalam tabel sebagai berikut. Isi
 
 | ID KNF | ID Kebutuhan | Parameter | Deskripsi Kebutuhan |
 | :--- | :--- | :--- | :--- |
-| *KNF01* | *R03* | *Reliability* | *Proses transaksi pembayaran harus memenuhi prinsip ACID untuk mencegah terjadinya data tersangkut (lost update) apabila terjadi kegagalan jaringan di tengah proses.* |
+| *KNF01* | *R03* | *Reliability* |ll *Proses transaksi pembayaran harus memenuhi prinsip ACID untuk mencegah terjadinya data tersangkut (lost update) apabila terjadi kegagalan jaringan di tengah proses.* |
 | *KNF02* | *R04* | *Security* | *Sistem harus mengenkripsi PIN atau password pengguna menggunakan algoritma SHA-256 sebelum data dikirimkan ke server, serta tidak menyimpannya dalam bentuk plain-text di database.* |
 | ... | ... | ... | ... |
 
