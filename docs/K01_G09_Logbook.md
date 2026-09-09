@@ -46,6 +46,19 @@
 * *(Isi jika ada catatan khusus untuk asisten atau evaluasi singkat kerja tim)*
 
 ---
+### Milestone 2
+**Periode:** [02-09-2026] - [09-09-2026]
+
+| Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| 08-09-2026 | David Christian |  Mengerjakan bab 2.1, 2.2 | 1 | Done | - | 
+| 09-09-2026 | David Christian | Mengerjakan bab 2.3 | 2 | Done | - |
+| 09-09-2026 | Hugo Daniel J N | Membuat 3 case di bab 2.5 | 1 | Done | Sakit batuk |
+| 09-09-2026 | Markus Christiano Simanjuntak | Mengerjakan keseluruhan bab 1 | 1.5 | Done | - | 
+| 09-09-2026 | Markus Christiano Simanjuntak | Mengerjakan keseluruhan bab 2.4 | 1 | Done | - |
+| 09-09-2026 | Matthew Allen Reynaldo | Membuat 1 case di bab 2.5 | 1 | Done | Sakit batuk |
+| 09-09-2026 | Fabian Amzar Susanto | Membuat 1 case di bab 2.5 | 1 | Done | - |
+
 
 
 ``Gunakan format penulisan Logbook yang sama untuk setiap Milestone dan pastikan pembuatan Daftar Isi juga sudah sesuai sebelum Logbook dikumpulkan. ``
