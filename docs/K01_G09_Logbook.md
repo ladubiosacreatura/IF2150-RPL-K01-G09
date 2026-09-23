@@ -81,6 +81,6 @@
 
 | Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
 | --- | --- | --- | --- | --- | --- |
-
+| *16-09-2026* | *Hugo Daniel J N* | *Membuat beberapa classes* | *1* | *Done* | *-* |
 
 ``Gunakan format penulisan Logbook yang sama untuk setiap Milestone dan pastikan pembuatan Daftar Isi juga sudah sesuai sebelum Logbook dikumpulkan. ``
