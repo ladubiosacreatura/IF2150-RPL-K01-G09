@@ -82,5 +82,9 @@
 | Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
 | --- | --- | --- | --- | --- | --- |
 | *16-09-2026* | *Hugo Daniel J N* | *Membuat beberapa classes* | *1* | *Done* | *-* |
+| *18-09-2026* | *David Christian* | *Membuat usecase diagram* | *1* | *Done* | *-* |
+| *23-09-2026* | *David Christian* | *Membuat usecase diagram dan merapihkan* | *2* | *Done* | *-* |
+
+
 
 ``Gunakan format penulisan Logbook yang sama untuk setiap Milestone dan pastikan pembuatan Daftar Isi juga sudah sesuai sebelum Logbook dikumpulkan. ``
