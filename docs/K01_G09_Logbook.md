@@ -75,6 +75,7 @@
 | *16-09-2026* | *Hugo Daniel Johansen Napitupulu* | *Menambahkan A13, R23, KF15, KF16, KF17, A14, R24 pada dokumen MS2* | *1* | *Done* | *-* |
 | *16-09-2026* | *Hugo Daniel Johansen Napitupulu* | *Menambahkan US21, US22, US23 serta skenario USnya* | *0.5* | *Done* | *-* |
 
+---
 ### Milestone 4
 **Periode:** [16-09-2026] - [23-09-2026]
 
