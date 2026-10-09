@@ -26,9 +26,9 @@
 
 | Catatan |
 | --- |
-| 1. *\[Berikan catatan hasil asistensi\]*  |
-| 2. ... |
-| 3. ... |
+| 1. deadline 21 oktober  |
+| 2. 1 use case bisa mencakup beberapa fragmen |
+| 3. 1 use case bisa beberapa diagram jika 1 diagram dianggap terlalu padat |
 | 4. ... |
 
 **Notes for this section:**  
@@ -38,7 +38,7 @@
 
 <!-- ![](./assets/foto-asistensi.jpg) -->
 <p align="center">
-  <img src="./assets/foto-asistensi.jpg" width="100%">
+  <img src="./assets/image.png" width="100%">
 </p>
 
 <p align="center">
