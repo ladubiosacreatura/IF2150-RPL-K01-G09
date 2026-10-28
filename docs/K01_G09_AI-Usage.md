@@ -17,8 +17,7 @@
 | _13525001_ | _Matthew Allen Reynaldo_          |
 | _13525010_ | _Fabian Amzar Susanto_            |
 | _13525025_ | _David Christian_                 |
-| _13525028_ | _Markus Christiano Simanjuntak_   |
-Fabian_Amzar_Susanto     
+| _13525028_ | _Markus Christiano Simanjuntak_   |  
 ---
 
 ### Daftar Isi
