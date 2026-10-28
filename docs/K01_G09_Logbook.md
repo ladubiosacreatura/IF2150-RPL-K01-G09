@@ -108,8 +108,15 @@
 | *30-09-2026* | *Markus Christiano Simanjuntak* | *Merapikan urutan subbab pada dokumen Class Diagram dan merevisi penuh tabel Traceability agar seluruh Kebutuhan Fungsional terpetakan tanpa ada yang terlewat* | *0.5* | *Done* | *-* |
 | *27-09-2026* | *Hugo Daniel J N* | *Menyusun sebagian besar pada bab 2.* | *1* | *Done* | *-* |
 
+### Milestone 6
+**Periode:** [30-09-2026] - [14-10-2026]
+
+| Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
+|---|---|---|---|---|---|
+| *28-10-2026* | *Markus Christiano Simanjuntak* | *Mengerjakan Bab 1, 2, dan 3* | *6* | *Done* | *Keos, pada matil di milestone ini. Instrruksi kurang jelas, banyak materi yang outside resources-nya terlalu outdated ataupun memang kurang dari sananya* |
+
 ### Milestone 7
-**Periode:** [23-09-2026] - [30-09-2026]
+**Periode:** [14-10-2026] - [21-10-2026]
 
 | Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
 |---|---|---|---|---|---|
@@ -119,30 +126,15 @@
 | *21-10-2026* | *David Christian* | *Menyusun Bab 3* | *3* | *Done* | *-* |
 
 ### Milestone 8
-**Periode:** [23-09-2026] - [30-09-2026]
+**Periode:** [21-10-2026] - [28-10-2026]
 
 | Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
 |---|---|---|---|---|---|
 | *26-10-2026* | *David Christian* | *Bab 6* | *3* | *Done* | *-* |
 | *27-10-2026* | *David Christian* | *Bab 6* | *3* | *Done* | *-* |
+| *27-10-2026* | *Matthew Allen Reynaldo* | *Menyusun daftar kelas bab 5* | *1* | *Done* | *-* |
 | *28-10-2026* | *Hugo Daniel J N* | *Bab 5 untuk C13 - C24* | *3* | *Done* | *-* |
 | *28-10-2026* | *David Christian* | *Bab 6* | *3* | *Done* | *-* |
 | *28-10-2026* | *Markus Christiano Simanjuntak* | *Memasukkan Bab 1, 2, 3, 4, 7, dan membuat form asistensi* | *1* | *Done* | *-* |
-
-
-### Milestone 8
-**Periode:** [21-10-2026] - [28-10-2026]
-
-| Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
-|---|---|---|---|---|---|
-| *27-10-2026* | *Matthew Allen Reynaldo* | *Menyusun daftar kelas bab 5* | *1* | *Done* | *-* |
-
-### Milestone 8
-**Periode:** [21-10-2026] - [28-10-2026]
-
-| Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
-|---|---|---|---|---|---|
-| *27-10-2026* | *Matthew Allen Reynaldo* | *Menyusun daftar kelas bab 5* | *1* | *Done* | *-* |
-
 
 ``Gunakan format penulisan Logbook yang sama untuk setiap Milestone dan pastikan pembuatan Daftar Isi juga sudah sesuai sebelum Logbook dikumpulkan. ``
