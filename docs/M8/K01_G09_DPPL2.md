@@ -1,4 +1,4 @@
-<h1>
+﻿<h1>
 IF2150 REKAYASA PERANGKAT LUNAK
 <br>
 TUGAS 5
@@ -2888,17 +2888,39 @@ Tabel 6.20. Rancangan Antarmuka Keseluruhan
 
 ---
 
-# BAB 7: Matriks Kerunutan
+# BAB 5: Matriks Kerunutan
 
-Petakan kelas perancangan dengan use case yang terkait. Gunakan **BAB 6 Traceability pada dokumen SKPL** sebagai acuan keterkaitan kelas analisis dan use case, lalu sesuaikan dengan realisasi use case dan kelas perancangan pada BAB 3–BAB 5 DPPL.
+Matriks kerunutan berikut memetakan keterkaitan antara setiap kelas perancangan dengan *use case* yang diimplementasikannya pada perangkat lunak **PeerUP**.
 
-Tabel 7.1. Matriks Kerunutan Kelas terhadap Use Case
+Tabel 5.1. Matriks Kerunutan Kelas terhadap Use Case
 
 | Kelas | Use Case Terkait |
 | :--- | :--- |
-| *[ID kelas - Nama kelas]* | *[ID UC - Nama use case; tuliskan seluruh use case terkait]* |
-| *[ID kelas - Nama kelas]* | *[ID UC - Nama use case]* |
-| *...* | *...* |
+| *C01 - User* | *UC01, UC02, UC05, UC06, UC07, UC08, UC09, UC14, UC15* |
+| *C02 - Mentor* | *UC01, UC02, UC03, UC05, UC06, UC07, UC08, UC09, UC11, UC12, UC13, UC14, UC15* |
+| *C03 - Mentee* | *UC01, UC02, UC04, UC05, UC06, UC07, UC08, UC09, UC10, UC14, UC15* |
+| *C04 - Session* | *UC03, UC04, UC05, UC06, UC07, UC08, UC09, UC10, UC11, UC12, UC13, UC14* |
+| *C05 - GroupChat* | *UC08* |
+| *C06 - Feedback* | *UC07, UC13* |
+| *C07 - SessionHistory* | *UC05, UC06, UC10, UC11, UC12, UC13* |
+| *C08 - ChatMessage* | *UC08* |
+| *C09 - Preference* | *UC02, UC04, UC14, UC15* |
+| *C10 - Profile* | *UC01, UC02, UC15* |
+| *C11 - Dashboard* | *UC01, UC04, UC06, UC09, UC14* |
+| *C12 - UserControl* | *UC01, UC02, UC15* |
+| *C13 - SessionControl* | *UC03, UC04, UC05, UC06, UC10, UC11, UC12, UC14* |
+| *C14 - FeedbackControl* | *UC07, UC13* |
+| *C15 - LoginPage* | *UC01* |
+| *C16 - ProfilePage* | *UC02, UC15* |
+| *C17 - SessionPage* | *UC03, UC04, UC05, UC10, UC11, UC12* |
+| *C18 - HostSessionPage* | *UC03, UC05, UC11, UC12, UC13* |
+| *C19 - ParticipantSessionPage* | *UC04, UC05, UC10* |
+| *C20 - FeedbackForm* | *UC07, UC13* |
+| *C21 - GroupChatPage* | *UC08* |
+| *C22 - Notification* | *UC09* |
+| *C23 - PopUpNotification* | *UC09* |
+| *C24 - HistoryPage* | *UC06* |
+
 
 
 # Lampiran
