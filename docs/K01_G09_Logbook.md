@@ -113,15 +113,20 @@
 
 | Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
 |---|---|---|---|---|---|
+| *19-10-2026* | *Hugo Daniel J N* | *Menyusun Bab 3* | *1* | *Done* | *-* |
 | *21-10-2026* | *Hugo Daniel J N* | *Membuat Logo* | *1* | *Done* | *-* |
 | *21-10-2026* | *Hugo Daniel J N* | *Menyusun Bab 5* | *1* | *Done* | *-* |
+| *21-10-2026* | *Davud Christian* | *Menyusun Bab 3* | *3* | *Done* | *-* |
 
 ### Milestone 8
 **Periode:** [23-09-2026] - [30-09-2026]
 
 | Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
 |---|---|---|---|---|---|
+| *26-10-2026* | *David Christian* | *Bab 6* | *3* | *Done* | *-* |
+| *27-10-2026* | *David Christian* | *Bab 6* | *3* | *Done* | *-* |
 | *28-10-2026* | *Hugo Daniel J N* | *Bab 5 untuk C13 - C24* | *3* | *Done* | *-* |
+| *28-10-2026* | *David Christian* | *Bab 6* | *3* | *Done* | *-* |
 
 
 
