@@ -70,7 +70,10 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 ### Milestone 6
 | Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |
 | :--- | :--- | :--- | :--- |
-| *-* | *-* | *"-"* | *-* |
+| ChatGPT | Membantu mendiskusikan pemilihan *architectural style/pattern* dan *architectural view* yang sesuai untuk PeerUP berdasarkan materi asistensi dan dokumen proyek. | "Berdasarkan materi Asistensi Akbar M6 serta dokumen SKPL, APL, dan DPPL PeerUP, style/pattern arsitektur apa yang sesuai? Jelaskan pertimbangan penggunaan MVC, Client-Server, dan beberapa architectural view." | AI digunakan untuk memperoleh pertimbangan dan alternatif, bukan menentukan arsitektur secara langsung. Kelompok membandingkan saran dengan kebutuhan PeerUP, arahan asistensi, dan rancangan implementasi sebelum menentukan pendekatan yang digunakan. |
+| ChatGPT | Membantu meninjau konsistensi dan menemukan potensi kesalahan pada Bab 1–2 DPPL, terutama pemetaan komponen, kebutuhan, serta kesesuaian antarbagian dokumen. | "Tinjau Bab 1–2 DPPL kami berdasarkan SKPL, APL, dan arahan asistensi. Tunjukkan inkonsistensi yang perlu diperiksa tanpa menilai Bab 3 ke atas yang belum dikerjakan." | Hasil AI dipakai sebagai daftar temuan awal. Kelompok memeriksa kembali saran yang relevan terhadap dokumen acuan dan menentukan sendiri koreksi yang diperlukan; saran yang tidak sesuai dengan rancangan kelompok tidak diterapkan begitu saja. |
+| ChatGPT | Membantu menyusun draf awal *Development View* berupa *package diagram* dan *Physical View* berupa *deployment diagram* menggunakan PlantUML. | "Bantu susun dan periksa draf package diagram serta deployment diagram PeerUP dalam PlantUML berdasarkan komponen, arsitektur, dan teknologi yang telah kami tentukan." | AI membantu menyusun bentuk awal diagram, tetapi hasilnya tidak langsung dianggap final. Kelompok meninjau pengelompokan komponen, relasi dependensi, node deployment, dan jalur komunikasi, kemudian menyesuaikannya dengan rancangan serta keputusan implementasi PeerUP. |
+
 
 ### Milestone 7
 | Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |
