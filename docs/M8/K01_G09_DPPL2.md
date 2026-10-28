@@ -1,4 +1,4 @@
-﻿<h1>
+<h1>
 IF2150 REKAYASA PERANGKAT LUNAK
 <br>
 TUGAS 5
@@ -43,23 +43,13 @@ Dipersiapkan oleh:
 
 ---
 
-<br>
-
-> **Petunjuk pengerjaan:** *[Silahkan hapus bagian ini setelah selesai mengerjakan]*
->
-> Dokumen ini melanjutkan **Deskripsi Perancangan Perangkat Lunak**. Gunakan nama, ID, kebutuhan, dan use case yang konsisten dengan kedua dokumen tersebut. Contoh pola ID baru di bawah dapat disesuaikan dengan kesepakatan kelompok, ID yang sudah ada tetap dipertahankan.
-
-<br>
-
----
-
 
 # BAB 1: Pendahuluan
 
 ## 1.1 Tujuan Penulisan Dokumen
-Dokumen Spesifikasi Kebutuhan Perangkat Lunak (SKPL) ini ditulis untuk mendefinisikan secara lengkap, rinci, dan terstruktur seluruh kebutuhan fungsional, kebutuhan non-fungsional, batasan sistem, pemodelan *use case*, serta pemodelan kelas dari perangkat lunak **PeerUP**. Dokumen ini ditujukan bagi:
+Dokumen Deskripsi Perancangan Perangkat Lunak (DPPL) ini ditulis untuk mendefinisikan secara lengkap, rinci, dan terstruktur perancangan arsitektur, realisasi *use case*, perancangan kelas, perancangan rinci kelas (operasi, atribut, algoritma, dan *query*), perancangan antarmuka, serta matriks kerunutan dari perangkat lunak **PeerUP**. Dokumen ini ditujukan bagi:
 1. **Tim Pengembang (Developer):** Sebagai acuan teknis utama dalam mengimplementasikan kode program, merancang basis data, dan mengintegrasikan antarmuka perangkat lunak.
-2. **Penguji Perangkat Lunak (Tester / QA):** Sebagai dasar pengujian untuk memvalidasi apakah seluruh fitur dan skenario telah berjalan sesuai spesifikasi.
+2. **Penguji Perangkat Lunak (Tester / QA):** Sebagai dasar pengujian untuk memvalidasi apakah seluruh fitur dan skenario telah berjalan sesuai spesifikasi perancangan.
 3. **Dosen dan/atau Asisten Pengampu IF2150:** Sebagai dokumen evaluasi akademik terhadap perancangan rekayasa perangkat lunak yang dilakukan oleh Kelompok ini.
 
 ## 1.2 Lingkup Masalah
@@ -74,6 +64,7 @@ Tabel 1.3. Definisi Istilah dan Singkatan
 | :--- | :--- |
 | *P/L* | *Singkatan dari Perangkat Lunak, yaitu aplikasi yang memberikan perintah kepada komputer untuk menjalankan tugas tertentu.* |
 | *SKPL* | *Singkatan dari Spesifikasi Kebutuhan Perangkat Lunak, yaitu dokumen yang merangkum kriteria-kriteria yang diperlukan untuk membangun aplikasi menjalankan tugasnya.* |
+| *DPPL* | *Singkatan dari Deskripsi Perancangan Perangkat Lunak, yaitu dokumen yang merinci arsitektur, realisasi use case, spesifikasi rinci kelas, serta perancangan antarmuka perangkat lunak.* |
 | *KF* | *Singkatan dari Kebutuhan Fungsional.* |
 | *KNF* | *Singkatan dari Kebutuhan Non-Fungsional.* |
 | *UC* | *Singkatan dari Use Case.* |
@@ -96,29 +87,31 @@ Tabel 1.4. Aturan Penomoran
 | *Aktor* | *AXX* | *XX menyatakan dua digit nomor urut aktor pada pemodelan use case (contoh: A01).* |
 | *Use Case* | *UCXX* | *XX menyatakan dua digit nomor urut use case (contoh: UC01).* |
 | *Kelas* | *CXX* | *XX menyatakan dua digit nomor urut kelas pada diagram kelas (contoh: C01).* |
+| *Algoritma* | *Algo-CXX-YY* | *CXX menyatakan ID kelas dan YY menyatakan nomor urut algoritma pada kelas tersebut (contoh: Algo-C01-01).* |
+| *Query* | *Q-CXX-YY* | *CXX menyatakan ID kelas dan YY menyatakan nomor urut query pada kelas tersebut (contoh: Q-C01-01).* |
+| *Antarmuka* | *I-XX* | *XX menyatakan dua digit nomor urut rancangan layar antarmuka (contoh: I-01).* |
 
 ## 1.5 Referensi
-1. Dokumentasi Perangkat Lunak *Topic Brainstorming* (Tugas 1), *Requirement Gathering* (Tugas 2), *Use Case & Scenario Use Case* (Tugas 3), dan *Class Diagram* (Tugas 4) Kelompok G09 IF2150 Rekayasa Perangkat Lunak.
+1. Dokumentasi Perangkat Lunak *Topic Brainstorming* (Tugas 1), *Requirement Gathering* (Tugas 2), *Use Case & Scenario Use Case* (Tugas 3), *Class Diagram* (Tugas 4), serta *Spesifikasi Kebutuhan Perangkat Lunak (SKPL)* Kelompok G09 IF2150 Rekayasa Perangkat Lunak.
 2. Mavin, A., Wilkinson, P., Harwood, A., & Novak, M. (2009). *Easy Approach to Requirements Syntax (EARS)*. 17th IEEE International Requirements Engineering Conference.
 3. Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP).
 4. Undang-Undang Republik Indonesia Nomor 1 Tahun 2024 tentang Perubahan Kedua atas UU ITE.
 
 ## 1.6 Deskripsi Umum Dokumen (Ikhtisar)
-Dokumen SKPL ini dibagi menjadi enam bab utama:
+Dokumen DPPL ini dibagi menjadi tujuh bab utama:
 - **BAB 1: Pendahuluan**, menjelaskan tujuan penulisan dokumen, lingkup masalah, definisi dan singkatan, aturan penomoran, referensi, serta ikhtisar dokumen.
-- **BAB 2: Deskripsi Perangkat Lunak**, menguraikan deskripsi umum sistem beserta *Activity Diagram* proses bisnis, deskripsi umum perangkat lunak dan komponen eksternal, karakteristik pengguna, batasan perangkat lunak, serta lingkungan operasi perangkat lunak.
-- **BAB 3: Deskripsi Kebutuhan Perangkat Lunak**, merinci seluruh Kebutuhan Fungsional (KF) dan Kebutuhan Non-Fungsional (KNF).
-- **BAB 4: Pemodelan Use Case**, memuat identifikasi aktor, identifikasi *use case*, *Use Case Diagram*, serta skenario normal dan alternatif untuk masing-masing *use case*.
-- **BAB 5: Pemodelan Kelas**, menyajikan identifikasi kelas (arsitektur *Boundary, Controller, Entity*), diagram kelas per *use case*, serta diagram kelas keseluruhan beserta atribut dan operasinya.
-- **BAB 6: Traceability**, memetakan keterlacakan antara ID Kelas, ID Use Case, dan ID Kebutuhan Fungsional.
+- **BAB 2: Perancangan Arsitektur**, menguraikan rancangan lingkungan implementasi, *style/pattern* arsitektur acuan (MVC & *Client-Server*), identifikasi komponen/modul/subsistem, serta model arsitektur (*Development View* dan *Physical View*).
+- **BAB 3: Realisasi Use Case**, menyajikan identifikasi kelas perancangan, *Sequence Diagram* (skenario normal dan alternatif), serta diagram kelas untuk setiap *use case* (`UC01`–`UC15`).
+- **BAB 4: Diagram Kelas Keseluruhan**, memuat diagram kelas perancangan keseluruhan beserta tabel daftar kelas, atribut, dan operasinya.
+- **BAB 5: Perancangan Rinci Kelas**, merinci spesifikasi operasi, atribut, algoritma (*pseudocode*), serta *query* basis data untuk seluruh kelas (`C01`–`C24`).
+- **BAB 6: Perancangan Antarmuka**, menyajikan rancangan layar antarmuka (`I-01`–`I-16`) beserta spesifikasi objek antarmukanya.
+- **BAB 7: Matriks Kerunutan**, memetakan keterlacakan antara setiap kelas perancangan (`C01`–`C24`) dengan *use case* yang diimplementasikannya.
 
 ---
 
 # BAB 2: Perancangan Arsitektur
 
 ## 2.1 Rancangan Lingkungan Implementasi
-
-Sebutkan *operating system*, DBMS, *development tools*, *filing system*, dan bahasa pemrograman yang digunakan.
 
 | Komponen | Spesifikasi |
 | :--- | :--- |
@@ -223,7 +216,7 @@ Untuk menggambarkan arsitektur perangkat lunak PeerUP dari sudut pandang yang be
 
 ### 2.4.1 Development View (Package Diagram)
 
-Development View dipilih untuk memperlihatkan bagaimana 26 komponen arsitektur pada Tabel 2.1 dikelompokkan ke dalam paket-paket fungsional dari sudut pandang pengembangan perangkat lunak. Package Diagram digunakan untuk menggambarkan pengelompokan komponen menjadi paket Presentation / View, Application / Controller, Domain / Model, Shared Support, External Integration / Adapters, dan Persistence.
+Development View dipilih untuk memperlihatkan bagaimana 26 komponen arsitektur pada Tabel 2.3 dikelompokkan ke dalam paket-paket fungsional dari sudut pandang pengembangan perangkat lunak. Package Diagram digunakan untuk menggambarkan pengelompokan komponen menjadi paket Presentation / View, Application / Controller, Domain / Model, Shared Support, External Integration / Adapters, dan Persistence.
 
 
 <p align="center">
@@ -235,7 +228,7 @@ Development View dipilih untuk memperlihatkan bagaimana 26 komponen arsitektur p
 
 Gambar 2 memperlihatkan pengorganisasian modul dan ketergantungan antarpaket. Garis putus-putus menunjukkan dependency, yaitu ketergantungan suatu paket terhadap layanan atau elemen yang disediakan paket lain. Paket Presentation / View bergantung pada Application / Controller untuk memproses aksi pengguna. Paket Application / Controller menggunakan Domain / Model untuk operasi domain serta Shared Support untuk validasi yang digunakan bersama. Application / Controller juga bergantung pada modul External Integration / Adapters dan Persistence sesuai kebutuhan layanan eksternal dan penyimpanan data.
 
-Layanan Supabase ditampilkan sebagai sistem eksternal untuk memperjelas batas antara modul kode PeerUP dan layanan yang digunakannya. Nama komponen pada diagram diselaraskan dengan Tabel 2.1, sedangkan nama kelas dicantumkan sebagai pemetaan komponen.
+Layanan Supabase ditampilkan sebagai sistem eksternal untuk memperjelas batas antara modul kode PeerUP dan layanan yang digunakannya. Nama komponen pada diagram diselaraskan dengan Tabel 2.3, sedangkan nama kelas dicantumkan sebagai pemetaan komponen.
 
 ## 2.4.2 Physical View (Deployment Diagram)
 
@@ -246,6 +239,7 @@ Physical View dipilih untuk menggambarkan penempatan perangkat lunak PeerUP pada
 </p>
 <p align="center">
 <i>Gambar 3. Physical View (Deployment Diagram) pada Perangkat Lunak PeerUP</i>
+</p>
 
 Gambar 3 menggambarkan tiga kelompok lingkungan operasi utama:
 
@@ -268,7 +262,7 @@ Dengan demikian, Development View menjelaskan organisasi dan dependensi modul, s
 
 ### 3.1.1 Identifikasi Kelas
 
-Kelas *LoginPage* pada SKPL direalisasikan sebagai komponen *LoginView* sesuai Tabel 2.3. Pengelolaan kredensial yang pada SKPL berada pada atribut `passwordHash` serta operasi `register()` dan `login()` di kelas *User* dipindahkan ke Supabase Auth melalui *AuthAdapter*, sehingga kata sandi tidak disimpan pada basis data aplikasi. Validasi domain email universitas yang pada SKPL berada di `UserControl.validateEmail()` dipindahkan ke kelas pendukung *Validator*. Data identitas yang diisi pada formulir registrasi (dibungkus sebagai `ProfileData`) disimpan sebagai *Profile*, sedangkan peran yang dipilih pengguna menentukan spesialisasi *Mentor* atau *Mentee*. Setelah autentikasi berhasil, pengguna diarahkan ke *DashboardView* yang pemuatan isinya dijelaskan pada UC14.
+Kelas *LoginPage* pada SKPL direalisasikan sebagai komponen *LoginView* sesuai Tabel 2.3. Pengelolaan kredensial yang pada SKPL berada pada atribut `passwordHash` serta operasi `register()` dan `login()` di kelas *User* dipindahkan ke Supabase Auth melalui *AuthAdapter*, sehingga kata sandi tidak disimpan pada basis data aplikasi. Validasi domain email universitas yang pada SKPL berada di `UserControl.validateEmail()` dipindahkan ke kelas pendukung *Validator*. Data identitas yang diisi pada formulir registrasi (dibungkus sebagai `ProfileData`) disimpan sebagai *Profile*, dan setiap *User* yang terdaftar dapat berperan sebagai *Mentor* (saat membuka sesi belajar) maupun *Mentee* (saat bergabung ke dalam sesi belajar). Setelah autentikasi berhasil, pengguna diarahkan ke *DashboardView* yang pemuatan isinya dijelaskan pada UC14.
 
 Tabel 3.1. Identifikasi Kelas Use Case UC01
 
@@ -455,7 +449,7 @@ Kapasitas lolos validasi, tetapi `hasScheduleConflict()` pada *Validator* bernil
 
 ### 3.4.1 Identifikasi Kelas
 
-Halaman "Cari Sesi" merupakan bagian dari *DashboardView* (realisasi *Dashboard* pada SKPL) yang menampilkan rekomendasi hasil *matchmaking*, sedangkan *ParticipantSessionPage* direalisasikan sebagai bagian dari *SessionView* sesuai Tabel 2.3. Algoritma *matchmaking* tetap berada di *SessionController* dan memakai *Preference* Mentee, sama dengan UC14. Pemeriksaan slot yang pada SKPL berada di `SessionControl.validateCapacity()` dan `Session.checkCapacity()` direalisasikan sebagai `hasAvailableSlot()` pada *Session*. *SessionHistory* tidak diperbarui secara eksplisit karena daftar sesi mendatang diturunkan langsung dari data peserta *Session*.
+Halaman "Cari Sesi" merupakan bagian dari *DashboardView* (realisasi *Dashboard* pada SKPL) yang menampilkan rekomendasi hasil *matchmaking*, sedangkan *ParticipantSessionPage* direalisasikan sebagai bagian dari *SessionView* sesuai Tabel 2.3. Algoritma *matchmaking* tetap berada di *SessionController* dan memakai *Preference* Mentee, sama dengan UC14. Pemeriksaan slot yang pada SKPL berada di `SessionControl.validateCapacity()` dan `Session.checkCapacity()` direalisasikan melalui `checkCapacity()` pada *Session*. *SessionHistory* tidak diperbarui secara eksplisit karena daftar sesi mendatang diturunkan langsung dari data peserta *Session*.
 
 Tabel 3.4. Identifikasi Kelas Use Case UC04
 
@@ -480,7 +474,7 @@ Tabel 3.4. Identifikasi Kelas Use Case UC04
 <i>Gambar 3.4.1. Sequence Diagram UC04 - Skenario Normal</i>
 </p>
 
-Mentee membuka halaman "Cari Sesi", lalu *DashboardView* meminta rekomendasi ke *SessionController*. *SessionController* mengambil *Preference* Mentee, memastikan preferensinya lengkap, mengambil sesi terbuka yang belum dimulai, lalu mencocokkan irisan tag materi, jadwal kosong, dan format belajar melalui `matchSession()`. *DashboardView* menampilkan daftar rekomendasi. Setelah Mentee memilih sebuah sesi, *SessionView* menampilkan detailnya. Saat Mentee menekan "Gabung Sesi", *SessionController* memvalidasi ketersediaan slot melalui `hasAvailableSlot()`, lalu menambahkan Mentee ke daftar partisipan sesi dan *SessionView* menampilkan notifikasi "Berhasil bergabung".
+Mentee membuka halaman "Cari Sesi", lalu *DashboardView* meminta rekomendasi ke *SessionController*. *SessionController* mengambil *Preference* Mentee, memastikan preferensinya lengkap, mengambil sesi terbuka yang belum dimulai, lalu mencocokkan irisan tag materi, jadwal kosong, dan format belajar melalui `matchSession()`. *DashboardView* menampilkan daftar rekomendasi. Setelah Mentee memilih sebuah sesi, *SessionView* menampilkan detailnya. Saat Mentee menekan "Gabung Sesi", *SessionController* memvalidasi ketersediaan slot melalui `checkCapacity()`, lalu menambahkan Mentee ke daftar partisipan sesi dan *SessionView* menampilkan notifikasi "Berhasil bergabung".
 
 - **Skenario Alternatif 1: Tidak Ada Rekomendasi Sesi yang Cocok**
 
@@ -1109,30 +1103,30 @@ Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 
 | ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
 | :--- | :--- | :--- | :--- |
-| *C01* | *User* | *idUser, username, email, passwordHash* | *register(), login(), logout(), saveAccount(), getProfile(), openDashboard(), openSessionDashboard(), checkSchedule(), getUserID(), isActive(), createMessage(), sendMessage()* |
-| *C02* | *Mentor* | *listSessionsMade, feedbackList* | *receiveFeedback(), viewFeedback()* |
-| *C03* | *Mentee* | *attendedSessions, listSessionsJoined* | *giveFeedback(), checkCompletedSession()* |
-| *C04* | *Session* | *idSession, topic, schedule, scheduledTime, format, capacity, userList, status, reasonNotConducted, groupChat* | *saveSession(), addParticipant(), checkCapacity(), getSessionDetails(), getSessionStatus(), setStatus(), getStatus(), isCompleted(), openGroupChat(), pushNotification(), getSessionID(), editTitle(), editDescription(), editPreference(), editSchedule()* |
-| *C05* | *GroupChat* | *listChatMessage, listMentee, mentor* | *searchMessage(), displayMessage(), editMessage(), deleteMessage()* |
-| *C06* | *Feedback* | *idFeedback, rating, comment, date* | *setRating(), setComment(), getRating(), getComment(), getDate()* |
-| *C07* | *SessionHistory* | *historyList, completedSessions, cancelledSessions, oncomingSession* | *getArchivedSessions(), getCompletedSessions(), addSessionToHistory(), updateOncomingSession()* |
-| *C08* | *ChatMessage* | *sender, timeStamp, text* | *getSender(), getTime(), getText()* |
-| *C09* | *Preference* | *materialTag, availability, sessionFormatPreference* | *getPreference(), getPreferenceDetails(), updatePreference()* |
-| *C10* | *Profile* | *name, university, studyProgram, bio* | *getProfileData(), updateProfile()* |
-| *C11* | *Dashboard* | *upcomingSessions, sessionRecommendation, listSessions* | *showSession(), matchMakeSession(), searchSession(), showRecommendation(), checkSchedule()* |
-| *C12* | *UserControl* | *-* | *authLogin(), validateEmail(), processRegistration(), saveProfile(), savePreference(), fetchUserProfile()* |
-| *C13* | *SessionControl* | *sessionList, sessionHistory, session* | *processSessionCreation(), validateScheduleConflict(), validateCapacity(), processRegistration(), processSessionConfirmation(), updateSessionStatus(), fetchUserHistory(), getUpcomingSessions(), findRecommendation(), matchSession(), editSession(), cancelSession(), deleteSession()* |
-| *C14* | *FeedbackControl* | *feedbackList* | *validateFeedback(), submitFeedback(), saveFeedback(), retrieveFeedbackBySession()* |
-| *C15* | *LoginPage* | *-* | *showForm(), submitForm()* |
-| *C16* | *ProfilePage* | *-* | *displayProfileData(), displayPreferenceData(), submitUpdate()* |
-| *C17* | *SessionPage* | *confirmationPrompt* | *showSessionDetails(), showConfirmationPrompt(), submitConfirmation()* |
-| *C18* | *HostSessionPage* | *-* | *showCreateForm(), submitSessionData(), showFeedbackList()* |
-| *C19* | *ParticipantSessionPage* | *-* | *showSessionDetails(), submitJoinRequest()* |
-| *C20* | *FeedbackForm* | *rating, comment* | *showForm(), submitFeedback()* |
-| *C21* | *GroupChatPage* | *-* | *displayMessage()* |
-| *C22* | *Notification* | *notificationId, title, content, timestamp, isRead* | *markAsRead(), showContent(), getTime(), openApp()* |
-| *C23* | *PopUpNotification* | *-* | *markAsRead(), showContent(), getTime(), openApp()* |
-| *C24* | *HistoryPage* | *historyList* | *displayHistoryList(), showEmptyState()* |
+| *C01* | *User* | *idUser, username, email, activeSession* | *create(), findById(), register(), login(), logout(), saveAccount(), getProfile(), openDashboard(), openSessionDashboard(), checkSchedule(), getUserID(), getUsername(), getEmail(), isActive(), createMessage(), sendMessage()* |
+| *C02* | *Mentor* | *listSessionsMade, feedbackList* | *createFrom(), getById(), getSessionsMade(), receiveFeedback(), viewFeedback()* |
+| *C03* | *Mentee* | *attendedSessions, listSessionsJoined* | *createFrom(), getById(), getSessionsJoined(), giveFeedback(), checkCompletedSession()* |
+| *C04* | *Session* | *idSession, idMentor, topic, description, schedule, scheduledTime, format, capacity, userList, status, reasonNotConducted, reminderSent, groupChat* | *saveSession(), getSessionById(), getSessionsByMentorInRange(), getAvailableSessions(), getUpcomingByUser(), getArchivedByUser(), findStartingBetween(), addParticipant(), removeParticipant(), checkCapacity(), isParticipant(), isOwnedBy(), involves(), hasStarted(), needsConfirmation(), getSessionDetails(), getSessionStatus(), setStatus(), getStatus(), isCompleted(), markAsDeleted(), markReminderSent(), openGroupChat(), pushNotification(), getSessionID(), getTopic(), getFormat(), getScheduledTime(), editTitle(), editDescription(), editPreference(), editSchedule()* |
+| *C05* | *GroupChat* | *idGroupChat, idSession, listChatMessage, listMentee, mentor, active, expiresAt* | *findBySession(), findById(), getId(), isActive(), isMember(), getMessages(), searchMessage(), displayMessage(), editMessage(), deleteMessage()* |
+| *C06* | *Feedback* | *idFeedback, idSession, idMentee, rating, comment, date* | *save(), getFeedbackBySession(), existsBySessionAndAuthor(), setRating(), setComment(), getRating(), getComment(), getDate()* |
+| *C07* | *SessionHistory* | *idUser, historyList, completedSessions, cancelledSessions, oncomingSession* | *getArchivedSessions(), getCompletedSessions(), getGroupedByStatus(), isEmpty(), addSessionToHistory(), updateOncomingSession()* |
+| *C08* | *ChatMessage* | *idMessage, idGroupChat, sender, timeStamp, text* | *create(), findByGroupChat(), getSender(), getTime(), getText()* |
+| *C09* | *Preference* | *idUser, materialTag, availability, sessionFormatPreference* | *getPreferenceByUser(), getPreference(), getPreferenceDetails(), updatePreference(), isComplete(), getMaterialTag(), getAvailability(), getSessionFormatPreference(), getUserId()* |
+| *C10* | *Profile* | *idUser, name, university, studyProgram, bio* | *create(), findByUser(), getProfileData(), updateProfile(), getName(), getUniversity(), getStudyProgram(), getBio()* |
+| *C11* | *Dashboard* | *upcomingSessions, sessionRecommendation, listSessions, userControl, sessionControl* | *loadDashboard(), showGreeting(), showSession(), openSearchSession(), matchMakeSession(), searchSession(), showRecommendation(), showPreferenceWarning(), showEmptyState(), selectSession(), navigateToProfile(), checkSchedule()* |
+| *C12* | *UserControl* | *authAdapter, validator* | *authLogin(), getCurrentUser(), validateEmail(), processRegistration(), saveProfile(), savePreference(), fetchUserProfile(), fetchUserPreference()* |
+| *C13* | *SessionControl* | *sessionList, sessionHistory, session* | *processSessionCreation(), validateScheduleConflict(), validateCapacity(), processRegistration(), processSessionConfirmation(), updateSessionStatus(), fetchUserHistory(), getUpcomingSessions(), findRecommendation(), matchSession(), getSessionDetail(), editSession(), cancelSession(), deleteSession()* |
+| *C14* | *FeedbackControl* | *feedbackList* | *checkFeedbackEligibility(), validateFeedback(), submitFeedback(), saveFeedback(), retrieveFeedbackBySession()* |
+| *C15* | *LoginPage* | *formMode, emailInput, passwordInput, profileInput, warningMessage, userControl* | *showForm(), clickRegister(), submitForm(), showWarning(), redirectToLogin(), loadDashboard()* |
+| *C16* | *ProfilePage* | *targetUserId, currentProfile, currentPreference, isEditingPreference, feedbackBanner, userControl* | *openProfile(), displayProfileData(), displayPreferenceData(), clickEditPreference(), showPreferenceForm(), submitUpdate(), showWarning(), showSuccessMessage(), showNotFound()* |
+| *C17* | *SessionPage* | *confirmationPrompt, currentSession, reasonInput, isReasonFieldVisible, sessionControl* | *openSessionDetail(), showSessionDetails(), showConfirmationPrompt(), closeConfirmationPrompt(), clickConducted(), clickNotConducted(), showReasonField(), submitConfirmation(), showSuccessMessage(), showWarning()* |
+| *C18* | *HostSessionPage* | *sessionFormData, sessionFeedbackList, isEditMode, feedbackControl* | *clickCreateSession(), showCreateForm(), submitSessionData(), clickEditSession(), showEditForm(), submitSessionUpdate(), clickDeleteSession(), confirmDelete(), cancelDelete(), clickViewFeedback(), showFeedbackList(), showEmptyFeedback()* |
+| *C19* | *ParticipantSessionPage* | *isRegisteredParticipant, idMentee* | *showSessionDetails(), submitJoinRequest(), clickCancelParticipation(), confirmCancelParticipation(), clickBack()* |
+| *C20* | *FeedbackForm* | *idSession, idMentee, rating, comment, isOpen, feedbackControl* | *showForm(), submitFeedback(), clickSkip(), closeForm(), showThankYou()* |
+| *C21* | *GroupChatPage* | *idGroupChat, messageList, messageInput, isInputDisabled* | *openGroupChat(), displayMessages(), displayMessage(), sendMessage(), onMessageReceived(), showChatExpired(), disableMessageInput()* |
+| *C22* | *Notification* | *notificationId, idUser, idSession, title, content, timestamp, isRead* | *create(), findById(), getNotificationsByUser(), markAsRead(), showContent(), getTime(), getNotificationId(), getSessionId(), getIsRead(), openApp()* |
+| *C23* | *PopUpNotification* | *activeNotification, isVisible* | *onNotificationReceived(), showPopUp(), showContent(), getTime(), clickNotification(), markAsRead(), openApp()* |
+| *C24* | *HistoryPage* | *historyList, selectedStatusFilter, sessionControl, sessionPage* | *openHistory(), displayHistoryList(), showEmptyState(), selectSession()* |
 
 <br>
 
@@ -1140,101 +1134,126 @@ Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 
 # BAB 5: Perancangan Rinci Kelas
 
-Bagian ini diisi dengan daftar seluruh kelas dalam tabel berikut:
-
 Tabel 5.1. Daftar Kelas Perancangan dan Kelas Analisis Terkait
 
 | No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
 | :--- | :--- | :--- |
-| 1 | *User* | *User* |
-| 2 | *Mentor* | *Mentor* |
-| 3 | *Mentee* | *Mentee* |
-| 4 | *Session* | *Session* |
-| 5 | *GroupChat* | *GroupChat* |
-| 6 | *Feedback* | *Feedback* |
-| 7 | *SessionHistory* | *SessionHistory* |
-| 8 | *ChatMessage* | *ChatMessage* |
-| 9 | *Preference* | *Preference* |
-| 10 | *Profile* | *Profile* |
-| 11 | *Dashboard* | *Dashboard* |
-| 12 | *UserControl* | *UserControl* |
-| 13 | *SessionControl* | *SessionControl* |
-| 14 | *FeedbackControl* | *FeedbackControl* |
-| 15 | *LoginPage* | *LoginPage* |
-| 16 | *ProfilePage* | *ProfilePage* |
-| 17 | *SessionPage* | *SessionPage* |
-| 18 | *HostSessionPage* | *HostSessionPage* |
-| 19 | *ParticipantSessionPage* | *ParticipantSessionPage* |
-| 20 | *FeedbackForm* | *FeedbackForm* |
-| 21 | *GroupChatPage* | *GroupChatPage* |
-| 22 | *Notification* | *Notification* |
-| 23 | *PopUpNotification* | *PopUpNotification* |
-| 24 | *HistoryPage* | *HistoryPage* |
-
-Untuk **setiap kelas**, identifikasi operasi berdasarkan tanggung jawab kelas beserta *visibility*-nya, serta atribut beserta *visibility* dan tipenya. Buat subbab tersendiri untuk setiap kelas.
+| 1 | *User* | *C01 (User)* |
+| 2 | *Mentor* | *C02 (Mentor)* |
+| 3 | *Mentee* | *C03 (Mentee)* |
+| 4 | *Session* | *C04 (Session)* |
+| 5 | *GroupChat* | *C05 (GroupChat)* |
+| 6 | *Feedback* | *C06 (Feedback)* |
+| 7 | *SessionHistory* | *C07 (SessionHistory)* |
+| 8 | *ChatMessage* | *C08 (ChatMessage)* |
+| 9 | *Preference* | *C09 (Preference)* |
+| 10 | *Profile* | *C10 (Profile)* |
+| 11 | *Dashboard (DashboardView)* | *C11 (Dashboard)* |
+| 12 | *UserControl (UserController)* | *C12 (UserControl)* |
+| 13 | *SessionControl (SessionController)* | *C13 (SessionControl)* |
+| 14 | *FeedbackControl (FeedbackController)* | *C14 (FeedbackControl)* |
+| 15 | *LoginPage (LoginView)* | *C15 (LoginPage)* |
+| 16 | *ProfilePage (ProfileView)* | *C16 (ProfilePage)* |
+| 17 | *SessionPage (SessionView)* | *C17 (SessionPage)* |
+| 18 | *HostSessionPage (SessionView)* | *C18 (HostSessionPage)* |
+| 19 | *ParticipantSessionPage (SessionView)* | *C19 (ParticipantSessionPage)* |
+| 20 | *FeedbackForm (FeedbackView)* | *C20 (FeedbackForm)* |
+| 21 | *GroupChatPage (GroupChatView)* | *C21 (GroupChatPage)* |
+| 22 | *Notification* | *C22 (Notification)* |
+| 23 | *PopUpNotification (NotificationView)* | *C23 (PopUpNotification)* |
+| 24 | *HistoryPage (HistoryView)* | *C24 (HistoryPage)* |
 
 ## 5.1 Kelas User
 
-**Nama Kelas:** *User*
-
+**Nama Kelas:** *User*  
 **ID Kelas:** *C01*
 
 Tabel 5.1.1. Operasi Kelas User
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| `register(email: string, password: string): Promise<User>` | `public` | Meneruskan registrasi ke `UserControl`; kredensial ditangani oleh Supabase Auth. |
-| `login(email: string, password: string): Promise<User>` | `public` | Meneruskan autentikasi ke `UserControl`/Supabase Auth. |
-| `logout(): Promise<void>` | `public` | Mengakhiri sesi melalui AuthAdapter. |
-| `saveAccount(): Promise<void>` | `public` | Menyimpan data akun non-kredensial ke penyimpanan aplikasi. |
-| `getProfile(): Profile` | `public` | Mengembalikan profil yang terkait dengan akun. |
-| `openDashboard(): void` | `public` | Meminta navigasi ke dashboard setelah autentikasi berhasil. |
-| `openSessionDashboard(): void` | `public` | Membuka tampilan dashboard sesi. |
-| `checkSchedule(session: Session): boolean` | `public` | Memeriksa kesesuaian sesi dengan jadwal pengguna. |
-| `getUserID(): string` | `public` | Mengembalikan ID pengguna. |
-| `isActive(): boolean` | `public` | Memeriksa apakah sesi autentikasi masih aktif. |
-| `createMessage(chat: GroupChat, text: string): ChatMessage` | `public` | Membentuk pesan baru dari pengguna untuk ruang obrolan. |
-| `sendMessage(chat: GroupChat, message: ChatMessage): Promise<void>` | `public` | Meneruskan pesan melalui mekanisme chat yang memeriksa hak akses peserta. |
+| `create(idUser: string, username: string, email: string): Promise<User>` | `public` | Operasi CRUD (Create) pada kelas entitas untuk menyimpan rekaman akun pengguna baru ke dalam tabel `users` beserta persetujuan privasi data. |
+| `findById(idUser: string): Promise<User \| null>` | `public` | Operasi getter statis (Read) untuk mencari dan mengambil objek entitas `User` dari basis data berdasarkan `idUser`. |
+| `register(email: string, password: string): Promise<User>` | `public` | Meneruskan registrasi ke `UserControl`; kredensial ditangani oleh Supabase Auth melalui `AuthAdapter`. |
+| `login(email: string, password: string): Promise<User>` | `public` | Meneruskan autentikasi ke `UserControl` / Supabase Auth. |
+| `logout(): Promise<void>` | `public` | Mengakhiri sesi autentikasi aktif melalui `AuthAdapter`. |
+| `saveAccount(): Promise<void>` | `public` | Operasi setter/persistensi (Update) untuk memperbarui data akun pengguna ke dalam basis data. |
+| `getProfile(): Promise<Profile \| null>` | `public` | Operasi getter untuk mengembalikan objek `Profile` yang terkait dengan akun pengguna (`Profile.findByUser(this.idUser)`). |
+| `openDashboard(): void` | `public` | Meminta navigasi ke beranda utama (`Dashboard`) setelah autentikasi berhasil. |
+| `openSessionDashboard(): void` | `public` | Membuka tampilan beranda sesi pengguna. |
+| `checkSchedule(session: Session): Promise<boolean>` | `public` | Memeriksa apakah jadwal sesi yang dipilih tidak berbenturan dengan jadwal ketersediaan pengguna. |
+| `getUserID(): string` | `public` | Operasi getter untuk mengembalikan identitas unik pengguna (`idUser`). |
+| `getUsername(): string` | `public` | Operasi getter untuk mengembalikan nama pengguna (`username`). |
+| `getEmail(): string` | `public` | Operasi getter untuk mengembalikan alamat email institusi pengguna (`email`). |
+| `isActive(): boolean` | `public` | Memeriksa apakah sesi autentikasi pengguna saat ini masih aktif. |
+| `createMessage(chat: GroupChat, text: string): Promise<ChatMessage>` | `public` | Membentuk dan menyimpan objek `ChatMessage` baru dari pengguna untuk ruang obrolan sesi (`ChatMessage.create()`). |
+| `sendMessage(chat: GroupChat, message: ChatMessage): Promise<void>` | `public` | Menambahkan pesan ke dalam ruang obrolan grup yang aktif dan memverifikasi keanggotaan pengguna. |
 
 Tabel 5.1.2. Atribut Kelas User
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| `idUser` | `private` | `string` |
-| `username` | `private` | `string` |
-| `email` | `private` | `string` |
+| `idUser` | `protected` | `string` |
+| `username` | `protected` | `string` |
+| `email` | `protected` | `string` |
+| `activeSession` | `protected` | `boolean` |
 
 ### 5.1.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
 **Nama Kelas:** *User*  
-**Nama Operasi:** `getUserID(): string`  
+**Nama Operasi:** `create(idUser: string, username: string, email: string): Promise<User>`, `findById(idUser: string): Promise<User | null>`, dan `getUserID(): string`  
 **ID Algoritma:** *Algo-C01-01*
 
-```
+```text
+STATIC FUNCTION create(idUser: string, username: string, email: string): Promise<User>
+    row <- AWAIT Database.executeQuery(Q-C01-01, [idUser, username, email])
+    RETURN NEW User(row.id_user, row.username, row.email, TRUE)
+END FUNCTION
+
+STATIC FUNCTION findById(idUser: string): Promise<User | null>
+    row <- AWAIT Database.executeQuery(Q-C01-02, [idUser])
+    IF row IS NULL THEN
+        RETURN NULL
+    END IF
+    RETURN NEW User(row.id_user, row.username, row.email, TRUE)
+END FUNCTION
+
+FUNCTION saveAccount(): Promise<void>
+    AWAIT Database.executeQuery(Q-C01-03, [THIS.username, THIS.email, THIS.idUser])
+END FUNCTION
+
 FUNCTION getUserID(): string
     RETURN THIS.idUser
 END FUNCTION
 
 FUNCTION isActive(): boolean
-    RETURN THIS.activeSession IS NOT NULL
+    RETURN THIS.activeSession == TRUE
 END FUNCTION
 ```
+
+Tabel 5.1.3. Query Operasi Kelas User
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *Q-C01-01* | `INSERT INTO users (id_user, username, email) VALUES ($1, $2, $3);` | Menyimpan data akun pengguna baru ke dalam tabel `users` (operasi Create pada `create`). |
+| *Q-C01-02* | `SELECT * FROM users WHERE id_user = $1;` | Mengambil data pengguna berdasarkan `id_user` (operasi Read pada `findById`). |
+| *Q-C01-03* | `UPDATE users SET username = $1, email = $2 WHERE id_user = $3;` | Memperbarui data akun pengguna pada tabel `users` (operasi Update pada `saveAccount`). |
 
 
 ## 5.2 Kelas Mentor
 
-**Nama Kelas:** *Mentor*
-
+**Nama Kelas:** *Mentor*  
 **ID Kelas:** *C02*
 
 Tabel 5.2.1. Operasi Kelas Mentor
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| `receiveFeedback(feedback: Feedback): void` | `public` | Menambahkan feedback yang terkait dengan sesi yang dibuat Mentor ke daftar feedback Mentor. Data feedback dibaca melalui `FeedbackControl`, bukan diambil langsung dari basis data oleh entitas. |
-| `viewFeedback(): Feedback[]` | `public` | Mengembalikan daftar feedback yang diterima Mentor. |
+| `createFrom(user: User): Mentor` | `public` | Menginstansiasi objek spesialisasi `Mentor` dari objek induk `User`. |
+| `getById(idMentor: string): Promise<Mentor \| null>` | `public` | Operasi getter statis (Read) untuk mengambil objek `Mentor` beserta daftar sesi yang dibuatnya dari basis data. |
+| `getSessionsMade(): Promise<Session[]>` | `public` | Operasi getter untuk mengambil daftar seluruh sesi belajar yang dibuat oleh Mentor (`Session.getSessionsByMentor(this.idUser)`). |
+| `receiveFeedback(feedback: Feedback): void` | `public` | Menambahkan objek `Feedback` yang terkait dengan sesi milik Mentor ke dalam koleksi `feedbackList`. |
+| `viewFeedback(): Promise<Feedback[]>` | `public` | Operasi getter untuk mengambil dan mengembalikan daftar seluruh `Feedback` dari sesi-sesi yang diampu oleh Mentor. |
 
 Tabel 5.2.2. Atribut Kelas Mentor
 
@@ -1245,44 +1264,53 @@ Tabel 5.2.2. Atribut Kelas Mentor
 
 ### 5.2.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
 **Nama Kelas:** *Mentor*  
-**Nama Operasi:** `receiveFeedback(feedback: Feedback): void`  
+**Nama Operasi:** `receiveFeedback(feedback: Feedback): void` dan `viewFeedback(): Promise<Feedback[]>`  
 **ID Algoritma:** *Algo-C02-01*
 
 ```text
+STATIC FUNCTION getById(idMentor: string): Promise<Mentor | null>
+    row <- AWAIT Database.executeQuery(Q-C02-01, [idMentor])
+    IF row IS NULL THEN
+        RETURN NULL
+    END IF
+    RETURN NEW Mentor(row.id_user, row.username, row.email)
+END FUNCTION
+
 FUNCTION receiveFeedback(feedback: Feedback): void
     IF feedback IS NOT NULL THEN
         APPEND feedback TO THIS.feedbackList
     END IF
 END FUNCTION
 
-FUNCTION viewFeedback(): Feedback[]
+FUNCTION viewFeedback(): Promise<Feedback[]>
+    rows <- AWAIT Database.executeQuery(Q-C02-02, [THIS.idUser])
+    THIS.feedbackList <- MAP rows TO Feedback
     RETURN COPY(THIS.feedbackList)
 END FUNCTION
-``` 
+```
 
-
-Tabel 5.1.1. Query Operasi [Nama Operasi]
+Tabel 5.2.3. Query Operasi Kelas Mentor
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
+| *Q-C02-01* | `SELECT * FROM users WHERE id_user = $1;` | Mengambil data pengguna yang bertindak sebagai Mentor berdasarkan `id_user` (operasi Read pada `getById`). |
+| *Q-C02-02* | `SELECT * FROM feedbacks WHERE id_mentor = $1;` | Mengambil daftar seluruh penilaian (*feedback*) untuk sesi-sesi yang dibuat oleh Mentor (operasi Read pada `viewFeedback`). |
 
 ## 5.3 Kelas Mentee
 
-**Nama Kelas:** *Mentee*
-
+**Nama Kelas:** *Mentee*  
 **ID Kelas:** *C03*
 
 Tabel 5.3.1. Operasi Kelas Mentee
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| `giveFeedback(idSession: string, rating: number, comment?: string): Promise<Feedback>` | `public` | Meneruskan feedback untuk sesi yang telah diikuti ke `FeedbackControl.submitFeedback()`; validasi dan penyimpanan dikoordinasikan oleh controller. |
-| `checkCompletedSession(idSession: string): boolean` | `public` | Memeriksa apakah sesi terdapat dalam daftar sesi yang dihadiri dan berstatus selesai, sebagai prasyarat pemberian feedback. |
+| `createFrom(user: User): Mentee` | `public` | Menginstansiasi objek spesialisasi `Mentee` dari objek induk `User`. |
+| `getById(idMentee: string): Promise<Mentee \| null>` | `public` | Operasi getter statis (Read) untuk mengambil objek `Mentee` berdasarkan ID pengguna dari basis data. |
+| `getSessionsJoined(): Promise<Session[]>` | `public` | Operasi getter untuk mengambil daftar sesi belajar yang diikuti oleh Mentee. |
+| `giveFeedback(idSession: string, rating: number, comment?: string): Promise<Feedback>` | `public` | Memeriksa apakah sesi telah selesai dan dihadiri (`checkCompletedSession()`), lalu meneruskan pengiriman penilaian ke `FeedbackControl.submitFeedback()`. |
+| `checkCompletedSession(idSession: string): Promise<boolean>` | `public` | Memeriksa pada basis data apakah sesi dengan `idSession` terdapat dalam daftar sesi yang diikuti Mentee dan berstatus `SELESAI`. |
 
 Tabel 5.3.2. Atribut Kelas Mentee
 
@@ -1293,67 +1321,90 @@ Tabel 5.3.2. Atribut Kelas Mentee
 
 ### 5.3.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
 **Nama Kelas:** *Mentee*  
-**Nama Operasi:** `giveFeedback(idSession: string, rating: number, comment?: string): Promise<Feedback>`  
+**Nama Operasi:** `getById(idMentee: string): Promise<Mentee | null>`, `giveFeedback(idSession: string, rating: number, comment?: string): Promise<Feedback>`, dan `checkCompletedSession(idSession: string): Promise<boolean>`  
 **ID Algoritma:** *Algo-C03-01*
 
 ```text
+STATIC FUNCTION getById(idMentee: string): Promise<Mentee | null>
+    row <- AWAIT Database.executeQuery(Q-C03-01, [idMentee])
+    IF row IS NULL THEN
+        RETURN NULL
+    END IF
+    RETURN NEW Mentee(row.id_user, row.username, row.email)
+END FUNCTION
+
 FUNCTION giveFeedback(idSession: string, rating: number, comment?: string): Promise<Feedback>
-    IF NOT THIS.checkCompletedSession(idSession) THEN
+    isCompleted <- AWAIT THIS.checkCompletedSession(idSession)
+    IF NOT isCompleted THEN
         THROW Error("SESSION_NOT_COMPLETED_OR_NOT_ATTENDED")
     END IF
     RETURN AWAIT feedbackControl.submitFeedback(idSession, THIS.getUserID(), rating, comment)
 END FUNCTION
 
-FUNCTION checkCompletedSession(idSession: string): boolean
-    RETURN EXISTS session IN THIS.attendedSessions WHERE
-        session.getSessionID() == idSession AND session.getSessionStatus() == SELESAI
+FUNCTION checkCompletedSession(idSession: string): Promise<boolean>
+    row <- AWAIT Database.executeQuery(Q-C03-02, [idSession, THIS.idUser])
+    RETURN row IS NOT NULL
 END FUNCTION
 ```
 
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.1.1. Query Operasi [Nama Operasi]
+Tabel 5.3.3. Query Operasi Kelas Mentee
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
+| *Q-C03-01* | `SELECT * FROM users WHERE id_user = $1;` | Mengambil data pengguna yang bertindak sebagai Mentee berdasarkan `id_user` (operasi Read pada `getById`). |
+| *Q-C03-02* | `SELECT * FROM session_participants WHERE id_session = $1 AND id_mentee = $2;` | Memeriksa apakah Mentee terdaftar sebagai peserta pada sesi tersebut (operasi Read pada `checkCompletedSession`). |
 
 ## 5.4 Kelas Session
 
-**Nama Kelas:** *Session*
-
+**Nama Kelas:** *Session*  
 **ID Kelas:** *C04*
 
 Tabel 5.4.1. Operasi Kelas Session
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| `saveSession(): Promise<Session>` | `public` | Menyimpan sesi baru/perubahan melalui repository entitas. |
-| `addParticipant(idMentee: string): Promise<boolean>` | `public` | Mendaftarkan Mentee jika sesi masih terbuka, belum dimulai, dan kuota tersedia. |
-| `checkCapacity(): boolean` | `public` | Memeriksa bahwa jumlah peserta belum mencapai kapasitas sesi. |
-| `getSessionDetails(): SessionData` | `public` | Mengembalikan detail sesi untuk ditampilkan. |
-| `getSessionStatus(): SessionStatus` | `public` | Mengembalikan status sesi. |
-| `setStatus(status: SessionStatus, reason?: string): Promise<void>` | `public` | Mengubah status akhir sesi dan alasan bila sesi tidak terlaksana. |
-| `getStatus(): SessionStatus` | `public` | Mengembalikan status terkini. |
-| `isCompleted(): boolean` | `public` | Memeriksa apakah sesi berstatus selesai. |
-| `openGroupChat(): GroupChat` | `public` | Mengembalikan ruang obrolan yang terkait dengan sesi. |
-| `pushNotification(): Promise<void>` | `public` | Mendelegasikan pembuatan pengingat sesi kepada mekanisme notifikasi terjadwal. |
-| `getSessionID(): string` | `public` | Mengembalikan ID sesi. |
-| `editTitle(title: string): void` | `public` | Memperbarui topik/judul sesi pada objek. |
-| `editDescription(description: string): void` | `public` | Memperbarui deskripsi sesi pada objek. |
-| `editPreference(preference: Preference): void` | `public` | Memperbarui tag/topik dan format yang ditawarkan sesi. |
-| `editSchedule(schedule: Date, scheduledTime: Date): void` | `public` | Memperbarui jadwal sesi setelah validasi konflik oleh `SessionControl`. |
+| `saveSession(): Promise<Session>` | `public` | Operasi CRUD (Create/Update) untuk menyimpan objek sesi baru atau memperbarui perubahan data sesi ke dalam tabel `sessions`. |
+| `getSessionById(idSession: string): Promise<Session \| null>` | `public` | Operasi getter statis (Read) untuk mengambil satu objek `Session` beserta daftar pesertanya dari basis data berdasarkan `idSession`. |
+| `getSessionsByMentorInRange(idMentor: string, startTime: Date, endTime: Date): Promise<Session[]>` | `public` | Operasi getter statis (Read) untuk mengambil daftar sesi aktif milik seorang Mentor pada rentang waktu tertentu guna pemeriksaan konflik jadwal. |
+| `getAvailableSessions(now: Date): Promise<Session[]>` | `public` | Operasi getter statis (Read) untuk mengambil seluruh kandidat sesi berstatus `TERJADWAL` yang belum dimulai dan masih memiliki slot kuota. |
+| `getUpcomingByUser(idUser: string): Promise<Session[]>` | `public` | Operasi getter statis (Read) untuk mengambil daftar sesi aktif terdekat yang dimiliki (sebagai Mentor) atau diikuti (sebagai Mentee) oleh pengguna. |
+| `getArchivedByUser(idUser: string): Promise<Session[]>` | `public` | Operasi getter statis (Read) untuk mengambil seluruh sesi milik atau yang diikuti pengguna dengan status akhir (`SELESAI`, `TIDAK_TERLAKSANA`, atau `DIBATALKAN`). |
+| `findStartingBetween(startWindow: Date, endWindow: Date): Promise<Session[]>` | `public` | Operasi getter statis (Read) untuk mengambil sesi terjadwal yang akan dimulai dalam 15 menit ke depan dan belum dikirimkan pengingat notifikasi. |
+| `addParticipant(idMentee: string): Promise<boolean>` | `public` | Operasi CRUD (Create) untuk menambahkan Mentee ke dalam daftar peserta sesi (`session_participants`) apabila kuota masih tersedia. |
+| `removeParticipant(idMentee: string): Promise<boolean>` | `public` | Operasi CRUD (Delete) untuk menghapus Mentee dari daftar pendaftar sesi saat membatalkan keikutsertaan. |
+| `checkCapacity(): boolean` | `public` | Memeriksa apakah jumlah peserta saat ini masih lebih kecil dari kapasitas maksimum sesi. |
+| `isParticipant(idMentee: string): boolean` | `public` | Memeriksa apakah seorang Mentee terdaftar di dalam `userList` sesi ini. |
+| `isOwnedBy(idMentor: string): boolean` | `public` | Memeriksa apakah pengguna dengan `idMentor` adalah host pembuat sesi ini. |
+| `involves(idUser: string): boolean` | `public` | Memeriksa apakah pengguna terlibat dalam sesi ini, baik sebagai Mentor pembuat sesi maupun Mentee peserta sesi. |
+| `hasStarted(): boolean` | `public` | Memeriksa apakah waktu mulai sesi (`scheduledTime`) telah terlewati. |
+| `needsConfirmation(now: Date): boolean` | `public` | Memeriksa apakah waktu sesi telah berakhir namun statusnya masih `TERJADWAL` sehingga membutuhkan konfirmasi keterlaksanaan. |
+| `getSessionDetails(): SessionData` | `public` | Operasi getter untuk mengembalikan bungkusan rincian data sesi (`SessionData`). |
+| `getSessionStatus(): SessionStatus` | `public` | Operasi getter untuk mengembalikan status sesi saat ini. |
+| `setStatus(status: SessionStatus, reason?: string): Promise<Session>` | `public` | Operasi setter (Update) untuk memperbarui status keterlaksanaan sesi beserta alasan opsional di basis data. |
+| `getStatus(): SessionStatus` | `public` | Operasi getter untuk mengembalikan nilai atribut `status`. |
+| `isCompleted(): boolean` | `public` | Memeriksa apakah status sesi bernilai `SELESAI`. |
+| `markAsDeleted(): Promise<boolean>` | `public` | Operasi setter (*soft delete* / Update) untuk mengubah status sesi menjadi `DIBATALKAN` di basis data. |
+| `markReminderSent(): Promise<boolean>` | `public` | Operasi setter (Update) untuk menandai bahwa notifikasi pengingat 15 menit untuk sesi ini telah dikirim. |
+| `openGroupChat(): Promise<GroupChat \| null>` | `public` | Mengambil objek `GroupChat` yang terhubung dengan sesi ini (`GroupChat.findBySession(this.idSession)`). |
+| `pushNotification(): Promise<void>` | `public` | Membuat pengingat `Notification` untuk seluruh partisipan sesi. |
+| `getSessionID(): string` | `public` | Operasi getter untuk mengembalikan identitas unik sesi (`idSession`). |
+| `getTopic(): string` | `public` | Operasi getter untuk mengembalikan topik materi sesi (`topic`). |
+| `getFormat(): SessionFormat` | `public` | Operasi getter untuk mengembalikan format pelaksanaan sesi (`format`). |
+| `getScheduledTime(): Date` | `public` | Operasi getter untuk mengembalikan waktu terjadwal sesi (`scheduledTime`). |
+| `editTitle(title: string): void` | `public` | Operasi setter untuk memperbarui judul/topik sesi pada objek. |
+| `editDescription(description: string): void` | `public` | Operasi setter untuk memperbarui deskripsi sesi pada objek. |
+| `editPreference(format: SessionFormat, capacity: number): void` | `public` | Operasi setter untuk memperbarui format dan batas kapasitas sesi pada objek. |
+| `editSchedule(schedule: Date, scheduledTime: Date): void` | `public` | Operasi setter untuk memperbarui tanggal dan waktu jadwal sesi pada objek. |
 
 Tabel 5.4.2. Atribut Kelas Session
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
 | `idSession` | `private` | `string` |
+| `idMentor` | `private` | `string` |
 | `topic` | `private` | `string` |
+| `description` | `private` | `string` |
 | `schedule` | `private` | `Date` |
 | `scheduledTime` | `private` | `Date` |
 | `format` | `private` | `SessionFormat` |
@@ -1361,26 +1412,62 @@ Tabel 5.4.2. Atribut Kelas Session
 | `userList` | `private` | `User[]` |
 | `status` | `private` | `SessionStatus` |
 | `reasonNotConducted` | `private` | `string \| null` |
+| `reminderSent` | `private` | `boolean` |
 | `groupChat` | `private` | `GroupChat \| null` |
 
 ### 5.4.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
 **Nama Kelas:** *Session*  
-**Nama Operasi:** `addParticipant(idMentee: string): Promise<boolean>`  
+**Nama Operasi:** `saveSession(): Promise<Session>`, `addParticipant(idMentee: string): Promise<boolean>`, `removeParticipant(idMentee: string): Promise<boolean>`, `setStatus(status: SessionStatus, reason?: string): Promise<Session>`, dan `markAsDeleted(): Promise<boolean>`  
 **ID Algoritma:** *Algo-C04-01*
 
 ```text
+FUNCTION saveSession(): Promise<Session>
+    IF THIS.idSession IS NULL THEN
+        row <- AWAIT Database.executeQuery(Q-C04-01, [
+            THIS.idMentor, THIS.topic, THIS.description,
+            THIS.schedule, THIS.scheduledTime, THIS.format, THIS.capacity
+        ])
+        THIS.idSession <- row.id_session
+        THIS.status <- row.status
+    ELSE
+        AWAIT Database.executeQuery(Q-C04-02, [
+            THIS.topic, THIS.description, THIS.schedule,
+            THIS.scheduledTime, THIS.format, THIS.capacity, THIS.idSession
+        ])
+    END IF
+    RETURN THIS
+END FUNCTION
+
 FUNCTION addParticipant(idMentee: string): Promise<boolean>
-    IF THIS.status != TERBUKA OR NOT THIS.checkCapacity() THEN
+    IF THIS.status != SessionStatus.TERJADWAL OR NOT THIS.checkCapacity() THEN
         RETURN FALSE
     END IF
-    IF EXISTS user IN THIS.userList WHERE user.getUserID() == idMentee THEN
+    IF THIS.isParticipant(idMentee) THEN
         RETURN FALSE
     END IF
-    APPEND Mentee.getById(idMentee) TO THIS.userList
-    AWAIT THIS.saveSession()
+    AWAIT Database.executeQuery(Q-C04-08, [THIS.idSession, idMentee])
+    mentee <- AWAIT Mentee.getById(idMentee)
+    APPEND mentee TO THIS.userList
+    RETURN TRUE
+END FUNCTION
+
+FUNCTION removeParticipant(idMentee: string): Promise<boolean>
+    AWAIT Database.executeQuery(Q-C04-09, [THIS.idSession, idMentee])
+    REMOVE user FROM THIS.userList WHERE user.getUserID() == idMentee
+    RETURN TRUE
+END FUNCTION
+
+FUNCTION setStatus(status: SessionStatus, reason?: string): Promise<Session>
+    THIS.status <- status
+    THIS.reasonNotConducted <- reason
+    AWAIT Database.executeQuery(Q-C04-10, [status, reason, THIS.idSession])
+    RETURN THIS
+END FUNCTION
+
+FUNCTION markAsDeleted(): Promise<boolean>
+    THIS.status <- SessionStatus.DIBATALKAN
+    AWAIT Database.executeQuery(Q-C04-11, [THIS.idSession])
     RETURN TRUE
 END FUNCTION
 
@@ -1389,47 +1476,76 @@ FUNCTION checkCapacity(): boolean
 END FUNCTION
 ```
 
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.1.1. Query Operasi [Nama Operasi]
+Tabel 5.4.3. Query Operasi Kelas Session
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
+| *Q-C04-01* | `INSERT INTO sessions (id_mentor, topic, description, schedule, scheduled_time, format, capacity, status) VALUES ($1, $2, $3, $4, $5, $6, $7, 'TERJADWAL');` | Menyimpan sesi belajar baru ke dalam tabel `sessions` (operasi Create pada `saveSession`). |
+| *Q-C04-02* | `UPDATE sessions SET topic = $1, description = $2, schedule = $3, scheduled_time = $4, format = $5, capacity = $6 WHERE id_session = $7;` | Memperbarui rincian data sesi yang diedit oleh Mentor (operasi Update pada `saveSession`). |
+| *Q-C04-03* | `SELECT * FROM sessions WHERE id_session = $1;` | Mengambil data sesi berdasarkan `id_session` (operasi Read pada `getSessionById`). |
+| *Q-C04-04* | `SELECT * FROM sessions WHERE id_mentor = $1 AND status = 'TERJADWAL' AND scheduled_time BETWEEN $2 AND $3;` | Mengambil sesi aktif milik Mentor pada rentang waktu tertentu untuk memeriksa konflik jadwal (operasi Read pada `getSessionsByMentorInRange`). |
+| *Q-C04-05* | `SELECT * FROM sessions WHERE status = 'TERJADWAL' AND scheduled_time > $1;` | Mengambil kandidat sesi terbuka yang belum dimulai untuk proses *matchmaking* (operasi Read pada `getAvailableSessions`). |
+| *Q-C04-06* | `SELECT * FROM sessions WHERE id_mentor = $1 AND status = 'TERJADWAL';` | Mengambil daftar sesi aktif terdekat milik atau yang diikuti pengguna (operasi Read pada `getUpcomingByUser`). |
+| *Q-C04-07* | `SELECT * FROM sessions WHERE id_mentor = $1 AND status IN ('SELESAI', 'TIDAK_TERLAKSANA', 'DIBATALKAN');` | Mengambil riwayat arsip sesi berstatus akhir milik atau yang diikuti pengguna (operasi Read pada `getArchivedByUser`). |
+| *Q-C04-08* | `INSERT INTO session_participants (id_session, id_mentee) VALUES ($1, $2);` | Menambahkan Mentee ke daftar partisipan sesi (operasi Create pada `addParticipant`). |
+| *Q-C04-09* | `DELETE FROM session_participants WHERE id_session = $1 AND id_mentee = $2;` | Menghapus Mentee dari daftar partisipan sesi saat membatalkan keikutsertaan (operasi Delete pada `removeParticipant`). |
+| *Q-C04-10* | `UPDATE sessions SET status = $1, reason_not_conducted = $2 WHERE id_session = $3;` | Memperbarui status keterlaksanaan sesi beserta alasan opsional (operasi Update pada `setStatus`). |
+| *Q-C04-11* | `UPDATE sessions SET status = 'DIBATALKAN' WHERE id_session = $1;` | Menandai sesi sebagai `DIBATALKAN` (*soft delete*) saat dihapus oleh Mentor (operasi Update pada `markAsDeleted`). |
+| *Q-C04-12* | `SELECT * FROM sessions WHERE status = 'TERJADWAL' AND reminder_sent = FALSE AND scheduled_time BETWEEN $1 AND $2;` | Mengambil sesi yang akan dimulai dalam 15 menit dan belum diingatkan (operasi Read pada `findStartingBetween`). |
+| *Q-C04-13* | `UPDATE sessions SET reminder_sent = TRUE WHERE id_session = $1;` | Menandai bahwa pengingat notifikasi sesi telah dikirimkan (operasi Update pada `markReminderSent`). |
 
 ## 5.5 Kelas GroupChat
 
-**Nama Kelas:** *GroupChat*
-
+**Nama Kelas:** *GroupChat*  
 **ID Kelas:** *C05*
 
 Tabel 5.5.1. Operasi Kelas GroupChat
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| `searchMessage(keyword: string): ChatMessage[]` | `public` | Mencari pesan dalam riwayat obrolan berdasarkan teks. |
-| `displayMessage(): ChatMessage[]` | `public` | Mengembalikan pesan secara kronologis untuk dirender oleh antarmuka. |
-| `editMessage(idMessage: string, text: string): Promise<boolean>` | `public` | Diperuntukkan bagi pengelolaan pesan sesuai kebijakan obrolan; perubahan harus memverifikasi pengirim. |
-| `deleteMessage(idMessage: string): Promise<boolean>` | `public` | Menghapus pesan sesuai kebijakan akses ruang obrolan. |
+| `findBySession(idSession: string): Promise<GroupChat \| null>` | `public` | Operasi getter statis (Read) untuk mengambil objek `GroupChat` berdasarkan `idSession`. |
+| `findById(idGroupChat: string): Promise<GroupChat \| null>` | `public` | Operasi getter statis (Read) untuk mengambil objek `GroupChat` berdasarkan `idGroupChat`. |
+| `getId(): string` | `public` | Operasi getter untuk mengembalikan identitas unik ruang obrolan (`idGroupChat`). |
+| `isActive(): boolean` | `public` | Memeriksa apakah ruang obrolan sementara masih aktif (belum melewati batas retensi 48 jam setelah sesi selesai). |
+| `isMember(idUser: string): boolean` | `public` | Memeriksa apakah pengguna merupakan anggota ruang obrolan (Mentor pengampu atau Mentee yang terdaftar pada sesi). |
+| `getMessages(): Promise<ChatMessage[]>` | `public` | Operasi getter (Read) untuk mengambil daftar seluruh pesan dalam ruang obrolan dari basis data secara kronologis. |
+| `searchMessage(keyword: string): ChatMessage[]` | `public` | Menyaring pesan dalam riwayat obrolan berdasarkan kata kunci teks. |
+| `displayMessage(): ChatMessage[]` | `public` | Mengembalikan daftar pesan terurut secara kronologis untuk dirender oleh antarmuka. |
+| `editMessage(idMessage: string, text: string): Promise<boolean>` | `public` | Operasi setter (Update) untuk memperbarui isi teks pesan milik pengirim di dalam ruang obrolan aktif. |
+| `deleteMessage(idMessage: string): Promise<boolean>` | `public` | Operasi CRUD (Delete) untuk menghapus pesan dari ruang obrolan atau membersihkan pesan saat masa retensi 48 jam berakhir. |
 
 Tabel 5.5.2. Atribut Kelas GroupChat
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
+| `idGroupChat` | `private` | `string` |
+| `idSession` | `private` | `string` |
 | `listChatMessage` | `private` | `ChatMessage[]` |
 | `listMentee` | `private` | `Mentee[]` |
 | `mentor` | `private` | `Mentor` |
+| `active` | `private` | `boolean` |
+| `expiresAt` | `private` | `Date \| null` |
 
 ### 5.5.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
 **Nama Kelas:** *GroupChat*  
-**Nama Operasi:** `searchMessage(keyword: string): ChatMessage[]`  
+**Nama Operasi:** `findBySession(idSession: string): Promise<GroupChat | null>`, `getMessages(): Promise<ChatMessage[]>`, dan `searchMessage(keyword: string): ChatMessage[]`  
 **ID Algoritma:** *Algo-C05-01*
 
 ```text
+STATIC FUNCTION findBySession(idSession: string): Promise<GroupChat | null>
+    row <- AWAIT Database.executeQuery(Q-C05-01, [idSession])
+    IF row IS NULL THEN
+        RETURN NULL
+    END IF
+    RETURN NEW GroupChat(row.id_group_chat, row.id_session, row.is_active, row.expires_at)
+END FUNCTION
+
+FUNCTION getMessages(): Promise<ChatMessage[]>
+    THIS.listChatMessage <- AWAIT ChatMessage.findByGroupChat(THIS.idGroupChat)
+    RETURN THIS.displayMessage()
+END FUNCTION
+
 FUNCTION searchMessage(keyword: string): ChatMessage[]
     normalizedKeyword <- LOWERCASE(TRIM(keyword))
     RETURN FILTER THIS.listChatMessage WHERE
@@ -1439,48 +1555,55 @@ END FUNCTION
 FUNCTION displayMessage(): ChatMessage[]
     RETURN SORT COPY(THIS.listChatMessage) BY message.getTime() ASCENDING
 END FUNCTION
+
+FUNCTION isActive(): boolean
+    RETURN THIS.active == TRUE AND (THIS.expiresAt IS NULL OR NOW() < THIS.expiresAt)
+END FUNCTION
 ```
 
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.1.1. Query Operasi [Nama Operasi]
+Tabel 5.5.3. Query Operasi Kelas GroupChat
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
+| *Q-C05-01* | `SELECT * FROM group_chats WHERE id_session = $1;` | Mengambil data ruang obrolan berdasarkan `id_session` (operasi Read pada `findBySession`). |
+| *Q-C05-02* | `SELECT * FROM group_chats WHERE id_group_chat = $1;` | Mengambil data ruang obrolan berdasarkan `id_group_chat` (operasi Read pada `findById`). |
+| *Q-C05-03* | `UPDATE chat_messages SET text = $1 WHERE id_message = $2;` | Memperbarui isi pesan pada ruang obrolan (operasi Update pada `editMessage`). |
+| *Q-C05-04* | `DELETE FROM chat_messages WHERE id_message = $1;` | Menghapus pesan tertentu dari ruang obrolan (operasi Delete pada `deleteMessage`). |
+| *Q-C05-05* | `UPDATE group_chats SET is_active = FALSE WHERE id_group_chat = $1;` | Menonaktifkan ruang obrolan sementara yang telah melewati masa aktif 48 jam setelah sesi selesai. |
 
 ## 5.6 Kelas Feedback
 
-**Nama Kelas:** *Feedback*
-
+**Nama Kelas:** *Feedback*  
 **ID Kelas:** *C06*
 
 Tabel 5.6.1. Operasi Kelas Feedback
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| `setRating(rating: number): void` | `public` | Menetapkan rating dalam rentang 1–5; validasi bisnis juga ditegakkan oleh `FeedbackControl`. |
-| `setComment(comment: string): void` | `public` | Menetapkan komentar opsional. |
-| `getRating(): number` | `public` | Mengembalikan rating. |
-| `getComment(): string` | `public` | Mengembalikan komentar. |
-| `getDate(): Date` | `public` | Mengembalikan waktu feedback dibuat. |
+| `save(): Promise<Feedback>` | `public` | Operasi CRUD (Create) pada kelas entitas untuk menyimpan objek penilaian (`Feedback`) baru ke dalam tabel `feedbacks`. |
+| `getFeedbackBySession(idSession: string): Promise<Feedback[]>` | `public` | Operasi getter statis (Read) untuk mengambil daftar seluruh `Feedback` yang terkait dengan suatu `idSession`. |
+| `existsBySessionAndAuthor(idSession: string, idMentee: string): Promise<boolean>` | `public` | Operasi getter statis (Read) untuk memeriksa apakah Mentee sudah pernah memberikan *feedback* pada sesi tersebut. |
+| `setRating(rating: number): void` | `public` | Operasi setter untuk menetapkan nilai *rating* dalam rentang integer 1–5. |
+| `setComment(comment?: string): void` | `public` | Operasi setter untuk menetapkan teks ulasan atau komentar opsional. |
+| `getRating(): number` | `public` | Operasi getter untuk mengembalikan nilai *rating*. |
+| `getComment(): string` | `public` | Operasi getter untuk mengembalikan teks komentar ulasan. |
+| `getDate(): Date` | `public` | Operasi getter untuk mengembalikan waktu pembuatan *feedback* (`date`). |
 
 Tabel 5.6.2. Atribut Kelas Feedback
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
 | `idFeedback` | `private` | `string` |
+| `idSession` | `private` | `string` |
+| `idMentee` | `private` | `string` |
 | `rating` | `private` | `number` |
 | `comment` | `private` | `string` |
 | `date` | `private` | `Date` |
 
 ### 5.6.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
 **Nama Kelas:** *Feedback*  
-**Nama Operasi:** `setRating(rating: number): void`  
+**Nama Operasi:** `setRating(rating: number): void`, `save(): Promise<Feedback>`, dan `getFeedbackBySession(idSession: string): Promise<Feedback[]>`  
 **ID Algoritma:** *Algo-C06-01*
 
 ```text
@@ -1490,36 +1613,58 @@ FUNCTION setRating(rating: number): void
     END IF
     THIS.rating <- rating
 END FUNCTION
+
+FUNCTION setComment(comment?: string): void
+    THIS.comment <- comment
+END FUNCTION
+
+FUNCTION save(): Promise<Feedback>
+    row <- AWAIT Database.executeQuery(Q-C06-01, [THIS.idSession, THIS.idMentee, THIS.rating, THIS.comment])
+    THIS.idFeedback <- row.id_feedback
+    THIS.date <- row.date
+    RETURN THIS
+END FUNCTION
+
+STATIC FUNCTION getFeedbackBySession(idSession: string): Promise<Feedback[]>
+    rows <- AWAIT Database.executeQuery(Q-C06-02, [idSession])
+    RETURN MAP rows TO Feedback
+END FUNCTION
+
+STATIC FUNCTION existsBySessionAndAuthor(idSession: string, idMentee: string): Promise<boolean>
+    row <- AWAIT Database.executeQuery(Q-C06-03, [idSession, idMentee])
+    RETURN row IS NOT NULL
+END FUNCTION
 ```
 
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.1.1. Query Operasi [Nama Operasi]
+Tabel 5.6.3. Query Operasi Kelas Feedback
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
+| *Q-C06-01* | `INSERT INTO feedbacks (id_session, id_mentee, rating, comment) VALUES ($1, $2, $3, $4);` | Menyimpan penilaian dan ulasan baru dari Mentee ke tabel `feedbacks` (operasi Create pada `save`). |
+| *Q-C06-02* | `SELECT * FROM feedbacks WHERE id_session = $1;` | Mengambil seluruh daftar *feedback* untuk suatu sesi (operasi Read pada `getFeedbackBySession`). |
+| *Q-C06-03* | `SELECT * FROM feedbacks WHERE id_session = $1 AND id_mentee = $2;` | Memeriksa apakah Mentee telah mengirimkan *feedback* pada sesi tersebut (operasi Read pada `existsBySessionAndAuthor`). |
 
 ## 5.7 Kelas SessionHistory
 
-**Nama Kelas:** *SessionHistory*
-
+**Nama Kelas:** *SessionHistory*  
 **ID Kelas:** *C07*
 
 Tabel 5.7.1. Operasi Kelas SessionHistory
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| `getArchivedSessions(): Session[]` | `public` | Mengembalikan sesi berstatus akhir yang diarsipkan. |
-| `getCompletedSessions(): Session[]` | `public` | Mengembalikan sesi berstatus Selesai. |
-| `addSessionToHistory(session: Session): void` | `public` | Menambahkan sesi berstatus akhir ke koleksi riwayat. |
-| `updateOncomingSession(sessions: Session[]): void` | `public` | Memperbarui daftar sesi mendatang; sesi mendatang tidak dicampur dengan arsip. |
+| `getArchivedSessions(): Session[]` | `public` | Operasi getter untuk mengembalikan daftar seluruh sesi berstatus akhir (`SELESAI`, `TIDAK_TERLAKSANA`, `DIBATALKAN`) dalam riwayat pengguna. |
+| `getCompletedSessions(): Session[]` | `public` | Operasi getter untuk mengembalikan daftar sesi yang berstatus `SELESAI`. |
+| `getGroupedByStatus(): Record<SessionStatus, Session[]>` | `public` | Operasi getter untuk mengelompokkan daftar sesi riwayat berdasarkan status akhirnya (`SELESAI`, `TIDAK_TERLAKSANA`, `DIBATALKAN`) untuk ditampilkan oleh `HistoryPage`. |
+| `isEmpty(): boolean` | `public` | Memeriksa apakah pengguna belum memiliki arsip sesi berstatus akhir (`historyList` kosong). |
+| `addSessionToHistory(session: Session): void` | `public` | Menambahkan objek sesi berstatus akhir ke dalam koleksi riwayat dan mengelompokkannya ke daftar status terkait. |
+| `updateOncomingSession(sessions: Session[]): void` | `public` | Operasi setter untuk memperbarui daftar sesi mendatang (`oncomingSession`). |
 
 Tabel 5.7.2. Atribut Kelas SessionHistory
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
+| `idUser` | `private` | `string` |
 | `historyList` | `private` | `Session[]` |
 | `completedSessions` | `private` | `Session[]` |
 | `cancelledSessions` | `private` | `Session[]` |
@@ -1527,10 +1672,8 @@ Tabel 5.7.2. Atribut Kelas SessionHistory
 
 ### 5.7.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
 **Nama Kelas:** *SessionHistory*  
-**Nama Operasi:** `addSessionToHistory(session: Session): void`  
+**Nama Operasi:** `addSessionToHistory(session: Session): void`, `getGroupedByStatus(): Record<SessionStatus, Session[]>`, dan `isEmpty(): boolean`  
 **ID Algoritma:** *Algo-C07-01*
 
 ```text
@@ -1539,139 +1682,181 @@ FUNCTION addSessionToHistory(session: Session): void
         RETURN
     END IF
     APPEND session TO THIS.historyList
-    IF session.getSessionStatus() == SELESAI THEN APPEND session TO THIS.completedSessions END IF
-    IF session.getSessionStatus() == DIBATALKAN THEN APPEND session TO THIS.cancelledSessions END IF
+    IF session.getSessionStatus() == SELESAI THEN
+        APPEND session TO THIS.completedSessions
+    END IF
+    IF session.getSessionStatus() == DIBATALKAN THEN
+        APPEND session TO THIS.cancelledSessions
+    END IF
+END FUNCTION
+
+FUNCTION getGroupedByStatus(): Record<SessionStatus, Session[]>
+    RETURN {
+        SELESAI: THIS.completedSessions,
+        TIDAK_TERLAKSANA: FILTER THIS.historyList WHERE session.getSessionStatus() == TIDAK_TERLAKSANA,
+        DIBATALKAN: THIS.cancelledSessions
+    }
+END FUNCTION
+
+FUNCTION isEmpty(): boolean
+    RETURN LENGTH(THIS.historyList) == 0
 END FUNCTION
 ```
 
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.1.1. Query Operasi [Nama Operasi]
-
-| No Query | Query | Keterangan |
-| :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
-
 ## 5.8 Kelas ChatMessage
 
-**Nama Kelas:** *ChatMessage*
-
+**Nama Kelas:** *ChatMessage*  
 **ID Kelas:** *C08*
 
 Tabel 5.8.1. Operasi Kelas ChatMessage
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| `getSender(): User` | `public` | Mengembalikan pengguna pengirim pesan. |
-| `getTime(): Date` | `public` | Mengembalikan waktu pesan dikirim. |
-| `getText(): string` | `public` | Mengembalikan isi teks pesan. |
+| `create(idGroupChat: string, idSender: string, text: string): Promise<ChatMessage>` | `public` | Operasi CRUD (Create) pada kelas entitas untuk menyimpan pesan obrolan baru ke dalam tabel `chat_messages` dan mengembalikan objek `ChatMessage`. |
+| `findByGroupChat(idGroupChat: string): Promise<ChatMessage[]>` | `public` | Operasi getter statis (Read) untuk mengambil daftar seluruh pesan pada suatu `GroupChat` secara kronologis. |
+| `getSender(): User` | `public` | Operasi getter untuk mengembalikan objek pengguna pengirim pesan (`sender`). |
+| `getTime(): Date` | `public` | Operasi getter untuk mengembalikan waktu pengiriman pesan (`timeStamp`). |
+| `getText(): string` | `public` | Operasi getter untuk mengembalikan isi teks pesan (`text`). |
 
 Tabel 5.8.2. Atribut Kelas ChatMessage
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
+| `idMessage` | `private` | `string` |
+| `idGroupChat` | `private` | `string` |
 | `sender` | `private` | `User` |
 | `timeStamp` | `private` | `Date` |
 | `text` | `private` | `string` |
 
 ### 5.8.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
 **Nama Kelas:** *ChatMessage*  
-**Nama Operasi:** `getText(): string`  
+**Nama Operasi:** `create(idGroupChat: string, idSender: string, text: string): Promise<ChatMessage>` dan `getText(): string`  
 **ID Algoritma:** *Algo-C08-01*
 
 ```text
+STATIC FUNCTION create(idGroupChat: string, idSender: string, text: string): Promise<ChatMessage>
+    row <- AWAIT Database.executeQuery(Q-C08-01, [idGroupChat, idSender, text])
+    senderUser <- AWAIT User.findById(idSender)
+    RETURN NEW ChatMessage(row.id_message, row.id_group_chat, senderUser, row.time_stamp, row.text)
+END FUNCTION
+
+STATIC FUNCTION findByGroupChat(idGroupChat: string): Promise<ChatMessage[]>
+    rows <- AWAIT Database.executeQuery(Q-C08-02, [idGroupChat])
+    RETURN MAP rows TO ChatMessage
+END FUNCTION
+
 FUNCTION getSender(): User
     RETURN THIS.sender
 END FUNCTION
+
 FUNCTION getTime(): Date
     RETURN THIS.timeStamp
 END FUNCTION
+
 FUNCTION getText(): string
     RETURN THIS.text
 END FUNCTION
 ```
 
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.1.1. Query Operasi [Nama Operasi]
+Tabel 5.8.3. Query Operasi Kelas ChatMessage
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
+| *Q-C08-01* | `INSERT INTO chat_messages (id_group_chat, id_sender, text) VALUES ($1, $2, $3);` | Menyimpan pesan obrolan baru ke dalam tabel `chat_messages` (operasi Create pada `create`). |
+| *Q-C08-02* | `SELECT * FROM chat_messages WHERE id_group_chat = $1;` | Mengambil daftar riwayat pesan dalam sebuah ruang obrolan (operasi Read pada `findByGroupChat`). |
 
 ## 5.9 Kelas Preference
 
-**Nama Kelas:** *Preference*
-
+**Nama Kelas:** *Preference*  
 **ID Kelas:** *C09*
 
 Tabel 5.9.1. Operasi Kelas Preference
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| `getPreference(): Preference` | `public` | Mengembalikan objek preferensi pengguna. |
-| `getPreferenceDetails(): PreferenceData` | `public` | Mengembalikan tag materi, ketersediaan waktu, dan format belajar. |
-| `updatePreference(data: PreferenceData): Promise<void>` | `public` | Memperbarui preferensi dan menyimpan perubahan melalui lapisan persistence yang dipanggil controller. |
+| `getPreferenceByUser(idUser: string): Promise<Preference \| null>` | `public` | Operasi getter statis (Read) untuk mengambil objek `Preference` milik pengguna tertentu berdasarkan `idUser` dari basis data. |
+| `getPreference(): Preference` | `public` | Operasi getter untuk mengembalikan instans objek preferensi pengguna saat ini. |
+| `getPreferenceDetails(): PreferenceData` | `public` | Operasi getter untuk mengembalikan bungkusan data tag materi, ketersediaan waktu, dan preferensi format sesi belajar. |
+| `updatePreference(data: PreferenceData): Promise<Preference>` | `public` | Operasi setter/CRUD (Upsert/Update) untuk memperbarui atribut preferensi dan menyimpannya ke dalam tabel `preferences` di basis data. |
+| `isComplete(): boolean` | `public` | Memeriksa apakah seluruh komponen preferensi (tag materi, ketersediaan waktu, dan format sesi) sudah diatur oleh pengguna sebagai prasyarat *matchmaking*. |
+| `getMaterialTag(): string[]` | `public` | Operasi getter untuk mengembalikan daftar tag materi pelajaran (`materialTag`). |
+| `getAvailability(): Availability[]` | `public` | Operasi getter untuk mengembalikan daftar jadwal ketersediaan waktu pengguna (`availability`). |
+| `getSessionFormatPreference(): SessionFormat` | `public` | Operasi getter untuk mengembalikan preferensi format pelaksanaan sesi (`sessionFormatPreference`). |
+| `getUserId(): string` | `public` | Operasi getter untuk mengembalikan ID pemilik preferensi (`idUser`). |
 
 Tabel 5.9.2. Atribut Kelas Preference
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
+| `idUser` | `private` | `string` |
 | `materialTag` | `private` | `string[]` |
 | `availability` | `private` | `Availability[]` |
 | `sessionFormatPreference` | `private` | `SessionFormat` |
 
 ### 5.9.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
 **Nama Kelas:** *Preference*  
-**Nama Operasi:** `updatePreference(data: PreferenceData): Promise<void>`  
+**Nama Operasi:** `getPreferenceByUser(idUser: string): Promise<Preference | null>`, `updatePreference(data: PreferenceData): Promise<Preference>`, dan `isComplete(): boolean`  
 **ID Algoritma:** *Algo-C09-01*
 
 ```text
-FUNCTION updatePreference(data: PreferenceData): Promise<void>
+STATIC FUNCTION getPreferenceByUser(idUser: string): Promise<Preference | null>
+    row <- AWAIT Database.executeQuery(Q-C09-01, [idUser])
+    IF row IS NULL THEN
+        RETURN NULL
+    END IF
+    RETURN NEW Preference(row.id_user, row.material_tag, row.availability, row.session_format_preference)
+END FUNCTION
+
+FUNCTION updatePreference(data: PreferenceData): Promise<Preference>
     IF data.materialTag IS EMPTY OR data.availability IS EMPTY OR data.sessionFormatPreference IS NULL THEN
-        THROW Error("PREFERENCE_INCOMPLETE")
+        THROW Error("INCOMPLETE_PREFERENCE")
     END IF
     THIS.materialTag <- data.materialTag
     THIS.availability <- data.availability
     THIS.sessionFormatPreference <- data.sessionFormatPreference
-    AWAIT PreferenceRepository.update(THIS)
+    AWAIT Database.executeQuery(Q-C09-02, [
+        THIS.materialTag, THIS.availability, THIS.sessionFormatPreference, THIS.idUser
+    ])
+    RETURN THIS
+END FUNCTION
+
+FUNCTION isComplete(): boolean
+    RETURN LENGTH(THIS.materialTag) > 0 AND LENGTH(THIS.availability) > 0 AND THIS.sessionFormatPreference IS NOT NULL
 END FUNCTION
 ```
 
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.1.1. Query Operasi [Nama Operasi]
+Tabel 5.9.3. Query Operasi Kelas Preference
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
+| *Q-C09-01* | `SELECT * FROM preferences WHERE id_user = $1;` | Mengambil data preferensi belajar pengguna berdasarkan `id_user` (operasi Read pada `getPreferenceByUser`). |
+| *Q-C09-02* | `UPDATE preferences SET material_tag = $1, availability = $2, session_format_preference = $3 WHERE id_user = $4;` | Memperbarui tag materi, ketersediaan waktu, dan format sesi pada tabel `preferences` (operasi Update pada `updatePreference`). |
 
 ## 5.10 Kelas Profile
 
-**Nama Kelas:** *Profile*
-
+**Nama Kelas:** *Profile*  
 **ID Kelas:** *C10*
 
 Tabel 5.10.1. Operasi Kelas Profile
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| `getProfileData(): ProfileData` | `public` | Mengembalikan data identitas profil pengguna. |
-| `updateProfile(data: ProfileData): Promise<void>` | `public` | Memperbarui nama, universitas, program studi, dan bio; persistensi dikoordinasikan di sisi server. |
+| `create(idUser: string, data: ProfileData): Promise<Profile>` | `public` | Operasi CRUD (Create) pada kelas entitas untuk menyimpan data profil identitas pengguna baru ke dalam tabel `profiles`. |
+| `findByUser(idUser: string): Promise<Profile \| null>` | `public` | Operasi getter statis (Read) untuk mengambil objek `Profile` berdasarkan `idUser` dari basis data. |
+| `getProfileData(): ProfileData` | `public` | Operasi getter untuk mengembalikan data identitas profil pengguna (`name`, `university`, `studyProgram`, `bio`). |
+| `updateProfile(data: ProfileData): Promise<Profile>` | `public` | Operasi setter/CRUD (Update) untuk memperbarui nama, universitas, program studi, dan bio pengguna di basis data. |
+| `getName(): string` | `public` | Operasi getter untuk mengembalikan nama lengkap pengguna (`name`). |
+| `getUniversity(): string` | `public` | Operasi getter untuk mengembalikan nama universitas pengguna (`university`). |
+| `getStudyProgram(): string` | `public` | Operasi getter untuk mengembalikan program studi pengguna (`studyProgram`). |
+| `getBio(): string` | `public` | Operasi getter untuk mengembalikan deskripsi singkat pengguna (`bio`). |
 
 Tabel 5.10.2. Atribut Kelas Profile
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
+| `idUser` | `private` | `string` |
 | `name` | `private` | `string` |
 | `university` | `private` | `string` |
 | `studyProgram` | `private` | `string` |
@@ -1679,47 +1864,65 @@ Tabel 5.10.2. Atribut Kelas Profile
 
 ### 5.10.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
 **Nama Kelas:** *Profile*  
-**Nama Operasi:** `updateProfile(data: ProfileData): Promise<void>`  
+**Nama Operasi:** `create(idUser: string, data: ProfileData): Promise<Profile>`, `findByUser(idUser: string): Promise<Profile | null>`, dan `updateProfile(data: ProfileData): Promise<Profile>`  
 **ID Algoritma:** *Algo-C10-01*
 
 ```text
-FUNCTION updateProfile(data: ProfileData): Promise<void>
-    VALIDATE data.name, data.university, data.studyProgram
+STATIC FUNCTION create(idUser: string, data: ProfileData): Promise<Profile>
+    row <- AWAIT Database.executeQuery(Q-C10-01, [
+        idUser, TRIM(data.name), TRIM(data.university), TRIM(data.studyProgram), TRIM(data.bio)
+    ])
+    RETURN NEW Profile(row.id_user, row.name, row.university, row.study_program, row.bio)
+END FUNCTION
+
+STATIC FUNCTION findByUser(idUser: string): Promise<Profile | null>
+    row <- AWAIT Database.executeQuery(Q-C10-02, [idUser])
+    IF row IS NULL THEN
+        RETURN NULL
+    END IF
+    RETURN NEW Profile(row.id_user, row.name, row.university, row.study_program, row.bio)
+END FUNCTION
+
+FUNCTION updateProfile(data: ProfileData): Promise<Profile>
     THIS.name <- TRIM(data.name)
     THIS.university <- TRIM(data.university)
     THIS.studyProgram <- TRIM(data.studyProgram)
     THIS.bio <- TRIM(data.bio)
-    AWAIT ProfileRepository.update(THIS)
+    AWAIT Database.executeQuery(Q-C10-03, [THIS.name, THIS.university, THIS.studyProgram, THIS.bio, THIS.idUser])
+    RETURN THIS
 END FUNCTION
 ```
 
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.1.1. Query Operasi [Nama Operasi]
+Tabel 5.10.3. Query Operasi Kelas Profile
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
+| *Q-C10-01* | `INSERT INTO profiles (id_user, name, university, study_program, bio) VALUES ($1, $2, $3, $4, $5);` | Menyimpan data identitas profil pengguna baru ke dalam tabel `profiles` saat registrasi (operasi Create pada `create`). |
+| *Q-C10-02* | `SELECT * FROM profiles WHERE id_user = $1;` | Mengambil data profil identitas pengguna berdasarkan `id_user` (operasi Read pada `findByUser`). |
+| *Q-C10-03* | `UPDATE profiles SET name = $1, university = $2, study_program = $3, bio = $4 WHERE id_user = $5;` | Memperbarui data identitas profil pengguna pada tabel `profiles` (operasi Update pada `updateProfile`). |
 
 ## 5.11 Kelas Dashboard
 
-**Nama Kelas:** *Dashboard*
-
+**Nama Kelas:** *Dashboard*  
 **ID Kelas:** *C11*
 
 Tabel 5.11.1. Operasi Kelas Dashboard
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| `showSession(sessions: Session[]): void` | `public` | Menyediakan daftar sesi aktif untuk ditampilkan pada dashboard. |
-| `matchMakeSession(preference: Preference, candidates: Session[]): Session[]` | `public` | Meminta controller mencocokkan kandidat sesi dengan preferensi Mentee. |
-| `searchSession(criteria: SearchCriteria): Session[]` | `public` | Menyaring sesi berdasarkan kriteria pencarian yang diberikan. |
-| `showRecommendation(sessions: Session[]): void` | `public` | Menyediakan sesi hasil rekomendasi untuk ditampilkan. |
-| `checkSchedule(session: Session): boolean` | `public` | Memeriksa kecocokan jadwal sesi dengan ketersediaan pengguna. |
+| `loadDashboard(): Promise<void>` | `public` | Memuat halaman beranda utama dengan memverifikasi pengguna aktif melalui `UserControl.getCurrentUser()`, mengambil sesi terdekat, dan memuat rekomendasi sesi melalui `SessionControl`. |
+| `showGreeting(username: string): void` | `public` | Menampilkan pesan sapaan personal kepada pengguna yang sedang aktif pada bagian atas beranda. |
+| `showSession(sessions: Session[]): void` | `public` | Merender daftar kartu sesi aktif terdekat (`upcomingSessions`) ke layar beranda. |
+| `openSearchSession(): Promise<void>` | `public` | Membuka tampilan eksplorasi pencarian sesi dan meminta daftar rekomendasi *matchmaking* melalui `SessionControl.findRecommendation()`. |
+| `matchMakeSession(preference: Preference, candidates: Session[]): Session[]` | `public` | Meneruskan pencocokan kandidat sesi terhadap preferensi Mentee melalui `SessionControl`. |
+| `searchSession(criteria: SearchCriteria): Session[]` | `public` | Menyaring daftar sesi yang ditampilkan berdasarkan kata kunci topik atau filter format belajar. |
+| `showRecommendation(sessions: Session[]): void` | `public` | Menampilkan daftar kartu rekomendasi sesi hasil *matchmaking* (`sessionRecommendation`) pada beranda. |
+| `showPreferenceWarning(): void` | `public` | Menampilkan pesan peringatan beserta tombol "Atur Preferensi" apabila preferensi belajar Mentee belum diatur (`PREFERENCE_NOT_SET`). |
+| `showEmptyState(message: string): void` | `public` | Menampilkan pesan keadaan kosong ("Belum ada sesi yang cocok dengan jadwalmu") beserta tombol "Ubah Preferensi" apabila tidak ada rekomendasi sesi yang cocok. |
+| `selectSession(idSession: string): void` | `public` | Menangani aksi pengguna saat memilih salah satu kartu sesi dan mengarahkan ke `SessionPage.openSessionDetail(idSession)`. |
+| `navigateToProfile(idUser: string): void` | `public` | Mengarahkan pengguna ke halaman pengaturan profil (`ProfilePage.openProfile(idUser)`) saat menekan tombol "Atur Preferensi" atau "Ubah Preferensi". |
+| `checkSchedule(session: Session): boolean` | `public` | Memeriksa kecocokan jadwal sesi terhadap ketersediaan waktu pengguna. |
 
 Tabel 5.11.2. Atribut Kelas Dashboard
 
@@ -1728,86 +1931,111 @@ Tabel 5.11.2. Atribut Kelas Dashboard
 | `upcomingSessions` | `private` | `Session[]` |
 | `sessionRecommendation` | `private` | `Session[]` |
 | `listSessions` | `private` | `Session[]` |
+| `userControl` | `private` | `UserControl` |
+| `sessionControl` | `private` | `SessionControl` |
 
 ### 5.11.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
 **Nama Kelas:** *Dashboard*  
-**Nama Operasi:** `matchMakeSession(preference: Preference, candidates: Session[]): Session[]`  
+**Nama Operasi:** `loadDashboard(): Promise<void>` dan `openSearchSession(): Promise<void>`  
 **ID Algoritma:** *Algo-C11-01*
 
 ```text
-FUNCTION matchMakeSession(preference: Preference, candidates: Session[]): Session[]
-    RETURN SessionControl.matchSession(preference, candidates)
+FUNCTION loadDashboard(): Promise<void>
+    user <- AWAIT THIS.userControl.getCurrentUser()
+    THIS.showGreeting(user.getUsername())
+
+    THIS.upcomingSessions <- AWAIT THIS.sessionControl.getUpcomingSessions(user.getUserID())
+    THIS.showSession(THIS.upcomingSessions)
+
+    TRY
+        THIS.sessionRecommendation <- AWAIT THIS.sessionControl.findRecommendation(user.getUserID())
+        THIS.showRecommendation(THIS.sessionRecommendation)
+    CATCH error
+        IF error.message == "PREFERENCE_NOT_SET" THEN
+            THIS.showPreferenceWarning()
+        END IF
+    END TRY
 END FUNCTION
 
-FUNCTION checkSchedule(session: Session): boolean
-    RETURN preference.getAvailability().overlapsWith(session.getScheduledTime())
+FUNCTION openSearchSession(): Promise<void>
+    user <- AWAIT THIS.userControl.getCurrentUser()
+    recommendations <- AWAIT THIS.sessionControl.findRecommendation(user.getUserID())
+    THIS.sessionRecommendation <- recommendations
+    IF LENGTH(recommendations) == 0 THEN
+        THIS.showEmptyState("Belum ada sesi yang cocok dengan jadwalmu")
+    ELSE
+        THIS.showRecommendation(recommendations)
+    END IF
 END FUNCTION
 ```
 
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.1.1. Query Operasi [Nama Operasi]
-
-| No Query | Query | Keterangan |
-| :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
-
 ## 5.12 Kelas UserControl
 
-**Nama Kelas:** *UserControl*
-
+**Nama Kelas:** *UserControl*  
 **ID Kelas:** *C12*
 
-Tabel 5.1.1. Operasi Kelas UserControl
+Tabel 5.12.1. Operasi Kelas UserControl
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| `authLogin(email: string, password: string): Promise<User>` | `public` | Mendelegasikan autentikasi ke Supabase Auth melalui `AuthAdapter` dan mengembalikan pengguna terautentikasi. |
-| `validateEmail(email: string): boolean` | `public` | Memeriksa format dan domain email universitas menggunakan validator sisi server. |
-| `processRegistration(data: RegistrationData): Promise<User>` | `public` | Memvalidasi registrasi, membuat akun melalui AuthAdapter, lalu membuat profil dan spesialisasi peran. |
-| `saveProfile(idUser: string, data: ProfileData): Promise<void>` | `public` | Memvalidasi dan menyimpan data profil pengguna. |
-| `savePreference(idUser: string, data: PreferenceData): Promise<void>` | `public` | Memvalidasi kelengkapan dan menyimpan preferensi pengguna. |
-| `fetchUserProfile(idUser: string): Promise<Profile>` | `public` | Mengambil data profil pengguna untuk halaman profil. |
+| `authLogin(email: string, password: string): Promise<User>` | `public` | Mengoordinasikan autentikasi kredensial pengguna melalui `AuthAdapter.signIn()`, lalu mengambil objek entitas `User` (`User.findById(idUser)`). |
+| `getCurrentUser(): Promise<User>` | `public` | Memverifikasi sesi aktif melalui `AuthAdapter.getSessionUserId()` dan mengambil objek `User` yang sedang masuk untuk ditampilkan pada beranda utama. |
+| `validateEmail(email: string): boolean` | `public` | Memeriksa apakah alamat email menggunakan format dan domain institusi universitas yang valid. |
+| `processRegistration(email: string, password: string, dataProfil: ProfileData): Promise<User>` | `public` | Memvalidasi domain email universitas (`validateEmail()`), mendaftarkan kredensial ke Supabase Auth melalui `AuthAdapter.signUp()`, lalu mendelegasikan penyimpanan akun dan profil ke kelas entitas `User.create()` dan `Profile.create()`. |
+| `saveProfile(idUser: string, data: ProfileData): Promise<Profile>` | `public` | Mengoordinasikan pembaruan data identitas profil pengguna dengan mengambil entitas `Profile.findByUser(idUser)` dan memanggil metode `profile.updateProfile(data)`. |
+| `savePreference(idUser: string, data: PreferenceData): Promise<Preference>` | `public` | Memvalidasi kelengkapan pilihan preferensi belajar, lalu mendelegasikan penyimpanan perubahan ke metode entitas `preference.updatePreference(data)`. |
+| `fetchUserProfile(idUser: string): Promise<Profile>` | `public` | Memastikan akun pengguna ada melalui `User.findById(idUser)`, lalu mengambil objek identitas `Profile` melalui getter entitas `Profile.findByUser(idUser)`. |
+| `fetchUserPreference(idUser: string): Promise<Preference \| null>` | `public` | Mengambil objek `Preference` pengguna melalui metode getter entitas `Preference.getPreferenceByUser(idUser)` untuk ditampilkan pada halaman profil. |
 
-Tabel 5.1.2. Atribut Kelas UserControl
+Tabel 5.12.2. Atribut Kelas UserControl
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
 | `authAdapter` | `private` | `AuthAdapter` |
+| `validator` | `private` | `Validator` |
 
 ### 5.12.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
 **Nama Kelas:** *UserControl*  
-**Nama Operasi:** `processRegistration(data: RegistrationData): Promise<User>`  
+**Nama Operasi:** `processRegistration(email: string, password: string, dataProfil: ProfileData): Promise<User>`, `savePreference(idUser: string, data: PreferenceData): Promise<Preference>`, dan `fetchUserProfile(idUser: string): Promise<Profile>`  
 **ID Algoritma:** *Algo-C12-01*
 
 ```text
-FUNCTION processRegistration(data: RegistrationData): Promise<User>
-    IF NOT THIS.validateEmail(data.email) THEN
+FUNCTION processRegistration(email: string, password: string, dataProfil: ProfileData): Promise<User>
+    IF NOT THIS.validateEmail(email) THEN
         THROW Error("INVALID_UNIVERSITY_EMAIL")
     END IF
-    authUser <- AWAIT THIS.authAdapter.register(data.email, data.password)
-    profile <- AWAIT Profile.create(authUser.id, data.profile)
-    user <- User.create(authUser.id, data.username, data.email, data.role, profile)
-    IF data.role == MENTOR THEN RETURN Mentor.createFrom(user) END IF
-    RETURN Mentee.createFrom(user)
+
+    idUser <- AWAIT THIS.authAdapter.signUp(email, password)
+    user <- AWAIT User.create(idUser, dataProfil.username, email)
+    AWAIT Profile.create(idUser, dataProfil)
+    RETURN user
+END FUNCTION
+
+FUNCTION savePreference(idUser: string, data: PreferenceData): Promise<Preference>
+    IF NOT THIS.validator.validatePreference(data) THEN
+        THROW Error("INCOMPLETE_PREFERENCE")
+    END IF
+
+    preference <- AWAIT Preference.getPreferenceByUser(idUser)
+    IF preference IS NULL THEN
+        preference <- NEW Preference(idUser, [], [], NULL)
+    END IF
+
+    RETURN AWAIT preference.updatePreference(data)
+END FUNCTION
+
+FUNCTION fetchUserProfile(idUser: string): Promise<Profile>
+    user <- AWAIT User.findById(idUser)
+    IF user IS NULL THEN
+        THROW Error("USER_NOT_FOUND")
+    END IF
+
+    profile <- AWAIT Profile.findByUser(idUser)
+    RETURN profile
 END FUNCTION
 ```
-
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.1.1. Query Operasi [Nama Operasi]
-
-| No Query | Query | Keterangan |
-| :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
 
 ## 5.13 Kelas SessionControl
 
@@ -1934,8 +2162,6 @@ FUNCTION processSessionConfirmation(idSession: string, idUser: string, isConduct
 END FUNCTION
 ```
 
-*Catatan: Kelas `SessionControl` tidak mengeksekusi query basis data secara langsung. Seluruh operasi pembacaan (getter) dan penulisan (setter/CRUD) basis data dienkapsulasi di dalam kelas entitas `Session` dan `Preference` sesuai prinsip pemrograman berorientasi objek (OOP).*
-
 ## 5.14 Kelas FeedbackControl
 
 **Nama Kelas:** *FeedbackControl*  
@@ -2011,8 +2237,6 @@ FUNCTION retrieveFeedbackBySession(idSession: string, idMentor: string): Promise
 END FUNCTION
 ```
 
-*Catatan: Kelas `FeedbackControl` berfokus pada orkestrasi aturan bisnis dan validasi, sedangkan operasi pembacaan dan penyimpanan ke basis data dilakukan oleh kelas entitas `Feedback` dan `Session`.*
-
 ## 5.15 Kelas LoginPage
 
 **Nama Kelas:** *LoginPage*  
@@ -2066,8 +2290,6 @@ FUNCTION submitForm(): Promise<void>
     END TRY
 END FUNCTION
 ```
-
-*Catatan: Kelas `LoginPage` merupakan kelas antarmuka (Boundary/View) sehingga tidak melakukan query ke basis data.*
 
 ## 5.16 Kelas ProfilePage
 
@@ -2134,8 +2356,6 @@ FUNCTION submitUpdate(data: PreferenceData): Promise<void>
 END FUNCTION
 ```
 
-*Catatan: Kelas `ProfilePage` merupakan kelas antarmuka (Boundary/View) sehingga tidak mengeksekusi query basis data.*
-
 ## 5.17 Kelas SessionPage
 
 **Nama Kelas:** *SessionPage*  
@@ -2194,8 +2414,6 @@ FUNCTION submitConfirmation(isConducted: boolean, reason?: string): Promise<void
     END TRY
 END FUNCTION
 ```
-
-*Catatan: Kelas `SessionPage` merupakan kelas antarmuka (Boundary/View) induk untuk tampilan sesi sehingga tidak mengeksekusi query basis data.*
 
 ## 5.18 Kelas HostSessionPage
 
@@ -2266,8 +2484,6 @@ FUNCTION clickViewFeedback(): Promise<void>
 END FUNCTION
 ```
 
-*Catatan: Kelas `HostSessionPage` merupakan kelas antarmuka (Boundary/View) turunan dari `SessionPage` khusus untuk Mentor (host) sehingga tidak mengeksekusi query basis data.*
-
 ## 5.19 Kelas ParticipantSessionPage
 
 **Nama Kelas:** *ParticipantSessionPage*  
@@ -2323,8 +2539,6 @@ FUNCTION confirmCancelParticipation(): Promise<void>
 END FUNCTION
 ```
 
-*Catatan: Kelas `ParticipantSessionPage` merupakan kelas antarmuka (Boundary/View) turunan dari `SessionPage` khusus untuk Mentee sehingga tidak mengeksekusi query basis data.*
-
 ## 5.20 Kelas FeedbackForm
 
 **Nama Kelas:** *FeedbackForm*  
@@ -2370,8 +2584,6 @@ FUNCTION clickSkip(): void
     THIS.closeForm()
 END FUNCTION
 ```
-
-*Catatan: Kelas `FeedbackForm` merupakan kelas antarmuka (Boundary/View) sehingga tidak mengeksekusi query basis data.*
 
 ## 5.21 Kelas GroupChatPage
 
@@ -2431,8 +2643,6 @@ FUNCTION sendMessage(text: string): Promise<void>
     THIS.messageInput <- ""
 END FUNCTION
 ```
-
-*Catatan: Kelas `GroupChatPage` merupakan kelas antarmuka (Boundary/View) sehingga tidak mengeksekusi query basis data.*
 
 ## 5.22 Kelas Notification
 
@@ -2497,10 +2707,10 @@ Tabel 5.22.3. Query Operasi Kelas Notification
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *Q-C22-01* | `INSERT INTO notifications (id_user, id_session, title, content, timestamp, is_read) VALUES ($1, $2, $3, $4, NOW(), FALSE) RETURNING *;` | Menyimpan entitas notifikasi pengingat sesi baru ke dalam tabel `notifications` (operasi Create). |
+| *Q-C22-01* | `INSERT INTO notifications (id_user, id_session, title, content, is_read) VALUES ($1, $2, $3, $4, FALSE);` | Menyimpan entitas notifikasi pengingat sesi baru ke dalam tabel `notifications` (operasi Create). |
 | *Q-C22-02* | `SELECT * FROM notifications WHERE notification_id = $1;` | Mengambil data entitas notifikasi berdasarkan `notification_id` (operasi Read pada `findById`). |
 | *Q-C22-03* | `UPDATE notifications SET is_read = TRUE WHERE notification_id = $1;` | Memperbarui status `is_read` menjadi `TRUE` saat notifikasi dibaca pengguna (operasi Update pada `markAsRead`). |
-| *Q-C22-04* | `SELECT * FROM notifications WHERE id_user = $1 ORDER BY timestamp DESC;` | Mengambil daftar seluruh notifikasi milik seorang pengguna diurutkan dari yang terbaru (operasi Read pada `getNotificationsByUser`). |
+| *Q-C22-04* | `SELECT * FROM notifications WHERE id_user = $1;` | Mengambil daftar seluruh notifikasi milik seorang pengguna (operasi Read pada `getNotificationsByUser`). |
 
 ## 5.23 Kelas PopUpNotification
 
@@ -2548,8 +2758,6 @@ FUNCTION clickNotification(idNotification: string): Promise<void>
 END FUNCTION
 ```
 
-*Catatan: Kelas `PopUpNotification` merupakan kelas antarmuka (Boundary/View) penampil notifikasi sehingga tidak mengeksekusi query basis data secara langsung.*
-
 ## 5.24 Kelas HistoryPage
 
 **Nama Kelas:** *HistoryPage*  
@@ -2596,11 +2804,6 @@ FUNCTION selectSession(idSession: string): void
     THIS.sessionPage.openSessionDetail(idSession)
 END FUNCTION
 ```
-
-*Catatan: Kelas `HistoryPage` merupakan kelas antarmuka (Boundary/View) sehingga tidak mengeksekusi query basis data.*
-
-
-*[Ulangi pola 5.1: nama dan ID kelas, tabel operasi, tabel atribut, serta subbab algoritma/query untuk operasi penting jika diperlukan.]*
 
 <br>
 
@@ -2754,7 +2957,7 @@ Tabel 6.7. Spesifikasi Objek Antarmuka I-05
 | *I05-02* | *Panel* | *Tanggal, Waktu, Format, Kapasitas* | *Tautan pertemuan disembunyikan sampai pengguna bergabung.* |
 | *I05-03* | *List* | *Peserta* | *Daftar Mentee yang sudah bergabung dan sisa slot.* |
 | *I05-04* | *Link* | *Lihat profil* | *Membuka I-07 milik Mentor.* |
-| *I05-05* | *Button* | *Gabung Sesi* | *Memanggil `SessionController.processRegistration(idSession, idMentee)`; slot diperiksa dengan `hasAvailableSlot()`. Jika berhasil, pengguna menjadi peserta dan tautan pertemuan ditampilkan.* |
+| *I05-05* | *Button* | *Gabung Sesi* | *Memanggil `SessionControl.processRegistration(idSession, idMentee)`; slot diperiksa dengan `Session.checkCapacity()`. Jika berhasil, pengguna menjadi peserta dan tautan pertemuan ditampilkan.* |
 
 ## 6.8 Rancangan Antarmuka I-05a
 
@@ -2819,10 +3022,10 @@ Tabel 6.10. Spesifikasi Objek Antarmuka I-07
 
 | Id_Objek | Jenis | Konten | Keterangan |
 | :--- | :--- | :--- | :--- |
-| *I07-01* | *Text* | *Nama, universitas, program studi, email, peran* | *Data dari `UserController.fetchUserProfile(idUser)`.* |
+| *I07-01* | *Text* | *Nama, universitas, program studi, email, bio* | *Data dari `UserControl.fetchUserProfile(idUser)`.* |
 | *I07-02* | *Button* | *Edit Preferensi* | *Membuka I-08. Hanya tampil pada profil milik sendiri.* |
 | *I07-03* | *Card* | *Statistik sesi dan rating* | *Ringkasan jumlah sesi sebagai Mentee, sebagai Mentor, dan rating Mentor.* |
-| *I07-04* | *Chip Group* | *Tag Materi, Format Belajar* | *Data dari `UserController.fetchUserPreference(idUser)`.* |
+| *I07-04* | *Chip Group* | *Tag Materi, Format Belajar* | *Data dari `UserControl.fetchUserPreference(idUser)`.* |
 | *I07-05* | *Grid* | *Ketersediaan Waktu* | *Slot waktu kosong per hari (hanya baca).* |
 
 ## 6.11 Rancangan Antarmuka I-08
@@ -2844,7 +3047,7 @@ Tabel 6.11. Spesifikasi Objek Antarmuka I-08
 | *I08-01* | *Chip Group* | *Tag Materi* | *Memilih satu atau lebih tag materi.* |
 | *I08-02* | *Checkbox Group* | *Daring, Luring* | *Memilih format belajar.* |
 | *I08-03* | *Grid* | *Ketersediaan Waktu* | *Memilih slot waktu kosong per hari.* |
-| *I08-04* | *Button* | *Simpan Preferensi* | *Memanggil `UserController.savePreference(idUser, materialTags, availability, sessionFormatPreference)`; Validator memastikan semua bagian terisi. Kembali ke I-07.* |
+| *I08-04* | *Button* | *Simpan Preferensi* | *Memanggil `UserControl.savePreference(idUser, data)`; Validator memastikan semua bagian terisi. Kembali ke I-07.* |
 | *I08-05* | *Button* | *Batal* | *Kembali ke I-07 tanpa menyimpan.* |
 
 ## 6.12 Rancangan Antarmuka I-09
@@ -2957,7 +3160,7 @@ Tabel 6.16. Spesifikasi Objek Antarmuka I-13
 | *I13-01* | *Button* | *Keluar Sesi* | *Membuka dialog konfirmasi.* |
 | *I13-02* | *Dialog* | *Keluar dari sesi?* | *Konfirmasi sebelum Mentee keluar dari sesi.* |
 | *I13-03* | *Button* | *Kembali* | *Menutup dialog.* |
-| *I13-04* | *Button* | *Keluar* | *Memanggil `SessionController.cancelParticipation(idSession, idMentee)`; pengguna dikeluarkan dari peserta dan grup obrolan. Kembali ke I-03.* |
+| *I13-04* | *Button* | *Keluar* | *Memanggil `SessionControl.cancelSession(idSession, idMentee)`; pengguna dikeluarkan dari peserta dan grup obrolan. Kembali ke I-03.* |
 
 ## 6.17 Rancangan Antarmuka I-14
 
@@ -3052,11 +3255,11 @@ Tabel 6.20. Rancangan Antarmuka Keseluruhan
 
 ---
 
-# BAB 5: Matriks Kerunutan
+# BAB 7: Matriks Kerunutan
 
 Matriks kerunutan berikut memetakan keterkaitan antara setiap kelas perancangan dengan *use case* yang diimplementasikannya pada perangkat lunak **PeerUP**.
 
-Tabel 5.1. Matriks Kerunutan Kelas terhadap Use Case
+Tabel 7.1. Matriks Kerunutan Kelas terhadap Use Case
 
 | Kelas | Use Case Terkait |
 | :--- | :--- |

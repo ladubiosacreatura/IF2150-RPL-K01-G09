@@ -84,6 +84,7 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 | Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |
 | :--- | :--- | :--- | :--- |
 | *Gemini* | *Menentukan contoh format pseudocode untuk web based functions* | *Untuk merealisasikan fungsi seperti ini .... , berikan contoh pseudocode secara web based (seperti realisasi promise)* | *Output gemini dibandingkan dengan function aktual javascript atau typescript* |
+| *Gemini* | *Menentukan format query CRUD pada kelas entitas* | *Untuk merealisasikan fungsi seperti ini .... , berikan contoh query untuk melakukan ini* | *Output gemini dibandingkan dengan query yang valid* |
 
 ---
 ### Pernyataan Integritas dan Persetujuan
