@@ -1173,35 +1173,144 @@ Tabel 5.1. Daftar Kelas Perancangan dan Kelas Analisis Terkait
 
 Untuk **setiap kelas**, identifikasi operasi berdasarkan tanggung jawab kelas beserta *visibility*-nya, serta atribut beserta *visibility* dan tipenya. Buat subbab tersendiri untuk setiap kelas.
 
-## 5.1 Kelas [Nama Kelas 1]
+## 5.1 Kelas User
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *User*
 
-Tabel 5.1.1. Operasi Kelas [Nama Kelas 1]
+**ID Kelas:** *C01*
+
+Tabel 5.1.1. Operasi Kelas User
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| `register(email: string, password: string): Promise<User>` | `public` | Meneruskan registrasi ke `UserControl`; kredensial ditangani oleh Supabase Auth. |
+| `login(email: string, password: string): Promise<User>` | `public` | Meneruskan autentikasi ke `UserControl`/Supabase Auth. |
+| `logout(): Promise<void>` | `public` | Mengakhiri sesi melalui AuthAdapter. |
+| `saveAccount(): Promise<void>` | `public` | Menyimpan data akun non-kredensial ke penyimpanan aplikasi. |
+| `getProfile(): Profile` | `public` | Mengembalikan profil yang terkait dengan akun. |
+| `openDashboard(): void` | `public` | Meminta navigasi ke dashboard setelah autentikasi berhasil. |
+| `openSessionDashboard(): void` | `public` | Membuka tampilan dashboard sesi. |
+| `checkSchedule(session: Session): boolean` | `public` | Memeriksa kesesuaian sesi dengan jadwal pengguna. |
+| `getUserID(): string` | `public` | Mengembalikan ID pengguna. |
+| `isActive(): boolean` | `public` | Memeriksa apakah sesi autentikasi masih aktif. |
+| `createMessage(chat: GroupChat, text: string): ChatMessage` | `public` | Membentuk pesan baru dari pengguna untuk ruang obrolan. |
+| `sendMessage(chat: GroupChat, message: ChatMessage): Promise<void>` | `public` | Meneruskan pesan melalui mekanisme chat yang memeriksa hak akses peserta. |
 
-Tabel 5.1.2. Atribut Kelas [Nama Kelas 1]
+Tabel 5.1.2. Atribut Kelas User
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| `idUser` | `private` | `string` |
+| `username` | `private` | `string` |
+| `email` | `private` | `string` |
 
 ### 5.1.1 Algoritma/Query
 
 Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
 
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *User*  
+**Nama Operasi:** `getUserID(): string`  
+**ID Algoritma:** *Algo-C01-01*
+
+```
+FUNCTION getUserID(): string
+    RETURN THIS.idUser
+END FUNCTION
+
+FUNCTION isActive(): boolean
+    RETURN THIS.activeSession IS NOT NULL
+END FUNCTION
+```
+
+
+## 5.2 Kelas Mentor
+
+**Nama Kelas:** *Mentor*
+
+**ID Kelas:** *C02*
+
+Tabel 5.2.1. Operasi Kelas Mentor
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `receiveFeedback(feedback: Feedback): void` | `public` | Menambahkan feedback yang terkait dengan sesi yang dibuat Mentor ke daftar feedback Mentor. Data feedback dibaca melalui `FeedbackControl`, bukan diambil langsung dari basis data oleh entitas. |
+| `viewFeedback(): Feedback[]` | `public` | Mengembalikan daftar feedback yang diterima Mentor. |
+
+Tabel 5.2.2. Atribut Kelas Mentor
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| `listSessionsMade` | `private` | `Session[]` |
+| `feedbackList` | `private` | `Feedback[]` |
+
+### 5.2.1 Algoritma/Query
+
+Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
+
+**Nama Kelas:** *Mentor*  
+**Nama Operasi:** `receiveFeedback(feedback: Feedback): void`  
+**ID Algoritma:** *Algo-C02-01*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+FUNCTION receiveFeedback(feedback: Feedback): void
+    IF feedback IS NOT NULL THEN
+        APPEND feedback TO THIS.feedbackList
+    END IF
+END FUNCTION
+
+FUNCTION viewFeedback(): Feedback[]
+    RETURN COPY(THIS.feedbackList)
+END FUNCTION
+``` 
+
+
+Tabel 5.1.1. Query Operasi [Nama Operasi]
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
+| *...* | *...* | *...* |
+
+## 5.3 Kelas Mentee
+
+**Nama Kelas:** *Mentee*
+
+**ID Kelas:** *C03*
+
+Tabel 5.3.1. Operasi Kelas Mentee
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `giveFeedback(idSession: string, rating: number, comment?: string): Promise<Feedback>` | `public` | Meneruskan feedback untuk sesi yang telah diikuti ke `FeedbackControl.submitFeedback()`; validasi dan penyimpanan dikoordinasikan oleh controller. |
+| `checkCompletedSession(idSession: string): boolean` | `public` | Memeriksa apakah sesi terdapat dalam daftar sesi yang dihadiri dan berstatus selesai, sebagai prasyarat pemberian feedback. |
+
+Tabel 5.3.2. Atribut Kelas Mentee
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| `attendedSessions` | `private` | `Session[]` |
+| `listSessionsJoined` | `private` | `Session[]` |
+
+### 5.3.1 Algoritma/Query
+
+Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
+
+**Nama Kelas:** *Mentee*  
+**Nama Operasi:** `giveFeedback(idSession: string, rating: number, comment?: string): Promise<Feedback>`  
+**ID Algoritma:** *Algo-C03-01*
+
+```text
+FUNCTION giveFeedback(idSession: string, rating: number, comment?: string): Promise<Feedback>
+    IF NOT THIS.checkCompletedSession(idSession) THEN
+        THROW Error("SESSION_NOT_COMPLETED_OR_NOT_ATTENDED")
+    END IF
+    RETURN AWAIT feedbackControl.submitFeedback(idSession, THIS.getUserID(), rating, comment)
+END FUNCTION
+
+FUNCTION checkCompletedSession(idSession: string): boolean
+    RETURN EXISTS session IN THIS.attendedSessions WHERE
+        session.getSessionID() == idSession AND session.getSessionStatus() == SELESAI
+END FUNCTION
 ```
 
 Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
@@ -1213,152 +1322,71 @@ Tabel 5.1.1. Query Operasi [Nama Operasi]
 | *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
 | *...* | *...* | *...* |
 
-## 5.2 Kelas [Nama Kelas 2]
+## 5.4 Kelas Session
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *Session*
 
-Tabel 5.1.1. Operasi Kelas [Nama Kelas 1]
+**ID Kelas:** *C04*
 
-| Nama Operasi | Visibility (private, public) | Keterangan |
-| :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
-
-Tabel 5.1.2. Atribut Kelas [Nama Kelas 1]
-
-| Nama Atribut | Visibility (private, public) | Tipe |
-| :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
-
-### 5.1.1 Algoritma/Query
-
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
-
-```text
-[Tuliskan pseudocode algoritma operasi di sini.]
-```
-
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.1.1. Query Operasi [Nama Operasi]
-
-| No Query | Query | Keterangan |
-| :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
-## 5.3 Kelas [Nama Kelas 3]
-
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
-
-Tabel 5.1.1. Operasi Kelas [Nama Kelas 1]
+Tabel 5.4.1. Operasi Kelas Session
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| `saveSession(): Promise<Session>` | `public` | Menyimpan sesi baru/perubahan melalui repository entitas. |
+| `addParticipant(idMentee: string): Promise<boolean>` | `public` | Mendaftarkan Mentee jika sesi masih terbuka, belum dimulai, dan kuota tersedia. |
+| `checkCapacity(): boolean` | `public` | Memeriksa bahwa jumlah peserta belum mencapai kapasitas sesi. |
+| `getSessionDetails(): SessionData` | `public` | Mengembalikan detail sesi untuk ditampilkan. |
+| `getSessionStatus(): SessionStatus` | `public` | Mengembalikan status sesi. |
+| `setStatus(status: SessionStatus, reason?: string): Promise<void>` | `public` | Mengubah status akhir sesi dan alasan bila sesi tidak terlaksana. |
+| `getStatus(): SessionStatus` | `public` | Mengembalikan status terkini. |
+| `isCompleted(): boolean` | `public` | Memeriksa apakah sesi berstatus selesai. |
+| `openGroupChat(): GroupChat` | `public` | Mengembalikan ruang obrolan yang terkait dengan sesi. |
+| `pushNotification(): Promise<void>` | `public` | Mendelegasikan pembuatan pengingat sesi kepada mekanisme notifikasi terjadwal. |
+| `getSessionID(): string` | `public` | Mengembalikan ID sesi. |
+| `editTitle(title: string): void` | `public` | Memperbarui topik/judul sesi pada objek. |
+| `editDescription(description: string): void` | `public` | Memperbarui deskripsi sesi pada objek. |
+| `editPreference(preference: Preference): void` | `public` | Memperbarui tag/topik dan format yang ditawarkan sesi. |
+| `editSchedule(schedule: Date, scheduledTime: Date): void` | `public` | Memperbarui jadwal sesi setelah validasi konflik oleh `SessionControl`. |
 
-Tabel 5.1.2. Atribut Kelas [Nama Kelas 1]
-
-| Nama Atribut | Visibility (private, public) | Tipe |
-| :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
-
-### 5.1.1 Algoritma/Query
-
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
-
-```text
-[Tuliskan pseudocode algoritma operasi di sini.]
-```
-
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.1.1. Query Operasi [Nama Operasi]
-
-| No Query | Query | Keterangan |
-| :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
-## 5.4 Kelas [Nama Kelas 4]
-
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
-
-Tabel 5.1.1. Operasi Kelas [Nama Kelas 1]
-
-| Nama Operasi | Visibility (private, public) | Keterangan |
-| :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
-
-Tabel 5.1.2. Atribut Kelas [Nama Kelas 1]
+Tabel 5.4.2. Atribut Kelas Session
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| `idSession` | `private` | `string` |
+| `topic` | `private` | `string` |
+| `schedule` | `private` | `Date` |
+| `scheduledTime` | `private` | `Date` |
+| `format` | `private` | `SessionFormat` |
+| `capacity` | `private` | `number` |
+| `userList` | `private` | `User[]` |
+| `status` | `private` | `SessionStatus` |
+| `reasonNotConducted` | `private` | `string \| null` |
+| `groupChat` | `private` | `GroupChat \| null` |
 
-### 5.1.1 Algoritma/Query
-
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
-
-```text
-[Tuliskan pseudocode algoritma operasi di sini.]
-```
-
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.1.1. Query Operasi [Nama Operasi]
-
-| No Query | Query | Keterangan |
-| :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
-## 5.5 Kelas [Nama Kelas 5]
-
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
-
-Tabel 5.1.1. Operasi Kelas [Nama Kelas 1]
-
-| Nama Operasi | Visibility (private, public) | Keterangan |
-| :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
-
-Tabel 5.1.2. Atribut Kelas [Nama Kelas 1]
-
-| Nama Atribut | Visibility (private, public) | Tipe |
-| :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
-
-### 5.1.1 Algoritma/Query
+### 5.4.1 Algoritma/Query
 
 Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
 
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *Session*  
+**Nama Operasi:** `addParticipant(idMentee: string): Promise<boolean>`  
+**ID Algoritma:** *Algo-C04-01*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+FUNCTION addParticipant(idMentee: string): Promise<boolean>
+    IF THIS.status != TERBUKA OR NOT THIS.checkCapacity() THEN
+        RETURN FALSE
+    END IF
+    IF EXISTS user IN THIS.userList WHERE user.getUserID() == idMentee THEN
+        RETURN FALSE
+    END IF
+    APPEND Mentee.getById(idMentee) TO THIS.userList
+    AWAIT THIS.saveSession()
+    RETURN TRUE
+END FUNCTION
+
+FUNCTION checkCapacity(): boolean
+    RETURN LENGTH(THIS.userList) < THIS.capacity AND THIS.capacity >= 1 AND THIS.capacity <= 20
+END FUNCTION
 ```
 
 Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
@@ -1370,35 +1398,47 @@ Tabel 5.1.1. Query Operasi [Nama Operasi]
 | *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
 | *...* | *...* | *...* |
 
-## 5.6 Kelas [Nama Kelas 6]
+## 5.5 Kelas GroupChat
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *GroupChat*
 
-Tabel 5.1.1. Operasi Kelas [Nama Kelas 1]
+**ID Kelas:** *C05*
+
+Tabel 5.5.1. Operasi Kelas GroupChat
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| `searchMessage(keyword: string): ChatMessage[]` | `public` | Mencari pesan dalam riwayat obrolan berdasarkan teks. |
+| `displayMessage(): ChatMessage[]` | `public` | Mengembalikan pesan secara kronologis untuk dirender oleh antarmuka. |
+| `editMessage(idMessage: string, text: string): Promise<boolean>` | `public` | Diperuntukkan bagi pengelolaan pesan sesuai kebijakan obrolan; perubahan harus memverifikasi pengirim. |
+| `deleteMessage(idMessage: string): Promise<boolean>` | `public` | Menghapus pesan sesuai kebijakan akses ruang obrolan. |
 
-Tabel 5.1.2. Atribut Kelas [Nama Kelas 1]
+Tabel 5.5.2. Atribut Kelas GroupChat
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| `listChatMessage` | `private` | `ChatMessage[]` |
+| `listMentee` | `private` | `Mentee[]` |
+| `mentor` | `private` | `Mentor` |
 
-### 5.1.1 Algoritma/Query
+### 5.5.1 Algoritma/Query
 
 Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
 
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *GroupChat*  
+**Nama Operasi:** `searchMessage(keyword: string): ChatMessage[]`  
+**ID Algoritma:** *Algo-C05-01*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+FUNCTION searchMessage(keyword: string): ChatMessage[]
+    normalizedKeyword <- LOWERCASE(TRIM(keyword))
+    RETURN FILTER THIS.listChatMessage WHERE
+        normalizedKeyword IN LOWERCASE(message.getText())
+END FUNCTION
+
+FUNCTION displayMessage(): ChatMessage[]
+    RETURN SORT COPY(THIS.listChatMessage) BY message.getTime() ASCENDING
+END FUNCTION
 ```
 
 Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
@@ -1410,35 +1450,46 @@ Tabel 5.1.1. Query Operasi [Nama Operasi]
 | *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
 | *...* | *...* | *...* |
 
-## 5.7 Kelas [Nama Kelas 7]
+## 5.6 Kelas Feedback
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *Feedback*
 
-Tabel 5.1.1. Operasi Kelas [Nama Kelas 1]
+**ID Kelas:** *C06*
+
+Tabel 5.6.1. Operasi Kelas Feedback
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| `setRating(rating: number): void` | `public` | Menetapkan rating dalam rentang 1–5; validasi bisnis juga ditegakkan oleh `FeedbackControl`. |
+| `setComment(comment: string): void` | `public` | Menetapkan komentar opsional. |
+| `getRating(): number` | `public` | Mengembalikan rating. |
+| `getComment(): string` | `public` | Mengembalikan komentar. |
+| `getDate(): Date` | `public` | Mengembalikan waktu feedback dibuat. |
 
-Tabel 5.1.2. Atribut Kelas [Nama Kelas 1]
+Tabel 5.6.2. Atribut Kelas Feedback
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| `idFeedback` | `private` | `string` |
+| `rating` | `private` | `number` |
+| `comment` | `private` | `string` |
+| `date` | `private` | `Date` |
 
-### 5.1.1 Algoritma/Query
+### 5.6.1 Algoritma/Query
 
 Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
 
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *Feedback*  
+**Nama Operasi:** `setRating(rating: number): void`  
+**ID Algoritma:** *Algo-C06-01*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+FUNCTION setRating(rating: number): void
+    IF rating < 1 OR rating > 5 OR rating IS NOT INTEGER THEN
+        THROW Error("INVALID_RATING")
+    END IF
+    THIS.rating <- rating
+END FUNCTION
 ```
 
 Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
@@ -1450,35 +1501,47 @@ Tabel 5.1.1. Query Operasi [Nama Operasi]
 | *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
 | *...* | *...* | *...* |
 
-## 5.8 Kelas [Nama Kelas 8]
+## 5.7 Kelas SessionHistory
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *SessionHistory*
 
-Tabel 5.1.1. Operasi Kelas [Nama Kelas 1]
+**ID Kelas:** *C07*
+
+Tabel 5.7.1. Operasi Kelas SessionHistory
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| `getArchivedSessions(): Session[]` | `public` | Mengembalikan sesi berstatus akhir yang diarsipkan. |
+| `getCompletedSessions(): Session[]` | `public` | Mengembalikan sesi berstatus Selesai. |
+| `addSessionToHistory(session: Session): void` | `public` | Menambahkan sesi berstatus akhir ke koleksi riwayat. |
+| `updateOncomingSession(sessions: Session[]): void` | `public` | Memperbarui daftar sesi mendatang; sesi mendatang tidak dicampur dengan arsip. |
 
-Tabel 5.1.2. Atribut Kelas [Nama Kelas 1]
+Tabel 5.7.2. Atribut Kelas SessionHistory
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| `historyList` | `private` | `Session[]` |
+| `completedSessions` | `private` | `Session[]` |
+| `cancelledSessions` | `private` | `Session[]` |
+| `oncomingSession` | `private` | `Session[]` |
 
-### 5.1.1 Algoritma/Query
+### 5.7.1 Algoritma/Query
 
 Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
 
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *SessionHistory*  
+**Nama Operasi:** `addSessionToHistory(session: Session): void`  
+**ID Algoritma:** *Algo-C07-01*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+FUNCTION addSessionToHistory(session: Session): void
+    IF session IS NULL OR session.getSessionStatus() NOT IN {SELESAI, TIDAK_TERLAKSANA, DIBATALKAN} THEN
+        RETURN
+    END IF
+    APPEND session TO THIS.historyList
+    IF session.getSessionStatus() == SELESAI THEN APPEND session TO THIS.completedSessions END IF
+    IF session.getSessionStatus() == DIBATALKAN THEN APPEND session TO THIS.cancelledSessions END IF
+END FUNCTION
 ```
 
 Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
@@ -1490,35 +1553,46 @@ Tabel 5.1.1. Query Operasi [Nama Operasi]
 | *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
 | *...* | *...* | *...* |
 
-## 5.9 Kelas [Nama Kelas 9]
+## 5.8 Kelas ChatMessage
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *ChatMessage*
 
-Tabel 5.1.1. Operasi Kelas [Nama Kelas 1]
+**ID Kelas:** *C08*
+
+Tabel 5.8.1. Operasi Kelas ChatMessage
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| `getSender(): User` | `public` | Mengembalikan pengguna pengirim pesan. |
+| `getTime(): Date` | `public` | Mengembalikan waktu pesan dikirim. |
+| `getText(): string` | `public` | Mengembalikan isi teks pesan. |
 
-Tabel 5.1.2. Atribut Kelas [Nama Kelas 1]
+Tabel 5.8.2. Atribut Kelas ChatMessage
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| `sender` | `private` | `User` |
+| `timeStamp` | `private` | `Date` |
+| `text` | `private` | `string` |
 
-### 5.1.1 Algoritma/Query
+### 5.8.1 Algoritma/Query
 
 Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
 
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *ChatMessage*  
+**Nama Operasi:** `getText(): string`  
+**ID Algoritma:** *Algo-C08-01*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+FUNCTION getSender(): User
+    RETURN THIS.sender
+END FUNCTION
+FUNCTION getTime(): Date
+    RETURN THIS.timeStamp
+END FUNCTION
+FUNCTION getText(): string
+    RETURN THIS.text
+END FUNCTION
 ```
 
 Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
@@ -1530,35 +1604,46 @@ Tabel 5.1.1. Query Operasi [Nama Operasi]
 | *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
 | *...* | *...* | *...* |
 
-## 5.10 Kelas [Nama Kelas 10]
+## 5.9 Kelas Preference
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *Preference*
 
-Tabel 5.1.1. Operasi Kelas [Nama Kelas 1]
+**ID Kelas:** *C09*
+
+Tabel 5.9.1. Operasi Kelas Preference
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| `getPreference(): Preference` | `public` | Mengembalikan objek preferensi pengguna. |
+| `getPreferenceDetails(): PreferenceData` | `public` | Mengembalikan tag materi, ketersediaan waktu, dan format belajar. |
+| `updatePreference(data: PreferenceData): Promise<void>` | `public` | Memperbarui preferensi dan menyimpan perubahan melalui lapisan persistence yang dipanggil controller. |
 
-Tabel 5.1.2. Atribut Kelas [Nama Kelas 1]
+Tabel 5.9.2. Atribut Kelas Preference
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| `materialTag` | `private` | `string[]` |
+| `availability` | `private` | `Availability[]` |
+| `sessionFormatPreference` | `private` | `SessionFormat` |
 
-### 5.1.1 Algoritma/Query
+### 5.9.1 Algoritma/Query
 
 Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
 
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *Preference*  
+**Nama Operasi:** `updatePreference(data: PreferenceData): Promise<void>`  
+**ID Algoritma:** *Algo-C09-01*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+FUNCTION updatePreference(data: PreferenceData): Promise<void>
+    IF data.materialTag IS EMPTY OR data.availability IS EMPTY OR data.sessionFormatPreference IS NULL THEN
+        THROW Error("PREFERENCE_INCOMPLETE")
+    END IF
+    THIS.materialTag <- data.materialTag
+    THIS.availability <- data.availability
+    THIS.sessionFormatPreference <- data.sessionFormatPreference
+    AWAIT PreferenceRepository.update(THIS)
+END FUNCTION
 ```
 
 Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
@@ -1570,35 +1655,45 @@ Tabel 5.1.1. Query Operasi [Nama Operasi]
 | *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
 | *...* | *...* | *...* |
 
-## 5.11 Kelas [Nama Kelas 11]
+## 5.10 Kelas Profile
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *Profile*
 
-Tabel 5.1.1. Operasi Kelas [Nama Kelas 1]
+**ID Kelas:** *C10*
+
+Tabel 5.10.1. Operasi Kelas Profile
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| `getProfileData(): ProfileData` | `public` | Mengembalikan data identitas profil pengguna. |
+| `updateProfile(data: ProfileData): Promise<void>` | `public` | Memperbarui nama, universitas, program studi, dan bio; persistensi dikoordinasikan di sisi server. |
 
-Tabel 5.1.2. Atribut Kelas [Nama Kelas 1]
+Tabel 5.10.2. Atribut Kelas Profile
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| `name` | `private` | `string` |
+| `university` | `private` | `string` |
+| `studyProgram` | `private` | `string` |
+| `bio` | `private` | `string` |
 
-### 5.1.1 Algoritma/Query
+### 5.10.1 Algoritma/Query
 
 Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
 
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *Profile*  
+**Nama Operasi:** `updateProfile(data: ProfileData): Promise<void>`  
+**ID Algoritma:** *Algo-C10-01*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+FUNCTION updateProfile(data: ProfileData): Promise<void>
+    VALIDATE data.name, data.university, data.studyProgram
+    THIS.name <- TRIM(data.name)
+    THIS.university <- TRIM(data.university)
+    THIS.studyProgram <- TRIM(data.studyProgram)
+    THIS.bio <- TRIM(data.bio)
+    AWAIT ProfileRepository.update(THIS)
+END FUNCTION
 ```
 
 Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
@@ -1610,35 +1705,99 @@ Tabel 5.1.1. Query Operasi [Nama Operasi]
 | *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
 | *...* | *...* | *...* |
 
-## 5.12 Kelas [Nama Kelas 12]
+## 5.11 Kelas Dashboard
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *Dashboard*
 
-Tabel 5.1.1. Operasi Kelas [Nama Kelas 1]
+**ID Kelas:** *C11*
+
+Tabel 5.11.1. Operasi Kelas Dashboard
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| `showSession(sessions: Session[]): void` | `public` | Menyediakan daftar sesi aktif untuk ditampilkan pada dashboard. |
+| `matchMakeSession(preference: Preference, candidates: Session[]): Session[]` | `public` | Meminta controller mencocokkan kandidat sesi dengan preferensi Mentee. |
+| `searchSession(criteria: SearchCriteria): Session[]` | `public` | Menyaring sesi berdasarkan kriteria pencarian yang diberikan. |
+| `showRecommendation(sessions: Session[]): void` | `public` | Menyediakan sesi hasil rekomendasi untuk ditampilkan. |
+| `checkSchedule(session: Session): boolean` | `public` | Memeriksa kecocokan jadwal sesi dengan ketersediaan pengguna. |
 
-Tabel 5.1.2. Atribut Kelas [Nama Kelas 1]
+Tabel 5.11.2. Atribut Kelas Dashboard
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| `upcomingSessions` | `private` | `Session[]` |
+| `sessionRecommendation` | `private` | `Session[]` |
+| `listSessions` | `private` | `Session[]` |
 
-### 5.1.1 Algoritma/Query
+### 5.11.1 Algoritma/Query
 
 Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
 
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *Dashboard*  
+**Nama Operasi:** `matchMakeSession(preference: Preference, candidates: Session[]): Session[]`  
+**ID Algoritma:** *Algo-C11-01*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+FUNCTION matchMakeSession(preference: Preference, candidates: Session[]): Session[]
+    RETURN SessionControl.matchSession(preference, candidates)
+END FUNCTION
+
+FUNCTION checkSchedule(session: Session): boolean
+    RETURN preference.getAvailability().overlapsWith(session.getScheduledTime())
+END FUNCTION
+```
+
+Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
+
+Tabel 5.1.1. Query Operasi [Nama Operasi]
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
+| *...* | *...* | *...* |
+
+## 5.12 Kelas UserControl
+
+**Nama Kelas:** *UserControl*
+
+**ID Kelas:** *C12*
+
+Tabel 5.1.1. Operasi Kelas UserControl
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `authLogin(email: string, password: string): Promise<User>` | `public` | Mendelegasikan autentikasi ke Supabase Auth melalui `AuthAdapter` dan mengembalikan pengguna terautentikasi. |
+| `validateEmail(email: string): boolean` | `public` | Memeriksa format dan domain email universitas menggunakan validator sisi server. |
+| `processRegistration(data: RegistrationData): Promise<User>` | `public` | Memvalidasi registrasi, membuat akun melalui AuthAdapter, lalu membuat profil dan spesialisasi peran. |
+| `saveProfile(idUser: string, data: ProfileData): Promise<void>` | `public` | Memvalidasi dan menyimpan data profil pengguna. |
+| `savePreference(idUser: string, data: PreferenceData): Promise<void>` | `public` | Memvalidasi kelengkapan dan menyimpan preferensi pengguna. |
+| `fetchUserProfile(idUser: string): Promise<Profile>` | `public` | Mengambil data profil pengguna untuk halaman profil. |
+
+Tabel 5.1.2. Atribut Kelas UserControl
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| `authAdapter` | `private` | `AuthAdapter` |
+
+### 5.12.1 Algoritma/Query
+
+Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
+
+**Nama Kelas:** *UserControl*  
+**Nama Operasi:** `processRegistration(data: RegistrationData): Promise<User>`  
+**ID Algoritma:** *Algo-C12-01*
+
+```text
+FUNCTION processRegistration(data: RegistrationData): Promise<User>
+    IF NOT THIS.validateEmail(data.email) THEN
+        THROW Error("INVALID_UNIVERSITY_EMAIL")
+    END IF
+    authUser <- AWAIT THIS.authAdapter.register(data.email, data.password)
+    profile <- AWAIT Profile.create(authUser.id, data.profile)
+    user <- User.create(authUser.id, data.username, data.email, data.role, profile)
+    IF data.role == MENTOR THEN RETURN Mentor.createFrom(user) END IF
+    RETURN Mentee.createFrom(user)
+END FUNCTION
 ```
 
 Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 

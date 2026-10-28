@@ -129,5 +129,19 @@
 | *28-10-2026* | *David Christian* | *Bab 6* | *3* | *Done* | *-* |
 
 
+### Milestone 8
+**Periode:** [21-10-2026] - [28-10-2026]
+
+| Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
+|---|---|---|---|---|---|
+| *27-10-2026* | *Matthew Allen Reynaldo* | *Menyusun daftar kelas bab 5* | *1* | *Done* | *-* |
+
+### Milestone 8
+**Periode:** [21-10-2026] - [28-10-2026]
+
+| Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
+|---|---|---|---|---|---|
+| *27-10-2026* | *Matthew Allen Reynaldo* | *Menyusun daftar kelas bab 5* | *1* | *Done* | *-* |
+
 
 ``Gunakan format penulisan Logbook yang sama untuk setiap Milestone dan pastikan pembuatan Daftar Isi juga sudah sesuai sebelum Logbook dikumpulkan. ``
