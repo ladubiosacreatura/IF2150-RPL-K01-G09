@@ -118,6 +118,36 @@ as $$
       or exists (select 1 from public.session_participants p where p.id_session = p_session and p.id_mentee = auth.uid());
 $$;
 
+-- UC05: mentor or mentee confirms whether an ended session took place. Only the
+-- mentor may update sessions directly, so mentees go through this function.
+create function public.confirm_session(p_session uuid, p_status public.session_status, p_reason text default null)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if p_status not in ('SELESAI', 'TIDAK_TERLAKSANA') then
+    raise exception 'status must be SELESAI or TIDAK_TERLAKSANA';
+  end if;
+
+  update public.sessions
+  set status = p_status,
+      reason_not_conducted = case when p_status = 'TIDAK_TERLAKSANA' then nullif(trim(p_reason), '') end
+  where id_session = p_session
+    and status = 'TERJADWAL'
+    and end_time <= now()
+    and public.is_session_member(p_session);
+
+  if not found then
+    raise exception 'session not found, not yet ended, already confirmed, or not a member';
+  end if;
+end;
+$$;
+
+revoke execute on function public.confirm_session(uuid, public.session_status, text) from public, anon;
+grant execute on function public.confirm_session(uuid, public.session_status, text) to authenticated;
+
 alter table public.users enable row level security;
 alter table public.profiles enable row level security;
 alter table public.preferences enable row level security;
@@ -142,7 +172,7 @@ create policy preferences_all on public.preferences for all to authenticated
 create policy sessions_select on public.sessions for select to authenticated using (true);
 create policy sessions_insert on public.sessions for insert to authenticated with check (id_mentor = auth.uid());
 create policy sessions_update on public.sessions for update to authenticated
-  using (public.is_session_member(id_session));
+  using (id_mentor = auth.uid()) with check (id_mentor = auth.uid());
 
 create policy participants_select on public.session_participants for select to authenticated using (true);
 create policy participants_insert on public.session_participants for insert to authenticated with check (id_mentee = auth.uid());
@@ -162,7 +192,12 @@ create policy chat_messages_delete on public.chat_messages for delete to authent
 
 create policy feedbacks_select on public.feedbacks for select to authenticated
   using (id_mentee = auth.uid() or id_mentor = auth.uid());
-create policy feedbacks_insert on public.feedbacks for insert to authenticated with check (id_mentee = auth.uid());
+create policy feedbacks_insert on public.feedbacks for insert to authenticated
+  with check (id_mentee = auth.uid() and exists (
+    select 1 from public.sessions s
+    join public.session_participants p on p.id_session = s.id_session
+    where s.id_session = feedbacks.id_session and s.id_mentor = feedbacks.id_mentor
+      and s.status = 'SELESAI' and p.id_mentee = auth.uid()));
 
 create policy notifications_select on public.notifications for select to authenticated using (id_user = auth.uid());
 create policy notifications_update on public.notifications for update to authenticated using (id_user = auth.uid());

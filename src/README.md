@@ -109,6 +109,8 @@ Schema: `supabase/migrations/20261102000000_init.sql`. Every table has Row Level
 
 Enums: `session_status` (`TERJADWAL`, `SELESAI`, `TIDAK_TERLAKSANA`, `DIBATALKAN`), `session_format` (`DARING`, `LURING`), `format_preference` (`DARING`, `LURING`, `BOTH`). A trigger creates the group chat when a session is inserted.
 
+Only the mentor can update a `sessions` row directly. To confirm whether an ended session took place (UC05), mentor and mentee both call `supabase.rpc("confirm_session", { p_session, p_status, p_reason })` with `p_status` `SELESAI` or `TIDAK_TERLAKSANA`. A mentee can insert feedback only for a `SELESAI` session they joined, with `id_mentor` set to that session's mentor.
+
 ## Contributing
 
 - Branch from `main` as `<type>/<feature>`, for example `feat/session-create`.
