@@ -1,0 +1,15 @@
+.DS_Store
+.idea/
+.vscode/
+
+.env
+.env.*
+!.env.example
+
+node_modules/
+.next/
+out/
+coverage/
+
+src/supabase/.temp/
+src/supabase/.branches/
