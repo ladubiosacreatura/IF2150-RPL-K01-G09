@@ -15,6 +15,22 @@ export async function signUp(email: string, password: string): Promise<string> {
   return data.user.id;
 }
 
+export async function signIn(email: string, password: string): Promise<string> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+  if (error?.code === "invalid_credentials") throw new Error("INVALID_CREDENTIALS");
+  if (error?.code === "email_not_confirmed") throw new Error("EMAIL_NOT_CONFIRMED");
+  if (error) throw new Error(error.message);
+
+  return data.user.id;
+}
+
+export async function signOut(): Promise<void> {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+}
+
 export async function rollbackSignUp(idUser: string): Promise<void> {
   await createAdminClient().auth.admin.deleteUser(idUser);
   const supabase = await createClient();

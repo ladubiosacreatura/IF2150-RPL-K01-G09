@@ -2,17 +2,20 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const auth = vi.hoisted(() => ({
   signUp: vi.fn(),
+  signIn: vi.fn(),
+  signOut: vi.fn(),
   rollbackSignUp: vi.fn(),
   getSessionUserId: vi.fn(),
 }));
-const user = vi.hoisted(() => ({ create: vi.fn(), exists: vi.fn() }));
-const profile = vi.hoisted(() => ({ create: vi.fn() }));
+const user = vi.hoisted(() => ({ create: vi.fn(), exists: vi.fn(), findById: vi.fn() }));
+const profile = vi.hoisted(() => ({ create: vi.fn(), findByUser: vi.fn() }));
 
 vi.mock("@/lib/adapters/authAdapter", () => auth);
 vi.mock("@/models/user", () => ({ User: user }));
 vi.mock("@/models/profile", () => ({ Profile: profile }));
 
-const { processRegistration } = await import("@/controllers/userController");
+const { authLogin, getCurrentUser, processRegistration } =
+  await import("@/controllers/userController");
 
 const EMAIL = "Hugo.Reynaldo@std.stei.itb.ac.id";
 const PASSWORD = "rahasia123";
@@ -96,5 +99,53 @@ describe("processRegistration", () => {
     profile.create.mockRejectedValueOnce(new Error("connection reset"));
     expect(await register()).toEqual({ ok: false, error: "REGISTRATION_FAILED" });
     expect(auth.rollbackSignUp).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe("authLogin", () => {
+  it("signs in with a normalized email", async () => {
+    auth.signIn.mockResolvedValue("user-id");
+    expect(await authLogin(" Mentee.Satu@Mahasiswa.ITB.ac.id ", "password123")).toEqual({
+      ok: true,
+      data: undefined,
+    });
+    expect(auth.signIn).toHaveBeenCalledWith("mentee.satu@mahasiswa.itb.ac.id", "password123");
+  });
+
+  it("rejects empty input without calling Supabase Auth", async () => {
+    expect(await authLogin("", "password123")).toEqual({ ok: false, error: "INVALID_CREDENTIALS" });
+    expect(await authLogin("a@itb.ac.id", "")).toEqual({ ok: false, error: "INVALID_CREDENTIALS" });
+    expect(auth.signIn).not.toHaveBeenCalled();
+  });
+
+  it("maps auth errors to login errors", async () => {
+    auth.signIn.mockRejectedValueOnce(new Error("INVALID_CREDENTIALS"));
+    expect(await authLogin("a@itb.ac.id", "wrong")).toEqual({
+      ok: false,
+      error: "INVALID_CREDENTIALS",
+    });
+
+    auth.signIn.mockRejectedValueOnce(new Error("fetch failed"));
+    expect(await authLogin("a@itb.ac.id", "wrong")).toEqual({ ok: false, error: "LOGIN_FAILED" });
+  });
+});
+
+describe("getCurrentUser", () => {
+  it("returns null without a session", async () => {
+    auth.getSessionUserId.mockResolvedValue(null);
+    expect(await getCurrentUser()).toBeNull();
+    expect(user.findById).not.toHaveBeenCalled();
+  });
+
+  it("combines the user and profile name", async () => {
+    auth.getSessionUserId.mockResolvedValue("user-id");
+    user.findById.mockResolvedValue({ username: "mentee_satu", email: "m@itb.ac.id" });
+    profile.findByUser.mockResolvedValue({ name: "Mentee Satu" });
+    expect(await getCurrentUser()).toEqual({
+      idUser: "user-id",
+      username: "mentee_satu",
+      email: "m@itb.ac.id",
+      name: "Mentee Satu",
+    });
   });
 });

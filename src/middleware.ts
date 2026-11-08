@@ -2,7 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { supabaseEnv } from "@/lib/supabase/env";
 
-const PUBLIC_PATHS = ["/login", "/register", "/api/cron"];
+const AUTH_PATHS = ["/login", "/register"];
+const PUBLIC_PATHS = [...AUTH_PATHS, "/api/cron"];
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -27,14 +28,21 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isPublic = PUBLIC_PATHS.some((path) => request.nextUrl.pathname.startsWith(path));
-  if (!user && !isPublic) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
+  const { pathname } = request.nextUrl;
+  const matches = (paths: string[]) => paths.some((path) => pathname.startsWith(path));
+
+  if (!user && !matches(PUBLIC_PATHS)) return redirectTo(request, "/login");
+  if (user && matches(AUTH_PATHS) && request.method === "GET") {
+    return redirectTo(request, "/dashboard");
   }
 
   return response;
+}
+
+function redirectTo(request: NextRequest, pathname: string) {
+  const url = request.nextUrl.clone();
+  url.pathname = pathname;
+  return NextResponse.redirect(url);
 }
 
 export const config = {

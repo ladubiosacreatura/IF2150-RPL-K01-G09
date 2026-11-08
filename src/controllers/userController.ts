@@ -1,10 +1,13 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import * as authAdapter from "@/lib/adapters/authAdapter";
 import { validateEmail } from "@/lib/validator";
 import { Profile } from "@/models/profile";
-import type { ActionResult, ProfileData } from "@/models/types";
+import type { ProfileData } from "@/models/types";
 import { User } from "@/models/user";
+
+type Result<E extends string> = { ok: true; data: undefined } | { ok: false; error: E };
 
 export type RegistrationError =
   | "INVALID_UNIVERSITY_EMAIL"
@@ -15,16 +18,24 @@ export type RegistrationError =
   | "EMAIL_TAKEN"
   | "USERNAME_TAKEN"
   | "REGISTRATION_FAILED";
+export type RegistrationResult = Result<RegistrationError>;
 
-export type RegistrationResult =
-  Extract<ActionResult, { ok: true }> | { ok: false; error: RegistrationError };
+export type LoginError = "INVALID_CREDENTIALS" | "EMAIL_NOT_CONFIRMED" | "LOGIN_FAILED";
+export type LoginResult = Result<LoginError>;
+
+export type CurrentUser = { idUser: string; username: string; email: string; name: string };
 
 const USERNAME_PATTERN = /^[a-z0-9_]{3,20}$/;
 const PASSWORD_MIN_LENGTH = 8;
-const PASSTHROUGH_ERRORS: readonly string[] = ["EMAIL_TAKEN", "USERNAME_TAKEN", "WEAK_PASSWORD"];
 
 const clean = (value: unknown) => String(value ?? "").trim();
-const fail = (error: RegistrationError) => ({ ok: false, error }) as const;
+const success = { ok: true, data: undefined } as const;
+const fail = <E extends string>(error: E) => ({ ok: false, error }) as const;
+
+function errorCode<E extends string>(error: unknown, known: readonly E[], fallback: E): E {
+  const code = error instanceof Error ? error.message : "";
+  return known.includes(code as E) ? (code as E) : fallback;
+}
 
 export async function processRegistration(
   email: string,
@@ -59,12 +70,48 @@ export async function processRegistration(
     idUser = await authAdapter.signUp(email, password);
     await User.create(idUser, profile.username, email);
     await Profile.create(idUser, profile);
-    return { ok: true, data: undefined };
+    return success;
   } catch (error) {
     if (idUser) await authAdapter.rollbackSignUp(idUser).catch(() => {});
-    const code = error instanceof Error ? error.message : "";
     return fail(
-      PASSTHROUGH_ERRORS.includes(code) ? (code as RegistrationError) : "REGISTRATION_FAILED",
+      errorCode<RegistrationError>(
+        error,
+        ["EMAIL_TAKEN", "USERNAME_TAKEN", "WEAK_PASSWORD"],
+        "REGISTRATION_FAILED",
+      ),
     );
   }
+}
+
+export async function authLogin(email: string, password: string): Promise<LoginResult> {
+  email = clean(email).toLowerCase();
+  if (!email || typeof password !== "string" || !password) return fail("INVALID_CREDENTIALS");
+
+  try {
+    await authAdapter.signIn(email, password);
+    return success;
+  } catch (error) {
+    return fail(
+      errorCode<LoginError>(error, ["INVALID_CREDENTIALS", "EMAIL_NOT_CONFIRMED"], "LOGIN_FAILED"),
+    );
+  }
+}
+
+export async function logout(): Promise<void> {
+  await authAdapter.signOut();
+  redirect("/login");
+}
+
+export async function getCurrentUser(): Promise<CurrentUser | null> {
+  const idUser = await authAdapter.getSessionUserId();
+  if (!idUser) return null;
+
+  const [user, profile] = await Promise.all([User.findById(idUser), Profile.findByUser(idUser)]);
+  if (!user) return null;
+  return {
+    idUser,
+    username: user.username,
+    email: user.email,
+    name: profile?.name ?? user.username,
+  };
 }
