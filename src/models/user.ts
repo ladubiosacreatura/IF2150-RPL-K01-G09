@@ -1,5 +1,5 @@
 import "server-only";
-import { createAdminClient } from "@/lib/supabase/server";
+import { createAdminClient, createClient } from "@/lib/supabase/server";
 import type { UserRow } from "./types";
 
 export class User {
@@ -8,6 +8,10 @@ export class User {
     readonly username: string,
     readonly email: string,
   ) {}
+
+  private static fromRow(row: UserRow): User {
+    return new User(row.id_user, row.username, row.email);
+  }
 
   static async create(idUser: string, username: string, email: string): Promise<User> {
     const { data, error } = await createAdminClient()
@@ -20,7 +24,19 @@ export class User {
       throw new Error(error.message.includes("username") ? "USERNAME_TAKEN" : "EMAIL_TAKEN");
     }
     if (error) throw new Error(error.message);
-    return new User(data.id_user, data.username, data.email);
+    return User.fromRow(data);
+  }
+
+  static async findById(idUser: string): Promise<User | null> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("users")
+      .select()
+      .eq("id_user", idUser)
+      .maybeSingle<UserRow>();
+
+    if (error) throw new Error(error.message);
+    return data && User.fromRow(data);
   }
 
   static async exists(column: "username" | "email", value: string): Promise<boolean> {
