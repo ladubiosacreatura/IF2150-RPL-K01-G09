@@ -3,10 +3,10 @@
 import { redirect } from "next/navigation";
 import { cache } from "react";
 import * as authAdapter from "@/lib/adapters/authAdapter";
-import { validateEmail } from "@/lib/validator";
+import { validateEmail, validatePreference } from "@/lib/validator";
 import { Preference } from "@/models/preference";
 import { Profile } from "@/models/profile";
-import type { FormatPreference, PreferenceData, ProfileData } from "@/models/types";
+import type { Availability, FormatPreference, PreferenceData, ProfileData } from "@/models/types";
 import { User } from "@/models/user";
 
 type Result<E extends string, T = undefined> = { ok: true; data: T } | { ok: false; error: E };
@@ -26,7 +26,11 @@ export type LoginError = "INVALID_CREDENTIALS" | "EMAIL_NOT_CONFIRMED" | "LOGIN_
 export type LoginResult = Result<LoginError>;
 
 export type PreferenceError =
-  "UNAUTHORIZED" | "INCOMPLETE_PREFERENCE" | "INVALID_TAG" | "PREFERENCE_FAILED";
+  | "UNAUTHORIZED"
+  | "INCOMPLETE_PREFERENCE"
+  | "INVALID_TAG"
+  | "INVALID_AVAILABILITY"
+  | "PREFERENCE_FAILED";
 export type PreferenceResult = Result<PreferenceError, PreferenceData>;
 
 export type CurrentUser = { idUser: string; username: string; email: string; name: string };
@@ -36,6 +40,8 @@ const PASSWORD_MIN_LENGTH = 8;
 const FORMAT_PREFERENCES: readonly FormatPreference[] = ["DARING", "LURING", "BOTH"];
 const TAG_MAX_COUNT = 20;
 const TAG_MAX_LENGTH = 40;
+const AVAILABILITY_MAX_SLOTS = 50;
+const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
 
 const clean = (value: unknown) => String(value ?? "").trim();
 const success = { ok: true, data: undefined } as const;
@@ -150,6 +156,31 @@ function normalizeTags(tags: unknown): string[] {
 const isFormatPreference = (value: unknown): value is FormatPreference =>
   FORMAT_PREFERENCES.includes(value as FormatPreference);
 
+const isTime = (value: unknown): value is string =>
+  typeof value === "string" && TIME_PATTERN.test(value);
+
+function isValidSlot(slot: unknown): slot is Availability {
+  const { day, start, end } = (slot ?? {}) as Partial<Availability>;
+  return (
+    typeof day === "number" &&
+    Number.isInteger(day) &&
+    day >= 0 &&
+    day <= 6 &&
+    isTime(start) &&
+    isTime(end) &&
+    start < end
+  );
+}
+
+function normalizeAvailability(slots: Availability[]): Availability[] {
+  const unique = new Map(
+    slots.map(({ day, start, end }) => [`${day}-${start}-${end}`, { day, start, end }]),
+  );
+  return [...unique.values()].sort(
+    (a, b) => a.day - b.day || a.start.localeCompare(b.start) || a.end.localeCompare(b.end),
+  );
+}
+
 export async function fetchUserPreference(
   idUser: string,
 ): Promise<Result<"PREFERENCE_FAILED", PreferenceData | null>> {
@@ -168,25 +199,29 @@ export async function savePreference(
   const sessionUserId = await authAdapter.getSessionUserId();
   if (!sessionUserId || sessionUserId !== idUser) return fail("UNAUTHORIZED");
 
-  const materialTag = normalizeTags(data?.materialTag);
-  const sessionFormatPreference = data?.sessionFormatPreference;
-  if (materialTag.length === 0 || !isFormatPreference(sessionFormatPreference)) {
-    return fail("INCOMPLETE_PREFERENCE");
-  }
+  const slots: unknown[] = Array.isArray(data?.availability) ? data.availability : [];
+  if (!slots.every(isValidSlot)) return fail("INVALID_AVAILABILITY");
+
+  const preference: PreferenceData = {
+    materialTag: normalizeTags(data?.materialTag),
+    availability: normalizeAvailability(slots),
+    sessionFormatPreference: isFormatPreference(data?.sessionFormatPreference)
+      ? data.sessionFormatPreference
+      : null,
+  };
+  if (!validatePreference(preference)) return fail("INCOMPLETE_PREFERENCE");
+
+  const { materialTag, availability } = preference;
   if (
     materialTag.length > TAG_MAX_COUNT ||
     materialTag.some((tag) => tag.length > TAG_MAX_LENGTH)
   ) {
     return fail("INVALID_TAG");
   }
+  if (availability.length > AVAILABILITY_MAX_SLOTS) return fail("INVALID_AVAILABILITY");
 
   try {
-    const current = await Preference.getPreferenceByUser(idUser);
-    const saved = await Preference.updatePreference(idUser, {
-      materialTag,
-      availability: current?.availability ?? [],
-      sessionFormatPreference,
-    });
+    const saved = await Preference.updatePreference(idUser, preference);
     return { ok: true, data: saved.getPreferenceDetails() };
   } catch {
     return fail("PREFERENCE_FAILED");

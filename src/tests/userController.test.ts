@@ -189,14 +189,13 @@ describe("savePreference", () => {
   const save = (data: object) =>
     savePreference("user-id", {
       materialTag: ["Struktur Data"],
-      availability: [],
+      availability: [SLOT],
       sessionFormatPreference: "DARING",
       ...data,
     });
 
   beforeEach(() => {
     auth.getSessionUserId.mockResolvedValue("user-id");
-    preference.getPreferenceByUser.mockResolvedValue(null);
     preference.updatePreference.mockImplementation(async (_id: string, data: object) =>
       stored(data),
     );
@@ -209,23 +208,63 @@ describe("savePreference", () => {
       ok: true,
       data: {
         materialTag: ["Kalkulus", "Struktur Data"],
-        availability: [],
+        availability: [SLOT],
         sessionFormatPreference: "DARING",
       },
     });
   });
 
-  it("keeps the stored availability instead of trusting the client", async () => {
-    preference.getPreferenceByUser.mockResolvedValue({ availability: [SLOT] });
-    await save({ availability: [{ day: 6, start: "00:00", end: "23:59" }] });
+  it("saves availability slots sorted by day and time without duplicates", async () => {
+    const monday = { day: 1, start: "13:00", end: "15:00" };
+    const sunday = { day: 0, start: "19:00", end: "21:00" };
+    await save({ availability: [monday, SLOT, sunday, { ...SLOT }] });
 
     expect(preference.updatePreference).toHaveBeenCalledWith(
       "user-id",
-      expect.objectContaining({ availability: [SLOT] }),
+      expect.objectContaining({ availability: [sunday, SLOT, monday] }),
     );
   });
 
-  it("rejects missing tags or format without touching the database", async () => {
+  it("rejects slots whose end time is not after the start time", async () => {
+    for (const end of ["08:00", "07:30"]) {
+      expect(await save({ availability: [{ day: 1, start: "08:00", end }] })).toEqual({
+        ok: false,
+        error: "INVALID_AVAILABILITY",
+      });
+    }
+    expect(preference.updatePreference).not.toHaveBeenCalled();
+  });
+
+  it("rejects malformed slots", async () => {
+    const malformed = [
+      { day: 7, start: "08:00", end: "10:00" },
+      { day: 1.5, start: "08:00", end: "10:00" },
+      { day: 1, start: "8:00", end: "10:00" },
+      { day: 1, start: "08:00", end: "24:00" },
+      { day: 1, start: "08:00" },
+      null,
+    ];
+    for (const slot of malformed) {
+      expect(await save({ availability: [slot] })).toEqual({
+        ok: false,
+        error: "INVALID_AVAILABILITY",
+      });
+    }
+  });
+
+  it("rejects too many slots", async () => {
+    const slots = Array.from({ length: 51 }, (_, minute) => ({
+      day: 1,
+      start: "08:00",
+      end: `09:${String(minute).padStart(2, "0")}`,
+    }));
+    expect(await save({ availability: slots })).toEqual({
+      ok: false,
+      error: "INVALID_AVAILABILITY",
+    });
+  });
+
+  it("rejects missing tags, format, or availability without touching the database", async () => {
     expect(await save({ materialTag: [" "] })).toEqual({
       ok: false,
       error: "INCOMPLETE_PREFERENCE",
@@ -235,6 +274,10 @@ describe("savePreference", () => {
       error: "INCOMPLETE_PREFERENCE",
     });
     expect(await save({ sessionFormatPreference: "HYBRID" })).toEqual({
+      ok: false,
+      error: "INCOMPLETE_PREFERENCE",
+    });
+    expect(await save({ availability: [] })).toEqual({
       ok: false,
       error: "INCOMPLETE_PREFERENCE",
     });
