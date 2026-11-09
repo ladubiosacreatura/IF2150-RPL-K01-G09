@@ -10,12 +10,14 @@ const auth = vi.hoisted(() => ({
 }));
 const user = vi.hoisted(() => ({ create: vi.fn(), exists: vi.fn(), findById: vi.fn() }));
 const profile = vi.hoisted(() => ({ create: vi.fn(), findByUser: vi.fn() }));
+const preference = vi.hoisted(() => ({ getPreferenceByUser: vi.fn(), updatePreference: vi.fn() }));
 
 vi.mock("@/lib/adapters/authAdapter", () => auth);
 vi.mock("@/models/user", () => ({ User: user }));
 vi.mock("@/models/profile", () => ({ Profile: profile }));
+vi.mock("@/models/preference", () => ({ Preference: preference }));
 
-const { authLogin, getCurrentUser, processRegistration } =
+const { authLogin, fetchUserPreference, getCurrentUser, processRegistration, savePreference } =
   await import("@/controllers/userController");
 
 const EMAIL = "Mentee.Demo@std.stei.itb.ac.id";
@@ -177,5 +179,105 @@ describe("getCurrentUser", () => {
       email: "m@itb.ac.id",
       name: "m@itb.ac.id",
     });
+  });
+});
+
+const SLOT = { day: 1, start: "08:00", end: "10:00" };
+const stored = (data: object) => ({ ...data, getPreferenceDetails: () => data });
+
+describe("savePreference", () => {
+  const save = (data: object) =>
+    savePreference("user-id", {
+      materialTag: ["Struktur Data"],
+      availability: [],
+      sessionFormatPreference: "DARING",
+      ...data,
+    });
+
+  beforeEach(() => {
+    auth.getSessionUserId.mockResolvedValue("user-id");
+    preference.getPreferenceByUser.mockResolvedValue(null);
+    preference.updatePreference.mockImplementation(async (_id: string, data: object) =>
+      stored(data),
+    );
+  });
+
+  it("saves trimmed, de-duplicated tags with the chosen format", async () => {
+    const result = await save({ materialTag: [" Kalkulus ", "kalkulus", "Struktur  Data", ""] });
+
+    expect(result).toEqual({
+      ok: true,
+      data: {
+        materialTag: ["Kalkulus", "Struktur Data"],
+        availability: [],
+        sessionFormatPreference: "DARING",
+      },
+    });
+  });
+
+  it("keeps the stored availability instead of trusting the client", async () => {
+    preference.getPreferenceByUser.mockResolvedValue({ availability: [SLOT] });
+    await save({ availability: [{ day: 6, start: "00:00", end: "23:59" }] });
+
+    expect(preference.updatePreference).toHaveBeenCalledWith(
+      "user-id",
+      expect.objectContaining({ availability: [SLOT] }),
+    );
+  });
+
+  it("rejects missing tags or format without touching the database", async () => {
+    expect(await save({ materialTag: [" "] })).toEqual({
+      ok: false,
+      error: "INCOMPLETE_PREFERENCE",
+    });
+    expect(await save({ sessionFormatPreference: null })).toEqual({
+      ok: false,
+      error: "INCOMPLETE_PREFERENCE",
+    });
+    expect(await save({ sessionFormatPreference: "HYBRID" })).toEqual({
+      ok: false,
+      error: "INCOMPLETE_PREFERENCE",
+    });
+    expect(preference.updatePreference).not.toHaveBeenCalled();
+  });
+
+  it("rejects too many or too long tags", async () => {
+    const many = Array.from({ length: 21 }, (_, index) => `Tag ${index}`);
+    expect(await save({ materialTag: many })).toEqual({ ok: false, error: "INVALID_TAG" });
+    expect(await save({ materialTag: ["x".repeat(41)] })).toEqual({
+      ok: false,
+      error: "INVALID_TAG",
+    });
+  });
+
+  it("refuses to save another user's preference", async () => {
+    auth.getSessionUserId.mockResolvedValue("someone-else");
+    expect(await save({})).toEqual({ ok: false, error: "UNAUTHORIZED" });
+    expect(preference.updatePreference).not.toHaveBeenCalled();
+  });
+
+  it("reports database failures", async () => {
+    preference.updatePreference.mockRejectedValue(new Error("connection lost"));
+    expect(await save({})).toEqual({ ok: false, error: "PREFERENCE_FAILED" });
+  });
+});
+
+describe("fetchUserPreference", () => {
+  it("returns the stored preference, or null when none is set", async () => {
+    const data = {
+      materialTag: ["Kalkulus"],
+      availability: [SLOT],
+      sessionFormatPreference: "BOTH",
+    };
+    preference.getPreferenceByUser.mockResolvedValueOnce(stored(data));
+    expect(await fetchUserPreference("user-id")).toEqual({ ok: true, data });
+
+    preference.getPreferenceByUser.mockResolvedValueOnce(null);
+    expect(await fetchUserPreference("user-id")).toEqual({ ok: true, data: null });
+  });
+
+  it("reports database failures", async () => {
+    preference.getPreferenceByUser.mockRejectedValue(new Error("connection lost"));
+    expect(await fetchUserPreference("user-id")).toEqual({ ok: false, error: "PREFERENCE_FAILED" });
   });
 });
