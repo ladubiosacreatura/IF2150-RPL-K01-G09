@@ -4,8 +4,9 @@ import { redirect } from "next/navigation";
 import { cache } from "react";
 import * as authAdapter from "@/lib/adapters/authAdapter";
 import { validateEmail } from "@/lib/validator";
+import { Preference } from "@/models/preference";
 import { Profile } from "@/models/profile";
-import type { ProfileData } from "@/models/types";
+import type { FormatPreference, PreferenceData, ProfileData } from "@/models/types";
 import { User } from "@/models/user";
 
 type Result<E extends string, T = undefined> = { ok: true; data: T } | { ok: false; error: E };
@@ -24,10 +25,17 @@ export type RegistrationResult = Result<RegistrationError, { needsConfirmation: 
 export type LoginError = "INVALID_CREDENTIALS" | "EMAIL_NOT_CONFIRMED" | "LOGIN_FAILED";
 export type LoginResult = Result<LoginError>;
 
+export type PreferenceError =
+  "UNAUTHORIZED" | "INCOMPLETE_PREFERENCE" | "INVALID_TAG" | "PREFERENCE_FAILED";
+export type PreferenceResult = Result<PreferenceError, PreferenceData>;
+
 export type CurrentUser = { idUser: string; username: string; email: string; name: string };
 
 const USERNAME_PATTERN = /^[a-z0-9_]{3,20}$/;
 const PASSWORD_MIN_LENGTH = 8;
+const FORMAT_PREFERENCES: readonly FormatPreference[] = ["DARING", "LURING", "BOTH"];
+const TAG_MAX_COUNT = 20;
+const TAG_MAX_LENGTH = 40;
 
 const clean = (value: unknown) => String(value ?? "").trim();
 const success = { ok: true, data: undefined } as const;
@@ -127,4 +135,60 @@ const loadCurrentUser = cache(async (): Promise<CurrentUser | null> => {
 
 export async function getCurrentUser(): Promise<CurrentUser | null> {
   return loadCurrentUser();
+}
+
+function normalizeTags(tags: unknown): string[] {
+  if (!Array.isArray(tags)) return [];
+  const unique = new Map<string, string>();
+  for (const tag of tags) {
+    const cleaned = clean(tag).replace(/\s+/g, " ");
+    if (cleaned && !unique.has(cleaned.toLowerCase())) unique.set(cleaned.toLowerCase(), cleaned);
+  }
+  return [...unique.values()];
+}
+
+const isFormatPreference = (value: unknown): value is FormatPreference =>
+  FORMAT_PREFERENCES.includes(value as FormatPreference);
+
+export async function fetchUserPreference(
+  idUser: string,
+): Promise<Result<"PREFERENCE_FAILED", PreferenceData | null>> {
+  try {
+    const preference = await Preference.getPreferenceByUser(idUser);
+    return { ok: true, data: preference?.getPreferenceDetails() ?? null };
+  } catch {
+    return fail("PREFERENCE_FAILED");
+  }
+}
+
+export async function savePreference(
+  idUser: string,
+  data: PreferenceData,
+): Promise<PreferenceResult> {
+  const sessionUserId = await authAdapter.getSessionUserId();
+  if (!sessionUserId || sessionUserId !== idUser) return fail("UNAUTHORIZED");
+
+  const materialTag = normalizeTags(data?.materialTag);
+  const sessionFormatPreference = data?.sessionFormatPreference;
+  if (materialTag.length === 0 || !isFormatPreference(sessionFormatPreference)) {
+    return fail("INCOMPLETE_PREFERENCE");
+  }
+  if (
+    materialTag.length > TAG_MAX_COUNT ||
+    materialTag.some((tag) => tag.length > TAG_MAX_LENGTH)
+  ) {
+    return fail("INVALID_TAG");
+  }
+
+  try {
+    const current = await Preference.getPreferenceByUser(idUser);
+    const saved = await Preference.updatePreference(idUser, {
+      materialTag,
+      availability: current?.availability ?? [],
+      sessionFormatPreference,
+    });
+    return { ok: true, data: saved.getPreferenceDetails() };
+  } catch {
+    return fail("PREFERENCE_FAILED");
+  }
 }

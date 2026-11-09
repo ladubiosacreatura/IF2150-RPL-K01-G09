@@ -190,7 +190,8 @@ Tabel B.1. Perubahan dari DPPL
 
 | No | Bagian DPPL | Rancangan Awal | Implementasi Akhir | Alasan |
 | :--- | :--- | :--- | :--- | :--- |
-| 1 | *[mis. Kelas C05, layar I-03, tabel `orders`]* | *[Yang direncanakan]* | *[Yang dibuat]* | *[Alasan perubahan]* |
+| 1 | C12 `UserControl.savePreference()` (Algo-C12-01) | Menolak simpan lewat `validatePreference()` jika tag materi, ketersediaan waktu, atau format sesi kosong | Sementara hanya memeriksa tag materi dan format sesi; ketersediaan waktu yang tersimpan dipertahankan apa adanya | KF03 dan KF04 dikerjakan dalam issue terpisah (#88, #89). Pemeriksaan penuh dengan `validatePreference()` diaktifkan bersama editor ketersediaan waktu pada KF04 |
+| 2 | C09 `Preference.updatePreference()` (Algo-C09-01) | Metode instans `updatePreference(data)` yang juga memeriksa kelengkapan | Metode statis `updatePreference(idUser, data)` berupa *upsert*; pemeriksaan kelengkapan hanya di `UserControl` | Baris `preferences` belum ada untuk pengguna baru sehingga perlu *upsert*, dan aturan bisnis cukup diperiksa satu kali di Controller |
 | *...* | *...* | *...* | *...* | *...* |
 
 ## B.2 Bukti Penerapan Best Practices
