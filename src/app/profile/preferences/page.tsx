@@ -16,7 +16,7 @@ export default async function Page() {
     <main className="mx-auto max-w-2xl px-4 py-10">
       <h1 className="text-2xl font-bold tracking-tight">Edit Preferensi</h1>
       <p className="mt-1.5 text-sm text-neutral-500 dark:text-neutral-400">
-        Atur materi dan format sesi yang kamu minati.
+        Atur materi, format sesi, dan waktu luang kamu.
       </p>
       {preference.ok ? (
         <PreferenceForm idUser={user.idUser} initial={preference.data} />

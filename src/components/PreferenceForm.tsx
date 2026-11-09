@@ -1,6 +1,11 @@
 "use client";
 
 import { useState, useTransition, type FormEvent, type KeyboardEvent } from "react";
+import AvailabilityEditor, {
+  isCompleteSlot,
+  toDrafts,
+  type SlotDraft,
+} from "@/components/AvailabilityEditor";
 import { Alert, inputClass, inputNormal, primaryButton, secondaryButton } from "@/components/ui";
 import { savePreference, type PreferenceError } from "@/controllers/userController";
 import type { FormatPreference, PreferenceData } from "@/models/types";
@@ -9,6 +14,8 @@ const ERRORS: Record<PreferenceError, string> = {
   UNAUTHORIZED: "Sesi kamu berakhir. Silakan masuk kembali.",
   INCOMPLETE_PREFERENCE: "Silahkan Isi Semua Pilihan Preferensi",
   INVALID_TAG: "Maksimal 20 tag, masing-masing paling banyak 40 karakter.",
+  INVALID_AVAILABILITY:
+    "Periksa slot ketersediaan: pilih hari dan pastikan jam selesai setelah jam mulai.",
   PREFERENCE_FAILED: "Gagal menyimpan preferensi. Coba lagi beberapa saat lagi.",
 };
 
@@ -33,7 +40,14 @@ export default function PreferenceForm({
   const [format, setFormat] = useState<FormatPreference | null>(
     initial?.sessionFormatPreference ?? null,
   );
+  const [slots, setSlots] = useState<SlotDraft[]>(() => toDrafts(initial?.availability ?? []));
+  const [showSlotErrors, setShowSlotErrors] = useState(false);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
+
+  function changeSlots(next: SlotDraft[]) {
+    setSlots(next);
+    setFeedback(null);
+  }
 
   function addTag() {
     const tag = draft.trim().replace(/\s+/g, " ");
@@ -61,14 +75,23 @@ export default function PreferenceForm({
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!slots.every(isCompleteSlot)) {
+      setShowSlotErrors(true);
+      setFeedback({ tone: "error", message: ERRORS.INVALID_AVAILABILITY });
+      return;
+    }
+    setShowSlotErrors(false);
     startTransition(async () => {
       const result = await savePreference(idUser, {
         materialTag: tags,
-        availability: initial?.availability ?? [],
+        availability: slots
+          .filter(isCompleteSlot)
+          .map(({ day, start, end }) => ({ day, start, end })),
         sessionFormatPreference: format,
       });
       if (result.ok) {
         setTags(result.data.materialTag);
+        setSlots(toDrafts(result.data.availability));
         setFeedback({ tone: "success", message: "Preferensi berhasil disimpan" });
       } else {
         setFeedback({ tone: "error", message: ERRORS[result.error] });
@@ -152,6 +175,8 @@ export default function PreferenceForm({
           ))}
         </div>
       </fieldset>
+
+      <AvailabilityEditor slots={slots} showErrors={showSlotErrors} onChange={changeSlots} />
 
       <button
         type="submit"
