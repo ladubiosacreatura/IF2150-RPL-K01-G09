@@ -1,13 +1,14 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { cache } from "react";
 import * as authAdapter from "@/lib/adapters/authAdapter";
 import { validateEmail } from "@/lib/validator";
 import { Profile } from "@/models/profile";
 import type { ProfileData } from "@/models/types";
 import { User } from "@/models/user";
 
-type Result<E extends string> = { ok: true; data: undefined } | { ok: false; error: E };
+type Result<E extends string, T = undefined> = { ok: true; data: T } | { ok: false; error: E };
 
 export type RegistrationError =
   | "INVALID_UNIVERSITY_EMAIL"
@@ -18,7 +19,7 @@ export type RegistrationError =
   | "EMAIL_TAKEN"
   | "USERNAME_TAKEN"
   | "REGISTRATION_FAILED";
-export type RegistrationResult = Result<RegistrationError>;
+export type RegistrationResult = Result<RegistrationError, { needsConfirmation: boolean }>;
 
 export type LoginError = "INVALID_CREDENTIALS" | "EMAIL_NOT_CONFIRMED" | "LOGIN_FAILED";
 export type LoginResult = Result<LoginError>;
@@ -64,13 +65,18 @@ export async function processRegistration(
 
   let idUser: string | undefined;
   try {
-    if (await User.exists("email", email)) return fail("EMAIL_TAKEN");
-    if (await User.exists("username", profile.username)) return fail("USERNAME_TAKEN");
+    const [emailTaken, usernameTaken] = await Promise.all([
+      User.exists("email", email),
+      User.exists("username", profile.username),
+    ]);
+    if (emailTaken) return fail("EMAIL_TAKEN");
+    if (usernameTaken) return fail("USERNAME_TAKEN");
 
-    idUser = await authAdapter.signUp(email, password);
+    const account = await authAdapter.signUp(email, password);
+    idUser = account.idUser;
     await User.create(idUser, profile.username, email);
     await Profile.create(idUser, profile);
-    return success;
+    return { ok: true, data: { needsConfirmation: !account.signedIn } };
   } catch (error) {
     if (idUser) await authAdapter.rollbackSignUp(idUser).catch(() => {});
     return fail(
@@ -102,16 +108,23 @@ export async function logout(): Promise<void> {
   redirect("/login");
 }
 
-export async function getCurrentUser(): Promise<CurrentUser | null> {
-  const idUser = await authAdapter.getSessionUserId();
-  if (!idUser) return null;
+const loadCurrentUser = cache(async (): Promise<CurrentUser | null> => {
+  const session = await authAdapter.getSessionUser();
+  if (!session) return null;
 
-  const [user, profile] = await Promise.all([User.findById(idUser), Profile.findByUser(idUser)]);
-  if (!user) return null;
+  const [user, profile] = await Promise.all([
+    User.findById(session.id),
+    Profile.findByUser(session.id),
+  ]);
+  const email = user?.email ?? session.email;
   return {
-    idUser,
-    username: user.username,
-    email: user.email,
-    name: profile?.name ?? user.username,
+    idUser: session.id,
+    username: user?.username ?? "",
+    email,
+    name: profile?.name ?? user?.username ?? email,
   };
+});
+
+export async function getCurrentUser(): Promise<CurrentUser | null> {
+  return loadCurrentUser();
 }

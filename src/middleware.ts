@@ -1,9 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { isAuthPath } from "@/lib/routes";
 import { supabaseEnv } from "@/lib/supabase/env";
-
-const AUTH_PATHS = ["/login", "/register"];
-const PUBLIC_PATHS = [...AUTH_PATHS, "/api/cron"];
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -29,20 +27,22 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
-  const matches = (paths: string[]) => paths.some((path) => pathname.startsWith(path));
+  const isPublic = isAuthPath(pathname) || pathname.startsWith("/api/cron");
 
-  if (!user && !matches(PUBLIC_PATHS)) return redirectTo(request, "/login");
-  if (user && matches(AUTH_PATHS) && request.method === "GET") {
-    return redirectTo(request, "/dashboard");
+  if (!user && !isPublic) return redirectTo(request, response, "/login");
+  if (user && isAuthPath(pathname) && request.method === "GET") {
+    return redirectTo(request, response, "/dashboard");
   }
 
   return response;
 }
 
-function redirectTo(request: NextRequest, pathname: string) {
+function redirectTo(request: NextRequest, response: NextResponse, pathname: string) {
   const url = request.nextUrl.clone();
   url.pathname = pathname;
-  return NextResponse.redirect(url);
+  const redirect = NextResponse.redirect(url);
+  response.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie));
+  return redirect;
 }
 
 export const config = {

@@ -72,6 +72,7 @@ export default function RegisterForm() {
     studyProgram: "",
   });
   const [consent, setConsent] = useState(false);
+  const [confirmEmail, setConfirmEmail] = useState<string | null>(null);
 
   const issue = error ? ERRORS[error] : null;
 
@@ -95,9 +96,25 @@ export default function RegisterForm() {
     const { email, password, ...profile } = values;
     startTransition(async () => {
       const result = await processRegistration(email, password, { ...profile, bio: "" }, consent);
-      if (result.ok) router.replace("/");
-      else setError(result.error);
+      if (!result.ok) setError(result.error);
+      else if (result.data.needsConfirmation) setConfirmEmail(email.trim().toLowerCase());
+      else router.replace("/");
     });
+  }
+
+  if (confirmEmail) {
+    return (
+      <AuthCard title="Cek Email Kamu" subtitle="Satu langkah lagi sebelum bisa masuk.">
+        <div className="mt-6">
+          <Alert tone="success">
+            Akun berhasil dibuat. Buka tautan konfirmasi yang dikirim ke {confirmEmail}, lalu masuk.
+          </Alert>
+        </div>
+        <Link href="/login" className={`mt-6 block w-full text-center ${primaryButton}`}>
+          Ke Halaman Masuk
+        </Link>
+      </AuthCard>
+    );
   }
 
   return (

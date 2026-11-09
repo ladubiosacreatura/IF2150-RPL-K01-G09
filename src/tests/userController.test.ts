@@ -5,6 +5,7 @@ const auth = vi.hoisted(() => ({
   signIn: vi.fn(),
   signOut: vi.fn(),
   rollbackSignUp: vi.fn(),
+  getSessionUser: vi.fn(),
   getSessionUserId: vi.fn(),
 }));
 const user = vi.hoisted(() => ({ create: vi.fn(), exists: vi.fn(), findById: vi.fn() }));
@@ -38,7 +39,7 @@ const register = (overrides: Partial<{ email: string; password: string; consent:
 beforeEach(() => {
   vi.resetAllMocks();
   user.exists.mockResolvedValue(false);
-  auth.signUp.mockResolvedValue("new-user-id");
+  auth.signUp.mockResolvedValue({ idUser: "new-user-id", signedIn: true });
   auth.rollbackSignUp.mockResolvedValue(undefined);
   user.create.mockResolvedValue({});
   profile.create.mockResolvedValue({});
@@ -46,7 +47,7 @@ beforeEach(() => {
 
 describe("processRegistration", () => {
   it("creates the auth account, users row, and profile with normalized data", async () => {
-    await expect(register()).resolves.toEqual({ ok: true, data: undefined });
+    await expect(register()).resolves.toEqual({ ok: true, data: { needsConfirmation: false } });
 
     expect(auth.signUp).toHaveBeenCalledWith("hugo.reynaldo@std.stei.itb.ac.id", PASSWORD);
     expect(user.create).toHaveBeenCalledWith(
@@ -58,6 +59,11 @@ describe("processRegistration", () => {
       "new-user-id",
       expect.objectContaining({ name: "Hugo Reynaldo", studyProgram: "Teknik Informatika" }),
     );
+  });
+
+  it("reports when the new account must confirm its email first", async () => {
+    auth.signUp.mockResolvedValueOnce({ idUser: "new-user-id", signedIn: false });
+    expect(await register()).toEqual({ ok: true, data: { needsConfirmation: true } });
   });
 
   it("rejects non-university email without touching auth or the database", async () => {
@@ -132,13 +138,13 @@ describe("authLogin", () => {
 
 describe("getCurrentUser", () => {
   it("returns null without a session", async () => {
-    auth.getSessionUserId.mockResolvedValue(null);
+    auth.getSessionUser.mockResolvedValue(null);
     expect(await getCurrentUser()).toBeNull();
     expect(user.findById).not.toHaveBeenCalled();
   });
 
   it("combines the user and profile name", async () => {
-    auth.getSessionUserId.mockResolvedValue("user-id");
+    auth.getSessionUser.mockResolvedValue({ id: "user-id", email: "m@itb.ac.id" });
     user.findById.mockResolvedValue({ username: "mentee_satu", email: "m@itb.ac.id" });
     profile.findByUser.mockResolvedValue({ name: "Mentee Satu" });
     expect(await getCurrentUser()).toEqual({
@@ -146,6 +152,18 @@ describe("getCurrentUser", () => {
       username: "mentee_satu",
       email: "m@itb.ac.id",
       name: "Mentee Satu",
+    });
+  });
+
+  it("still returns the session when the users row is missing", async () => {
+    auth.getSessionUser.mockResolvedValue({ id: "orphan-id", email: "orphan@itb.ac.id" });
+    user.findById.mockResolvedValue(null);
+    profile.findByUser.mockResolvedValue(null);
+    expect(await getCurrentUser()).toEqual({
+      idUser: "orphan-id",
+      username: "",
+      email: "orphan@itb.ac.id",
+      name: "orphan@itb.ac.id",
     });
   });
 });
