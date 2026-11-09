@@ -156,19 +156,25 @@ export default function RegisterForm() {
         {textField(
           "username",
           "Username",
-          { autoComplete: "username", minLength: 3, maxLength: 20, placeholder: "hugo_reynaldo" },
+          { autoComplete: "username", minLength: 3, maxLength: 20, placeholder: "nama_kamu" },
           "3–20 karakter: huruf kecil, angka, atau garis bawah",
         )}
         {textField(
           "password",
           "Kata Sandi",
-          { type: "password", autoComplete: "new-password", minLength: 8 },
+          { type: "password", autoComplete: "new-password", minLength: 8, placeholder: "••••••••" },
           "Minimal 8 karakter",
         )}
-        {textField("name", "Nama Lengkap", { autoComplete: "name" })}
+        {textField("name", "Nama Lengkap", {
+          autoComplete: "name",
+          placeholder: "Nama lengkap kamu",
+        })}
         <div className="grid gap-5 sm:grid-cols-2">
-          {textField("university", "Universitas", { autoComplete: "organization" })}
-          {textField("studyProgram", "Program Studi", {})}
+          {textField("university", "Universitas", {
+            autoComplete: "organization",
+            placeholder: "Institut Teknologi Bandung",
+          })}
+          {textField("studyProgram", "Program Studi", { placeholder: "Teknik Informatika" })}
         </div>
 
         <label className="flex items-start gap-3 text-sm">
