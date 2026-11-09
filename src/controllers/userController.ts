@@ -113,8 +113,8 @@ const loadCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   if (!session) return null;
 
   const [user, profile] = await Promise.all([
-    User.findById(session.id),
-    Profile.findByUser(session.id),
+    User.findById(session.id).catch(() => null),
+    Profile.findByUser(session.id).catch(() => null),
   ]);
   const email = user?.email ?? session.email;
   return {

@@ -139,7 +139,7 @@ export default function RegisterForm() {
           autoComplete="username"
           minLength={3}
           maxLength={20}
-          placeholder="hugo_reynaldo"
+          placeholder="nama_kamu"
         />
         <Field
           {...field("password")}
@@ -147,11 +147,26 @@ export default function RegisterForm() {
           type="password"
           autoComplete="new-password"
           minLength={8}
+          placeholder="••••••••"
         />
-        <Field {...field("name")} label="Nama Lengkap" autoComplete="name" />
+        <Field
+          {...field("name")}
+          label="Nama Lengkap"
+          autoComplete="name"
+          placeholder="Nama lengkap kamu"
+        />
         <div className="grid gap-5 sm:grid-cols-2">
-          <Field {...field("university")} label="Universitas" autoComplete="organization" />
-          <Field {...field("studyProgram")} label="Program Studi" />
+          <Field
+            {...field("university")}
+            label="Universitas"
+            autoComplete="organization"
+            placeholder="Institut Teknologi Bandung"
+          />
+          <Field
+            {...field("studyProgram")}
+            label="Program Studi"
+            placeholder="Teknik Informatika"
+          />
         </div>
 
         <label className="flex items-start gap-3 text-sm">

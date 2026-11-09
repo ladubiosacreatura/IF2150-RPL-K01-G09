@@ -18,11 +18,11 @@ vi.mock("@/models/profile", () => ({ Profile: profile }));
 const { authLogin, getCurrentUser, processRegistration } =
   await import("@/controllers/userController");
 
-const EMAIL = "Hugo.Reynaldo@std.stei.itb.ac.id";
+const EMAIL = "Mentee.Demo@std.stei.itb.ac.id";
 const PASSWORD = "rahasia123";
 const PROFILE = {
-  username: "Hugo_R",
-  name: " Hugo Reynaldo ",
+  username: "Mentee_D",
+  name: " Mentee Demo ",
   university: "Institut Teknologi Bandung",
   studyProgram: "Teknik Informatika",
   bio: "",
@@ -49,15 +49,15 @@ describe("processRegistration", () => {
   it("creates the auth account, users row, and profile with normalized data", async () => {
     await expect(register()).resolves.toEqual({ ok: true, data: { needsConfirmation: false } });
 
-    expect(auth.signUp).toHaveBeenCalledWith("hugo.reynaldo@std.stei.itb.ac.id", PASSWORD);
+    expect(auth.signUp).toHaveBeenCalledWith("mentee.demo@std.stei.itb.ac.id", PASSWORD);
     expect(user.create).toHaveBeenCalledWith(
       "new-user-id",
-      "hugo_r",
-      "hugo.reynaldo@std.stei.itb.ac.id",
+      "mentee_d",
+      "mentee.demo@std.stei.itb.ac.id",
     );
     expect(profile.create).toHaveBeenCalledWith(
       "new-user-id",
-      expect.objectContaining({ name: "Hugo Reynaldo", studyProgram: "Teknik Informatika" }),
+      expect.objectContaining({ name: "Mentee Demo", studyProgram: "Teknik Informatika" }),
     );
   });
 
@@ -67,7 +67,7 @@ describe("processRegistration", () => {
   });
 
   it("rejects non-university email without touching auth or the database", async () => {
-    await expect(register({ email: "hugoreynaldo@gmail.com" })).resolves.toEqual({
+    await expect(register({ email: "menteedemo@gmail.com" })).resolves.toEqual({
       ok: false,
       error: "INVALID_UNIVERSITY_EMAIL",
     });
@@ -164,6 +164,18 @@ describe("getCurrentUser", () => {
       username: "",
       email: "orphan@itb.ac.id",
       name: "orphan@itb.ac.id",
+    });
+  });
+
+  it("falls back to the session when the database query fails", async () => {
+    auth.getSessionUser.mockResolvedValue({ id: "user-id", email: "m@itb.ac.id" });
+    user.findById.mockRejectedValue(new Error("relation does not exist"));
+    profile.findByUser.mockRejectedValue(new Error("relation does not exist"));
+    expect(await getCurrentUser()).toEqual({
+      idUser: "user-id",
+      username: "",
+      email: "m@itb.ac.id",
+      name: "m@itb.ac.id",
     });
   });
 });
