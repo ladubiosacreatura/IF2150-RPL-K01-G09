@@ -9,7 +9,11 @@ const auth = vi.hoisted(() => ({
   getSessionUserId: vi.fn(),
 }));
 const user = vi.hoisted(() => ({ create: vi.fn(), exists: vi.fn(), findById: vi.fn() }));
-const profile = vi.hoisted(() => ({ create: vi.fn(), findByUser: vi.fn() }));
+const profile = vi.hoisted(() => ({
+  create: vi.fn(),
+  findByUser: vi.fn(),
+  updateProfile: vi.fn(),
+}));
 const preference = vi.hoisted(() => ({ getPreferenceByUser: vi.fn(), updatePreference: vi.fn() }));
 
 vi.mock("@/lib/adapters/authAdapter", () => auth);
@@ -17,8 +21,15 @@ vi.mock("@/models/user", () => ({ User: user }));
 vi.mock("@/models/profile", () => ({ Profile: profile }));
 vi.mock("@/models/preference", () => ({ Preference: preference }));
 
-const { authLogin, fetchUserPreference, getCurrentUser, processRegistration, savePreference } =
-  await import("@/controllers/userController");
+const {
+  authLogin,
+  fetchUserPreference,
+  fetchUserProfile,
+  getCurrentUser,
+  processRegistration,
+  savePreference,
+  saveProfile,
+} = await import("@/controllers/userController");
 
 const EMAIL = "Mentee.Demo@std.stei.itb.ac.id";
 const PASSWORD = "rahasia123";
@@ -322,5 +333,143 @@ describe("fetchUserPreference", () => {
   it("reports database failures", async () => {
     preference.getPreferenceByUser.mockRejectedValue(new Error("connection lost"));
     expect(await fetchUserPreference("user-id")).toEqual({ ok: false, error: "PREFERENCE_FAILED" });
+  });
+});
+
+describe("fetchUserProfile", () => {
+  it("combines the user account and profile details", async () => {
+    user.findById.mockResolvedValue({
+      idUser: "user-id",
+      username: "mentee_satu",
+      email: "mentee.satu@mahasiswa.itb.ac.id",
+    });
+    profile.findByUser.mockResolvedValue({
+      name: "Mentee Satu",
+      university: "Institut Teknologi Bandung",
+      studyProgram: "Sistem dan Teknologi Informasi",
+      bio: "Suka belajar bersama.",
+    });
+
+    expect(await fetchUserProfile(" user-id ")).toEqual({
+      ok: true,
+      data: {
+        idUser: "user-id",
+        username: "mentee_satu",
+        email: "mentee.satu@mahasiswa.itb.ac.id",
+        name: "Mentee Satu",
+        university: "Institut Teknologi Bandung",
+        studyProgram: "Sistem dan Teknologi Informasi",
+        bio: "Suka belajar bersama.",
+      },
+    });
+    expect(user.findById).toHaveBeenCalledWith("user-id");
+    expect(profile.findByUser).toHaveBeenCalledWith("user-id");
+  });
+
+  it("falls back to defaults when the profile row is missing", async () => {
+    user.findById.mockResolvedValue({
+      idUser: "user-id",
+      username: "mentee_satu",
+      email: "mentee.satu@mahasiswa.itb.ac.id",
+    });
+    profile.findByUser.mockResolvedValue(null);
+
+    expect(await fetchUserProfile("user-id")).toEqual({
+      ok: true,
+      data: {
+        idUser: "user-id",
+        username: "mentee_satu",
+        email: "mentee.satu@mahasiswa.itb.ac.id",
+        name: "mentee_satu",
+        university: "",
+        studyProgram: "",
+        bio: "",
+      },
+    });
+  });
+
+  it("returns USER_NOT_FOUND when the user ID is blank or does not exist", async () => {
+    expect(await fetchUserProfile("   ")).toEqual({ ok: false, error: "USER_NOT_FOUND" });
+    expect(user.findById).not.toHaveBeenCalled();
+
+    user.findById.mockResolvedValueOnce(null);
+    expect(await fetchUserProfile("missing-id")).toEqual({ ok: false, error: "USER_NOT_FOUND" });
+    expect(profile.findByUser).not.toHaveBeenCalled();
+  });
+
+  it("reports database failures", async () => {
+    user.findById.mockRejectedValueOnce(new Error("connection lost"));
+    expect(await fetchUserProfile("user-id")).toEqual({ ok: false, error: "PROFILE_FAILED" });
+  });
+});
+
+describe("saveProfile", () => {
+  const validProfile = {
+    name: " Mentee Satu ",
+    university: " Institut Teknologi Bandung ",
+    studyProgram: " Teknik Informatika ",
+    bio: " Suka algoritma ",
+  };
+
+  beforeEach(() => {
+    auth.getSessionUserId.mockResolvedValue("user-id");
+    profile.updateProfile.mockImplementation(async (_id: string, data: object) => data);
+  });
+
+  it("updates the profile with trimmed fields", async () => {
+    const result = await saveProfile("user-id", validProfile);
+
+    expect(result).toEqual({
+      ok: true,
+      data: {
+        name: "Mentee Satu",
+        university: "Institut Teknologi Bandung",
+        studyProgram: "Teknik Informatika",
+        bio: "Suka algoritma",
+      },
+    });
+    expect(profile.updateProfile).toHaveBeenCalledWith("user-id", {
+      name: "Mentee Satu",
+      university: "Institut Teknologi Bandung",
+      studyProgram: "Teknik Informatika",
+      bio: "Suka algoritma",
+    });
+  });
+
+  it("rejects missing required fields or overly long bio without touching the database", async () => {
+    expect(await saveProfile("user-id", { ...validProfile, name: "   " })).toEqual({
+      ok: false,
+      error: "INCOMPLETE_PROFILE",
+    });
+    expect(await saveProfile("user-id", { ...validProfile, university: "" })).toEqual({
+      ok: false,
+      error: "INCOMPLETE_PROFILE",
+    });
+    expect(await saveProfile("user-id", { ...validProfile, studyProgram: "" })).toEqual({
+      ok: false,
+      error: "INCOMPLETE_PROFILE",
+    });
+    expect(await saveProfile("user-id", { ...validProfile, bio: "x".repeat(301) })).toEqual({
+      ok: false,
+      error: "BIO_TOO_LONG",
+    });
+    expect(profile.updateProfile).not.toHaveBeenCalled();
+  });
+
+  it("refuses to update another user's profile", async () => {
+    auth.getSessionUserId.mockResolvedValue("other-user");
+    expect(await saveProfile("user-id", validProfile)).toEqual({
+      ok: false,
+      error: "UNAUTHORIZED",
+    });
+    expect(profile.updateProfile).not.toHaveBeenCalled();
+  });
+
+  it("reports database failures", async () => {
+    profile.updateProfile.mockRejectedValueOnce(new Error("connection lost"));
+    expect(await saveProfile("user-id", validProfile)).toEqual({
+      ok: false,
+      error: "PROFILE_FAILED",
+    });
   });
 });

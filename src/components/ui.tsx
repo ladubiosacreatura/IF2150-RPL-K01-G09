@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { InputHTMLAttributes, ReactNode } from "react";
 
 export const inputClass =
@@ -106,5 +107,35 @@ export function AuthCard({
         {children}
       </div>
     </main>
+  );
+}
+
+export function UserProfileLink({
+  idUser,
+  name,
+  subtitle,
+  href,
+  className = "",
+}: {
+  idUser: string;
+  name: string;
+  subtitle?: string;
+  href?: string;
+  className?: string;
+}) {
+  const initial = (name.trim().charAt(0) || "?").toUpperCase();
+  return (
+    <Link
+      href={href ?? `/profile/${idUser}`}
+      className={`inline-flex min-w-0 items-center gap-3 rounded-lg transition hover:text-teal-600 dark:hover:text-teal-400 ${className}`}
+    >
+      <span className="grid size-9 shrink-0 place-items-center rounded-full bg-teal-500/15 text-sm font-semibold text-teal-700 dark:text-teal-400">
+        {initial}
+      </span>
+      <span className="min-w-0">
+        <span className="block truncate text-sm font-medium">{name}</span>
+        {subtitle && <span className="block truncate text-xs text-neutral-500">{subtitle}</span>}
+      </span>
+    </Link>
   );
 }

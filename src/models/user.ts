@@ -35,6 +35,7 @@ export class User {
       .eq("id_user", idUser)
       .maybeSingle<UserRow>();
 
+    if (error?.code === "22P02") return null;
     if (error) throw new Error(error.message);
     return data && User.fromRow(data);
   }
