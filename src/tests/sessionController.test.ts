@@ -4,9 +4,13 @@ const user = vi.hoisted(() => ({ getCurrentUser: vi.fn() }));
 const session = vi.hoisted(() => ({ createSession: vi.fn() }));
 
 vi.mock("@/controllers/userController", () => user);
-vi.mock("@/models/session", () => ({ Session: session }));
+vi.mock("@/models/session", () => ({
+  Session: session,
+  SessionScheduleConflictError: class SessionScheduleConflictError extends Error {},
+}));
 
 const { processSessionCreation } = await import("@/controllers/sessionController");
+const { SessionScheduleConflictError } = await import("@/models/session");
 
 const validInput = () => ({
   topic: "  Struktur Data  ",
@@ -92,6 +96,15 @@ describe("processSessionCreation", () => {
     await expect(processSessionCreation(validInput())).resolves.toEqual({
       ok: false,
       error: "SESSION_CREATION_FAILED",
+    });
+  });
+
+  it("reports overlapping sessions with a specific conflict result", async () => {
+    session.createSession.mockRejectedValue(new SessionScheduleConflictError());
+
+    await expect(processSessionCreation(validInput())).resolves.toEqual({
+      ok: false,
+      error: "OVERLAPPING_SESSION",
     });
   });
 });
