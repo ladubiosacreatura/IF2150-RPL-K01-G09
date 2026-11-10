@@ -126,33 +126,47 @@ export default function RegisterForm() {
       )}
 
       <form onSubmit={onSubmit} className="mt-6 space-y-5">
-        {textField("email", "Email Universitas", {
-          type: "email",
-          autoComplete: "email",
-          placeholder: "nim@std.stei.itb.ac.id",
-        })}
-        {textField(
-          "username",
-          "Username",
-          { autoComplete: "username", minLength: 3, maxLength: 20, placeholder: "nama_kamu" },
-          "3–20 karakter: huruf kecil, angka, atau garis bawah",
-        )}
-        {textField(
-          "password",
-          "Kata Sandi",
-          { type: "password", autoComplete: "new-password", minLength: 8, placeholder: "••••••••" },
-          "Minimal 8 karakter",
-        )}
-        {textField("name", "Nama Lengkap", {
-          autoComplete: "name",
-          placeholder: "Nama lengkap kamu",
-        })}
+        <Field
+          {...field("email")}
+          label="Email Universitas"
+          type="email"
+          autoComplete="email"
+          placeholder="nim@std.stei.itb.ac.id"
+        />
+        <Field
+          {...field("username")}
+          label="Username"
+          autoComplete="username"
+          minLength={3}
+          maxLength={20}
+          placeholder="nama_kamu"
+        />
+        <Field
+          {...field("password")}
+          label="Kata Sandi"
+          type="password"
+          autoComplete="new-password"
+          minLength={8}
+          placeholder="••••••••"
+        />
+        <Field
+          {...field("name")}
+          label="Nama Lengkap"
+          autoComplete="name"
+          placeholder="Nama lengkap kamu"
+        />
         <div className="grid gap-5 sm:grid-cols-2">
-          {textField("university", "Universitas", {
-            autoComplete: "organization",
-            placeholder: "Institut Teknologi Bandung",
-          })}
-          {textField("studyProgram", "Program Studi", { placeholder: "Teknik Informatika" })}
+          <Field
+            {...field("university")}
+            label="Universitas"
+            autoComplete="organization"
+            placeholder="Institut Teknologi Bandung"
+          />
+          <Field
+            {...field("studyProgram")}
+            label="Program Studi"
+            placeholder="Teknik Informatika"
+          />
         </div>
 
         <label className="flex items-start gap-3 text-sm">

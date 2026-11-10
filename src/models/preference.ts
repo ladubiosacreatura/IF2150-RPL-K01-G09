@@ -27,6 +27,7 @@ export class Preference {
       .eq("id_user", idUser)
       .maybeSingle<PreferenceRow>();
 
+    if (error?.code === "22P02") return null;
     if (error) throw new Error(error.message);
     return data && Preference.fromRow(data);
   }

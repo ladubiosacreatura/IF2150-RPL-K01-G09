@@ -191,6 +191,7 @@ Tabel B.1. Perubahan dari DPPL
 | No | Bagian DPPL | Rancangan Awal | Implementasi Akhir | Alasan |
 | :--- | :--- | :--- | :--- | :--- |
 | 1 | C09 `Preference.updatePreference()` (Algo-C09-01) | Metode instans `updatePreference(data)` yang juga memeriksa kelengkapan | Metode statis `updatePreference(idUser, data)` berupa *upsert*; pemeriksaan kelengkapan hanya di `UserControl` | Baris `preferences` belum ada untuk pengguna baru sehingga perlu *upsert*, dan aturan bisnis cukup diperiksa satu kali di Controller |
+| 2 | C10 `Profile.updateProfile()` (Algo-C10-01) & C12 `UserControl.fetchUserProfile()` (Algo-C12-01) | `updateProfile(data)` sebagai metode instans; `fetchUserProfile()` hanya mengembalikan entitas `Profile` | `Profile.updateProfile(idUser, data)` sebagai metode statis *upsert*; `fetchUserProfile(idUser)` mengembalikan gabungan `username` dan `email` dari `User` beserta atribut `Profile` | Memudahkan serialisasi data dari Server Action ke Client Component (`ProfileView`) dalam satu pemanggilan |
 | *...* | *...* | *...* | *...* | *...* |
 
 ## B.2 Bukti Penerapan Best Practices

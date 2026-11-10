@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import PreferenceForm from "@/components/PreferenceForm";
 import { Alert } from "@/components/ui";
@@ -14,7 +15,13 @@ export default async function Page() {
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="text-2xl font-bold tracking-tight">Edit Preferensi</h1>
+      <Link
+        href="/profile"
+        className="inline-block text-sm font-medium text-teal-600 hover:underline dark:text-teal-400"
+      >
+        ← Kembali ke Profil
+      </Link>
+      <h1 className="mt-3 text-2xl font-bold tracking-tight">Edit Preferensi</h1>
       <p className="mt-1.5 text-sm text-neutral-500 dark:text-neutral-400">
         Atur materi, format sesi, dan waktu luang kamu.
       </p>

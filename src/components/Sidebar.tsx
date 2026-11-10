@@ -82,9 +82,18 @@ export default function Sidebar({ user }: { user: CurrentUser }) {
         })}
       </nav>
 
-      <div className="ml-auto flex items-center gap-1 rounded-xl md:mt-auto md:ml-0 md:border md:border-neutral-200 md:p-2 dark:md:border-neutral-800">
+      <div
+        className={`ml-auto flex items-center gap-1 rounded-xl md:mt-auto md:ml-0 md:border md:p-2 ${
+          pathname === "/profile" || pathname === `/profile/${user.idUser}`
+            ? "md:border-teal-500/60 md:bg-teal-500/5"
+            : "md:border-neutral-200 dark:md:border-neutral-800"
+        }`}
+      >
         <Link
           href="/profile"
+          aria-current={
+            pathname === "/profile" || pathname === `/profile/${user.idUser}` ? "page" : undefined
+          }
           className="flex min-w-0 flex-1 items-center gap-3 rounded-lg p-1 hover:bg-neutral-100 dark:hover:bg-neutral-900"
         >
           <span className="grid size-9 shrink-0 place-items-center rounded-full bg-teal-500/15 text-sm font-semibold text-teal-700 dark:text-teal-400">

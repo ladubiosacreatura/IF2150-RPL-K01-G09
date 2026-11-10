@@ -33,10 +33,19 @@ export type PreferenceError =
   | "PREFERENCE_FAILED";
 export type PreferenceResult = Result<PreferenceError, PreferenceData>;
 
+export type UserProfile = ProfileData & { idUser: string; email: string };
+export type ProfileError = "USER_NOT_FOUND" | "PROFILE_FAILED";
+export type ProfileResult = Result<ProfileError, UserProfile>;
+
+export type SaveProfileError =
+  "UNAUTHORIZED" | "INCOMPLETE_PROFILE" | "BIO_TOO_LONG" | "PROFILE_FAILED";
+export type SaveProfileResult = Result<SaveProfileError, Omit<ProfileData, "username">>;
+
 export type CurrentUser = { idUser: string; username: string; email: string; name: string };
 
 const USERNAME_PATTERN = /^[a-z0-9_]{3,20}$/;
 const PASSWORD_MIN_LENGTH = 8;
+const BIO_MAX_LENGTH = 300;
 const FORMAT_PREFERENCES: readonly FormatPreference[] = ["DARING", "LURING", "BOTH"];
 const TAG_MAX_COUNT = 20;
 const TAG_MAX_LENGTH = 40;
@@ -179,6 +188,67 @@ function normalizeAvailability(slots: Availability[]): Availability[] {
   return [...unique.values()].sort(
     (a, b) => a.day - b.day || a.start.localeCompare(b.start) || a.end.localeCompare(b.end),
   );
+}
+
+export async function fetchUserProfile(idUser: string): Promise<ProfileResult> {
+  idUser = clean(idUser);
+  if (!idUser) return fail("USER_NOT_FOUND");
+
+  try {
+    const user = await User.findById(idUser);
+    if (!user) return fail("USER_NOT_FOUND");
+
+    const profile = await Profile.findByUser(idUser);
+    return {
+      ok: true,
+      data: {
+        idUser: user.idUser,
+        username: user.username,
+        email: user.email,
+        name: profile?.name ?? user.username,
+        university: profile?.university ?? "",
+        studyProgram: profile?.studyProgram ?? "",
+        bio: profile?.bio ?? "",
+      },
+    };
+  } catch {
+    return fail("PROFILE_FAILED");
+  }
+}
+
+export async function saveProfile(
+  idUser: string,
+  data: Omit<ProfileData, "username">,
+): Promise<SaveProfileResult> {
+  const sessionUserId = await authAdapter.getSessionUserId();
+  if (!sessionUserId || sessionUserId !== idUser) return fail("UNAUTHORIZED");
+
+  const profile = {
+    name: clean(data?.name),
+    university: clean(data?.university),
+    studyProgram: clean(data?.studyProgram),
+    bio: clean(data?.bio),
+  };
+
+  if (!profile.name || !profile.university || !profile.studyProgram) {
+    return fail("INCOMPLETE_PROFILE");
+  }
+  if (profile.bio.length > BIO_MAX_LENGTH) return fail("BIO_TOO_LONG");
+
+  try {
+    const saved = await Profile.updateProfile(idUser, profile);
+    return {
+      ok: true,
+      data: {
+        name: saved.name,
+        university: saved.university,
+        studyProgram: saved.studyProgram,
+        bio: saved.bio,
+      },
+    };
+  } catch {
+    return fail("PROFILE_FAILED");
+  }
 }
 
 export async function fetchUserPreference(
