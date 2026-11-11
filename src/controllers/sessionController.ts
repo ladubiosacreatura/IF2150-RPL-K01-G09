@@ -2,7 +2,7 @@
 
 import { validateCapacity } from "@/lib/validator";
 import { getCurrentUser } from "@/controllers/userController";
-import { Session } from "@/models/session";
+import { Session, SessionScheduleConflictError } from "@/models/session";
 import type { SessionData, SessionFormat } from "@/models/types";
 
 export type SessionCreationError =
@@ -11,6 +11,7 @@ export type SessionCreationError =
   | "INVALID_SCHEDULE"
   | "INVALID_FORMAT"
   | "INVALID_CAPACITY"
+  | "OVERLAPPING_SESSION"
   | "SESSION_CREATION_FAILED";
 
 export type SessionCreationResult =
@@ -64,7 +65,8 @@ export async function processSessionCreation(
   try {
     const session = await Session.createSession(user.idUser, data, input.schedule);
     return { ok: true, data: { idSession: session.idSession } };
-  } catch {
+  } catch (error) {
+    if (error instanceof SessionScheduleConflictError) return fail("OVERLAPPING_SESSION");
     return fail("SESSION_CREATION_FAILED");
   }
 }

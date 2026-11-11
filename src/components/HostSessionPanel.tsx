@@ -12,6 +12,8 @@ const ERRORS: Record<SessionCreationError, string> = {
   INVALID_SCHEDULE: "Pilih jadwal yang valid dan pastikan jam selesai setelah jam mulai.",
   INVALID_FORMAT: "Pilih format sesi.",
   INVALID_CAPACITY: "Batas peserta harus antara 1 dan 20 orang.",
+  OVERLAPPING_SESSION:
+    "Jadwal sesi bertabrakan dengan sesi lain yang kamu buat. Pilih waktu yang berbeda.",
   SESSION_CREATION_FAILED: "Sesi gagal dibuat. Coba lagi beberapa saat lagi.",
 };
 

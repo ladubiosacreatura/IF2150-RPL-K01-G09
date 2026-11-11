@@ -2,6 +2,13 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import type { SessionData, SessionFormat, SessionRow, SessionStatus } from "./types";
 
+export class SessionScheduleConflictError extends Error {
+  constructor() {
+    super("Tutor already has an overlapping scheduled session.");
+    this.name = "SessionScheduleConflictError";
+  }
+}
+
 export class Session {
   private constructor(
     readonly idSession: string,
@@ -52,6 +59,7 @@ export class Session {
       .select()
       .single<SessionRow>();
 
+    if (error?.code === "23P01") throw new SessionScheduleConflictError();
     if (error) throw new Error(error.message);
     return Session.fromRow(row);
   }
