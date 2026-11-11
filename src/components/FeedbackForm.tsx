@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { submitFeedback } from "@/controllers/feedbackController";
 import { processSessionCompletion } from "@/controllers/sessionHistoryController";
 import type { SessionHistoryEntry } from "@/models/sessionHistoryTypes";
 
@@ -11,10 +12,17 @@ type Props = {
   onClose?: () => void;
 };
 
+const THANK_YOU_MESSAGE = "Terima kasih atas feedback Anda";
+
 const ERROR_MESSAGES: Record<string, string> = {
+  INVALID_RATING: "Pilih penilaian dari 1 sampai 5 bintang.",
+  INVALID_COMMENT: "Catatan maksimal 500 karakter.",
+  NOT_PARTICIPANT: "Hanya mentee yang mengikuti sesi dapat memberikan penilaian.",
+  SESSION_NOT_COMPLETED: "Penilaian hanya dapat diberikan untuk sesi yang sudah terlaksana.",
   SESSION_LOOKUP_FAILED: "Riwayat sesi gagal dimuat. Silakan coba lagi.",
   SESSION_NOT_ENDED: "Sesi belum berakhir dan belum dapat dikonfirmasi.",
-  SESSION_ALREADY_CONFIRMED: "Status sesi sudah dikonfirmasi. Muat ulang riwayat untuk melihat perubahan.",
+  SESSION_ALREADY_CONFIRMED:
+    "Status sesi sudah dikonfirmasi. Muat ulang riwayat untuk melihat perubahan.",
   FEEDBACK_NOT_ALLOWED: "Hanya mentee yang mengikuti sesi dapat memberikan penilaian.",
   FEEDBACK_ALREADY_EXISTS: "Penilaian untuk sesi ini sudah pernah dikirim.",
   SESSION_CONFIRMATION_FAILED: "Status sesi gagal diperbarui. Silakan coba lagi.",
@@ -37,26 +45,42 @@ export default function FeedbackForm({ session, mode, onClose }: Props) {
   const [reason, setReason] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  const [thanked, setThanked] = useState(false);
 
   const close = () => {
     if (onClose) onClose();
     else router.push("/history");
   };
 
-  async function submit() {
-    if (mode === "feedback" && rating === 0) {
-      setError("Pilih penilaian dari 1 sampai 5 bintang.");
-      return;
-    }
+  const finish = () => {
+    close();
+    router.refresh();
+  };
 
-    setPending(true);
-    setError("");
+  async function sendFeedback() {
+    const result = await submitFeedback(session.idSession, rating, comment);
+    return result.ok ? { ok: true as const, feedbackSaved: true } : result;
+  }
+
+  async function sendCompletion() {
     const result = await processSessionCompletion(session.idSession, {
       status,
       reason,
       rating: status === "SELESAI" ? rating : 0,
       comment,
     });
+    return result.ok ? { ok: true as const, feedbackSaved: result.data.feedbackSaved } : result;
+  }
+
+  async function submit() {
+    if (mode === "feedback" && rating === 0) {
+      setError(ERROR_MESSAGES.INVALID_RATING);
+      return;
+    }
+
+    setPending(true);
+    setError("");
+    const result = mode === "feedback" ? await sendFeedback() : await sendCompletion();
     setPending(false);
 
     if (!result.ok) {
@@ -64,14 +88,32 @@ export default function FeedbackForm({ session, mode, onClose }: Props) {
       return;
     }
 
-    if (mode === "feedback") {
-      router.push("/history");
-      router.refresh();
-      return;
-    }
+    if (result.feedbackSaved) setThanked(true);
+    else finish();
+  }
 
-    close();
-    router.refresh();
+  if (thanked) {
+    return (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+        role="presentation"
+      >
+        <section
+          role="status"
+          className="w-full max-w-sm rounded-2xl border border-neutral-800 bg-neutral-900 p-6 text-center text-neutral-100 shadow-2xl"
+        >
+          <p className="text-lg font-semibold">{THANK_YOU_MESSAGE}</p>
+          <p className="mt-1 text-sm text-neutral-400">Penilaian Anda sudah tersimpan.</p>
+          <button
+            type="button"
+            onClick={finish}
+            className="mt-5 rounded-lg bg-teal-500 px-4 py-2.5 text-sm font-semibold text-neutral-950 transition hover:bg-teal-400"
+          >
+            Kembali ke Riwayat
+          </button>
+        </section>
+      </div>
+    );
   }
 
   const date = new Intl.DateTimeFormat("id-ID", {
@@ -210,7 +252,10 @@ export default function FeedbackForm({ session, mode, onClose }: Props) {
         )}
 
         {error && (
-          <p role="alert" className="mt-4 rounded-lg border border-red-500/40 bg-red-950/40 p-3 text-sm text-red-300">
+          <p
+            role="alert"
+            className="mt-4 rounded-lg border border-red-500/40 bg-red-950/40 p-3 text-sm text-red-300"
+          >
             {error}
           </p>
         )}
