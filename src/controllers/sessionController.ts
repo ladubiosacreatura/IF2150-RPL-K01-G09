@@ -89,6 +89,16 @@ export type SessionUpdateError =
 export type SessionUpdateResult =
   { ok: true; data: { idSession: string } } | { ok: false; error: SessionUpdateError };
 
+export type SessionDeletionError =
+  | "UNAUTHORIZED"
+  | "INVALID_SESSION_ID"
+  | "SESSION_NOT_FOUND"
+  | "SESSION_DELETE_FAILED";
+
+export type SessionDeletionResult =
+  | { ok: true; data: { participantCount: number } }
+  | { ok: false; error: SessionDeletionError };
+
 function isValidMeetingLink(value: string, format: SessionFormat): boolean {
   if (!value) return format === "LURING";
   if (value.length > 500) return false;
@@ -100,6 +110,25 @@ function isValidMeetingLink(value: string, format: SessionFormat): boolean {
     );
   } catch {
     return false;
+  }
+}
+
+export async function processSessionDeletion(idSession: string): Promise<SessionDeletionResult> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "UNAUTHORIZED" };
+  if (!/^[\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12}$/i.test(idSession)) {
+    return { ok: false, error: "INVALID_SESSION_ID" };
+  }
+
+  try {
+    const participantCount = await Session.deleteSession(idSession);
+    if (participantCount === null) return { ok: false, error: "SESSION_NOT_FOUND" };
+    return { ok: true, data: { participantCount } };
+  } catch (error) {
+    if (error instanceof Error && error.message === "session not found or not owned") {
+      return { ok: false, error: "SESSION_NOT_FOUND" };
+    }
+    return { ok: false, error: "SESSION_DELETE_FAILED" };
   }
 }
 

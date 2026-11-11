@@ -91,7 +91,7 @@ export type FeedbackRow = {
 export type NotificationRow = {
   notification_id: string;
   id_user: string;
-  id_session: string;
+  id_session: string | null;
   title: string;
   content: string;
   timestamp: string;
