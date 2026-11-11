@@ -48,11 +48,9 @@ export type SessionRow = {
   id_mentor: string;
   topic: string;
   description: string;
-  material_tag: string;
   schedule: string;
   scheduled_time: string;
   end_time: string;
-  meeting_link: string;
   format: SessionFormat;
   capacity: number;
   status: SessionStatus;
@@ -119,11 +117,6 @@ export type SessionData = {
   endTime: Date;
   format: SessionFormat;
   capacity: number;
-};
-
-export type SessionUpdateData = SessionData & {
-  materialTag: string;
-  meetingLink: string;
 };
 
 export type ActionResult<T = void> = { ok: true; data: T } | { ok: false; error: string };

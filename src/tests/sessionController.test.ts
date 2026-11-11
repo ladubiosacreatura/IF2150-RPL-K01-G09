@@ -1,11 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const user = vi.hoisted(() => ({ getCurrentUser: vi.fn() }));
-const session = vi.hoisted(() => ({
-  createSession: vi.fn(),
-  findForMentor: vi.fn(),
-  updateSession: vi.fn(),
-}));
+const session = vi.hoisted(() => ({ createSession: vi.fn() }));
 
 vi.mock("@/controllers/userController", () => user);
 vi.mock("@/models/session", () => ({
@@ -13,8 +9,7 @@ vi.mock("@/models/session", () => ({
   SessionScheduleConflictError: class SessionScheduleConflictError extends Error {},
 }));
 
-const { processSessionCreation, processSessionUpdate } =
-  await import("@/controllers/sessionController");
+const { processSessionCreation } = await import("@/controllers/sessionController");
 const { SessionScheduleConflictError } = await import("@/models/session");
 
 const validInput = () => ({
@@ -27,21 +22,10 @@ const validInput = () => ({
   capacity: 5,
 });
 
-const validUpdateInput = () => ({
-  ...validInput(),
-  materialTag: "Struktur Data",
-  meetingLink: "https://meet.google.com/abc-defg-hij",
-});
-
 beforeEach(() => {
   vi.resetAllMocks();
   user.getCurrentUser.mockResolvedValue({ idUser: "mentor-1" });
   session.createSession.mockResolvedValue({ idSession: "session-1" });
-  session.findForMentor.mockResolvedValue({
-    session: { idSession: "session-1" },
-    participantCount: 2,
-  });
-  session.updateSession.mockResolvedValue({ idSession: "session-1" });
 });
 
 describe("processSessionCreation", () => {
@@ -114,85 +98,6 @@ describe("processSessionCreation", () => {
     await expect(processSessionCreation(validInput())).resolves.toEqual({
       ok: false,
       error: "SESSION_CREATION_FAILED",
-    });
-  });
-
-  describe("processSessionUpdate", () => {
-    it("updates the authenticated mentor's session with normalized details", async () => {
-      const input = validUpdateInput();
-
-      await expect(processSessionUpdate("session-1", input)).resolves.toEqual({
-        ok: true,
-        data: { idSession: "session-1" },
-      });
-      expect(session.findForMentor).toHaveBeenCalledWith("session-1", "mentor-1");
-      expect(session.updateSession).toHaveBeenCalledWith(
-        "session-1",
-        "mentor-1",
-        {
-          topic: "Struktur Data",
-          description: "Pohon biner",
-          materialTag: "Struktur Data",
-          startTime: input.startTime,
-          endTime: input.endTime,
-          meetingLink: input.meetingLink,
-          format: input.format,
-          capacity: input.capacity,
-        },
-        input.schedule,
-      );
-    });
-
-    it("rejects unauthenticated callers and sessions they do not own", async () => {
-      user.getCurrentUser.mockResolvedValue(null);
-      await expect(processSessionUpdate("session-1", validUpdateInput())).resolves.toEqual({
-        ok: false,
-        error: "UNAUTHORIZED",
-      });
-      expect(session.findForMentor).not.toHaveBeenCalled();
-
-      user.getCurrentUser.mockResolvedValue({ idUser: "mentor-1" });
-      session.findForMentor.mockResolvedValue(null);
-      await expect(processSessionUpdate("session-1", validUpdateInput())).resolves.toEqual({
-        ok: false,
-        error: "SESSION_NOT_FOUND",
-      });
-      expect(session.updateSession).not.toHaveBeenCalled();
-    });
-
-    it("prevents reducing capacity below the number of joined participants", async () => {
-      await expect(
-        processSessionUpdate("session-1", { ...validUpdateInput(), capacity: 1 }),
-      ).resolves.toEqual({ ok: false, error: "CAPACITY_BELOW_PARTICIPANTS" });
-      expect(session.updateSession).not.toHaveBeenCalled();
-    });
-
-    it("validates the material tag, schedule, and online meeting link", async () => {
-      const input = validUpdateInput();
-      await expect(
-        processSessionUpdate("session-1", { ...input, materialTag: "" }),
-      ).resolves.toEqual({ ok: false, error: "INVALID_MATERIAL_TAG" });
-      await expect(
-        processSessionUpdate("session-1", { ...input, schedule: "2026-02-30" }),
-      ).resolves.toEqual({ ok: false, error: "INVALID_SCHEDULE" });
-      await expect(
-        processSessionUpdate("session-1", { ...input, meetingLink: "javascript:alert(1)" }),
-      ).resolves.toEqual({ ok: false, error: "INVALID_MEETING_LINK" });
-      expect(session.findForMentor).not.toHaveBeenCalled();
-    });
-
-    it("reports overlapping schedules and update failures", async () => {
-      session.updateSession.mockRejectedValue(new SessionScheduleConflictError());
-      await expect(processSessionUpdate("session-1", validUpdateInput())).resolves.toEqual({
-        ok: false,
-        error: "OVERLAPPING_SESSION",
-      });
-
-      session.updateSession.mockRejectedValue(new Error("database unavailable"));
-      await expect(processSessionUpdate("session-1", validUpdateInput())).resolves.toEqual({
-        ok: false,
-        error: "SESSION_UPDATE_FAILED",
-      });
     });
   });
 
