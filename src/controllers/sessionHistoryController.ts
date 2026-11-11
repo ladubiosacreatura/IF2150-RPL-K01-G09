@@ -3,7 +3,8 @@
 import { getCurrentUser } from "@/controllers/userController";
 import { Feedback, FeedbackAlreadyExistsError } from "@/models/feedback";
 import { SessionHistory } from "@/models/sessionHistory";
-import type { SessionStatus } from "@/models/types";
+import type { HistorySession } from "@/models/sessionHistoryTypes";
+import type { ActionResult, SessionStatus } from "@/models/types";
 
 const SESSION_ID_PATTERN = /^[\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12}$/i;
 
@@ -103,5 +104,24 @@ export async function processSessionCompletion(
   } catch (error) {
     if (error instanceof FeedbackAlreadyExistsError) return fail("FEEDBACK_ALREADY_EXISTS");
     return fail("FEEDBACK_SUBMISSION_FAILED");
+  }
+}
+
+export async function fetchUserHistory(): Promise<ActionResult<HistorySession[]>> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "UNAUTHORIZED" };
+
+  try {
+    const entries = await SessionHistory.listForUser(user.idUser);
+    const now = Date.now();
+    return {
+      ok: true,
+      data: entries.map((entry) => ({
+        ...entry,
+        canConfirm: new Date(entry.endTime).getTime() <= now,
+      })),
+    };
+  } catch {
+    return { ok: false, error: "HISTORY_LOOKUP_FAILED" };
   }
 }

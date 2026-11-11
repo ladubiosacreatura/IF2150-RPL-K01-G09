@@ -3,9 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import FeedbackForm from "@/components/FeedbackForm";
-import type { SessionHistoryEntry } from "@/models/sessionHistoryTypes";
+import { getGroupedByStatus, type HistorySession } from "@/models/sessionHistoryTypes";
 
-type HistorySession = SessionHistoryEntry & { canConfirm: boolean };
 type Filter = "ALL" | "MENTEE" | "MENTOR";
 
 const SECTIONS = [
@@ -55,6 +54,7 @@ export default function SessionHistoryView({ sessions }: { sessions: HistorySess
     mode: "confirm" | "feedback";
   } | null>(null);
   const visibleSessions = sessions.filter((session) => filter === "ALL" || session.role === filter);
+  const groupedSessions = getGroupedByStatus(visibleSessions);
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
@@ -81,9 +81,7 @@ export default function SessionHistoryView({ sessions }: { sessions: HistorySess
 
       <div className="mt-7 space-y-8">
         {SECTIONS.map((section) => {
-          const sectionSessions = visibleSessions.filter(
-            (session) => session.status === section.status,
-          );
+          const sectionSessions = groupedSessions[section.status];
           if (sectionSessions.length === 0) return null;
 
           return (
@@ -102,6 +100,7 @@ export default function SessionHistoryView({ sessions }: { sessions: HistorySess
                   const isScheduled = session.status === "TERJADWAL";
                   const canRate =
                     session.status === "SELESAI" && session.role === "MENTEE" && !session.feedback;
+                  const canViewFeedback = session.status === "SELESAI" && session.role === "MENTOR";
                   const scheduleDay = formatDay(session);
 
                   return (
@@ -174,6 +173,13 @@ export default function SessionHistoryView({ sessions }: { sessions: HistorySess
                           >
                             Beri Penilaian
                           </button>
+                        ) : canViewFeedback ? (
+                          <Link
+                            href={`/sessions/${session.idSession}/feedback`}
+                            className={buttonClass}
+                          >
+                            Lihat Feedback
+                          </Link>
                         ) : (
                           <Link href={`/sessions/${session.idSession}`} className={buttonClass}>
                             Lihat Detail
