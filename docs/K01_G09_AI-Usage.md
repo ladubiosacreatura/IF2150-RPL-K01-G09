@@ -86,6 +86,14 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 | *Gemini* | *Menentukan contoh format pseudocode untuk web based functions* | *Untuk merealisasikan fungsi seperti ini .... , berikan contoh pseudocode secara web based (seperti realisasi promise)* | *Output gemini dibandingkan dengan function aktual javascript atau typescript* |
 | *Gemini* | *Menentukan format query CRUD pada kelas entitas* | *Untuk merealisasikan fungsi seperti ini .... , berikan contoh query untuk melakukan ini* | *Output gemini dibandingkan dengan query yang valid* |
 
+### Milestone 9
+| Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |
+| :--- | :--- | :--- | :--- |
+| Claude Code (Claude Opus 5.5) | Menganalisis dan menyelesaikan konflik PR KF10a dan KF16 di branch `development` yang muncul karena PR KF17 ter-merge lebih dulu. | "Cek alasan error PR KF10a dan KF16 setelah KF17 ter-merge, dan apakah revert KF17 lalu merge ulang 10a, 16, 17 akan menyelesaikan masalahnya." | AI menyimulasikan merge di salinan sementara. Usulan revert tidak dipakai karena terbukti menghilangkan kode KF17. Konflik ternyata hanya pada tabel modul `src/README.md` dan diselesaikan mengikuti format terbaru. Lint, typecheck, test, dan build dijalankan sebelum push, dan merge PR tetap dilakukan anggota. |
+| Claude Code (Claude Opus 5.5) | Membantu implementasi modul Feedback & History, yaitu KF10b (penilaian sesi), KF18 (melihat feedback sesi), dan KF11 (halaman riwayat), beserta unit test-nya. | "Kerjakan issue #113, #114, dan #115 sesuai DPPL2 dan acceptance criteria. Buat tiap KF di branch masing-masing, lalu buat PR." | AI diminta membandingkan kode yang sudah ada dengan acceptance criteria dan DPPL2 sebelum menulis kode. Kami menetapkan batasan: mengikuti pembagian modul, tidak mengubah file bersama, dan meminta konfirmasi sebelum aksi yang tidak bisa dibatalkan. Hasil divalidasi dengan lint, typecheck, Vitest, build, dan CI, lalu diajukan lewat PR #119–#121 untuk di-review anggota lain. |
+| Claude Code (Claude Opus 5.5) | Profiling dan optimasi query halaman Riwayat (`SessionHistory.listForUser`) sebagai bahan B.2.1. | "Optimalkan query riwayat sesi dan ukur waktunya sebelum dan sesudah perubahan." | Waktu diukur langsung ke basis data dengan akun seed fiktif (median 20 kali), dan hasil query lama dan baru dicek identik. Angka di PR #121 berasal dari pengukuran tersebut, bukan perkiraan AI. |
+| Claude Code (Claude Opus 5.5) | Memahami spesifikasi M9 (materi asistensi akbar, template laporan, SKPL, dan DPPL2) untuk memeriksa kelengkapan tugas modul dan laporan. | "Pahami file asistensi M9 dan spesifikasi di branch main, lalu cek apakah tugasku (bagian D) sudah selesai semua." | Ringkasan AI dicocokkan kembali dengan dokumen asli. Prioritas pengerjaan dan bagian laporan yang dikerjakan tetap diputuskan kelompok. |
+
 ---
 ### Pernyataan Integritas dan Persetujuan
 
