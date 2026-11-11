@@ -4,6 +4,7 @@ const user = vi.hoisted(() => ({ getCurrentUser: vi.fn() }));
 const history = vi.hoisted(() => ({
   confirmSession: vi.fn(),
   findForUser: vi.fn(),
+  listForUser: vi.fn(),
 }));
 const feedback = vi.hoisted(() => ({ create: vi.fn() }));
 const feedbackErrors = vi.hoisted(() => ({
@@ -17,7 +18,8 @@ vi.mock("@/models/feedback", () => ({
   FeedbackAlreadyExistsError: feedbackErrors.FeedbackAlreadyExistsError,
 }));
 
-const { processSessionCompletion } = await import("@/controllers/sessionHistoryController");
+const { fetchUserHistory, processSessionCompletion } =
+  await import("@/controllers/sessionHistoryController");
 
 const idSession = "c2251aa3-8f25-4948-af2e-0421a8cedb1c";
 const input = () => ({
@@ -127,5 +129,37 @@ describe("processSessionCompletion", () => {
       error: "FEEDBACK_SUBMISSION_FAILED",
     });
     expect(history.confirmSession).toHaveBeenCalledOnce();
+  });
+});
+
+describe("fetchUserHistory", () => {
+  const ended = { idSession: "ended", endTime: new Date(Date.now() - 60_000).toISOString() };
+  const upcoming = { idSession: "upcoming", endTime: new Date(Date.now() + 60_000).toISOString() };
+
+  it("returns the user's history and marks ended sessions as confirmable", async () => {
+    history.listForUser.mockResolvedValueOnce([ended, upcoming]);
+
+    await expect(fetchUserHistory()).resolves.toEqual({
+      ok: true,
+      data: [
+        { ...ended, canConfirm: true },
+        { ...upcoming, canConfirm: false },
+      ],
+    });
+    expect(history.listForUser).toHaveBeenCalledWith("mentee-1");
+  });
+
+  it("rejects guests without loading history", async () => {
+    user.getCurrentUser.mockResolvedValueOnce(null);
+    await expect(fetchUserHistory()).resolves.toEqual({ ok: false, error: "UNAUTHORIZED" });
+    expect(history.listForUser).not.toHaveBeenCalled();
+  });
+
+  it("reports lookup failures", async () => {
+    history.listForUser.mockRejectedValueOnce(new Error("network"));
+    await expect(fetchUserHistory()).resolves.toEqual({
+      ok: false,
+      error: "HISTORY_LOOKUP_FAILED",
+    });
   });
 });
