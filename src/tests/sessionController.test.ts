@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const user = vi.hoisted(() => ({ getCurrentUser: vi.fn() }));
 const session = vi.hoisted(() => ({
   createSession: vi.fn(),
+  deleteSession: vi.fn(),
   findForMentor: vi.fn(),
   updateSession: vi.fn(),
 }));
@@ -13,7 +14,7 @@ vi.mock("@/models/session", () => ({
   SessionScheduleConflictError: class SessionScheduleConflictError extends Error {},
 }));
 
-const { processSessionCreation, processSessionUpdate } =
+const { processSessionCreation, processSessionDeletion, processSessionUpdate } =
   await import("@/controllers/sessionController");
 const { SessionScheduleConflictError } = await import("@/models/session");
 
@@ -37,6 +38,7 @@ beforeEach(() => {
   vi.resetAllMocks();
   user.getCurrentUser.mockResolvedValue({ idUser: "mentor-1" });
   session.createSession.mockResolvedValue({ idSession: "session-1" });
+  session.deleteSession.mockResolvedValue(2);
   session.findForMentor.mockResolvedValue({
     session: { idSession: "session-1" },
     participantCount: 2,
@@ -114,6 +116,52 @@ describe("processSessionCreation", () => {
     await expect(processSessionCreation(validInput())).resolves.toEqual({
       ok: false,
       error: "SESSION_CREATION_FAILED",
+    });
+  });
+
+  describe("processSessionDeletion", () => {
+    const idSession = "c2251aa3-8f25-4948-af2e-0421a8cedb1c";
+
+    it("deletes the authenticated mentor's session and returns the participant count", async () => {
+      await expect(processSessionDeletion(idSession)).resolves.toEqual({
+        ok: true,
+        data: { participantCount: 2 },
+      });
+      expect(session.deleteSession).toHaveBeenCalledWith(idSession);
+    });
+
+    it("rejects unauthenticated callers and invalid session IDs", async () => {
+      user.getCurrentUser.mockResolvedValue(null);
+      await expect(processSessionDeletion(idSession)).resolves.toEqual({
+        ok: false,
+        error: "UNAUTHORIZED",
+      });
+      expect(session.deleteSession).not.toHaveBeenCalled();
+
+      user.getCurrentUser.mockResolvedValue({ idUser: "mentor-1" });
+      await expect(processSessionDeletion("not-a-session-id")).resolves.toEqual({
+        ok: false,
+        error: "INVALID_SESSION_ID",
+      });
+      expect(session.deleteSession).not.toHaveBeenCalled();
+    });
+
+    it("reports sessions the authenticated user does not own", async () => {
+      session.deleteSession.mockRejectedValue(new Error("session not found or not owned"));
+
+      await expect(processSessionDeletion(idSession)).resolves.toEqual({
+        ok: false,
+        error: "SESSION_NOT_FOUND",
+      });
+    });
+
+    it("reports persistence failures", async () => {
+      session.deleteSession.mockRejectedValue(new Error("database unavailable"));
+
+      await expect(processSessionDeletion(idSession)).resolves.toEqual({
+        ok: false,
+        error: "SESSION_DELETE_FAILED",
+      });
     });
   });
 

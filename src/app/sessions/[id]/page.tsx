@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getCurrentUser } from "@/controllers/userController";
 import { Session } from "@/models/session";
 import { secondaryButton } from "@/components/ui";
+import DeleteSessionButton from "@/components/DeleteSessionButton";
 
 export const metadata: Metadata = { title: "Detail Sesi · PeerUP" };
 
@@ -23,6 +24,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
     timeZone: "Asia/Jakarta",
   });
   const isMentor = user?.idUser === session.idMentor;
+  const mentorSession = isMentor ? await Session.findForMentor(id, session.idMentor) : null;
+  if (isMentor && !mentorSession) notFound();
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
@@ -39,10 +42,16 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
               {session.format === "DARING" ? "Daring" : "Luring"}
             </span>
           </div>
-          {isMentor && (
-            <Link href={`/sessions/${id}/edit`} className={secondaryButton}>
-              Edit Sesi
-            </Link>
+          {isMentor && mentorSession && (
+            <div className="flex flex-wrap gap-2">
+              <DeleteSessionButton
+                idSession={id}
+                participantCount={mentorSession.participantCount}
+              />
+              <Link href={`/sessions/${id}/edit`} className={secondaryButton}>
+                Edit Sesi
+              </Link>
+            </div>
           )}
         </div>
         <h1 className="mt-5 text-2xl font-bold tracking-tight">{session.topic}</h1>

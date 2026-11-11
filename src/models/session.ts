@@ -140,4 +140,14 @@ export class Session {
     if (error) throw new Error(error.message);
     return row ? Session.fromRow(row) : null;
   }
+
+  static async deleteSession(idSession: string): Promise<number | null> {
+    const supabase = await createClient();
+    const { data, error } = await supabase.rpc("delete_session", { p_session: idSession });
+
+    if (error) throw new Error(error.message);
+    if (data === null) return null;
+    if (typeof data !== "number") throw new Error("Unable to read deleted session participant count.");
+    return data;
+  }
 }
