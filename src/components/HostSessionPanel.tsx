@@ -2,8 +2,16 @@
 
 import Link from "next/link";
 import { useState, useTransition, type FormEvent } from "react";
-import { Alert, inputClass, inputNormal, primaryButton, secondaryButton } from "@/components/ui";
+import {
+  Alert,
+  inputClass,
+  inputInvalid,
+  inputNormal,
+  primaryButton,
+  secondaryButton,
+} from "@/components/ui";
 import { processSessionCreation, type SessionCreationError } from "@/controllers/sessionController";
+import { validateCapacity } from "@/lib/validator";
 import type { SessionFormat } from "@/models/types";
 
 const ERRORS: Record<SessionCreationError, string> = {
@@ -54,10 +62,15 @@ export default function HostSessionPanel() {
   const [createdSessionId, setCreatedSessionId] = useState<string | null>(null);
   const today = localDate(new Date());
   const numericCapacity = Number(capacity);
+  const capacityIsValid = validateCapacity(numericCapacity);
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
+    if (!capacityIsValid) {
+      setError(ERRORS.INVALID_CAPACITY);
+      return;
+    }
     if (!date || !startTime || !endTime) {
       setError(ERRORS.INVALID_SCHEDULE);
       return;
@@ -255,10 +268,24 @@ export default function HostSessionPanel() {
                 step={1}
                 value={capacity}
                 onChange={(event) => setCapacity(event.target.value)}
-                className={`${inputClass} ${inputNormal}`}
+                aria-invalid={!capacityIsValid}
+                aria-describedby={capacityIsValid ? "capacity-hint" : "capacity-warning"}
+                className={`${inputClass} ${capacityIsValid ? inputNormal : inputInvalid}`}
                 disabled={Boolean(createdSessionId)}
               />
-              <p className="text-xs text-neutral-500 dark:text-neutral-400">Maksimal 20 peserta.</p>
+              {capacityIsValid ? (
+                <p id="capacity-hint" className="text-xs text-neutral-500 dark:text-neutral-400">
+                  Masukkan 1–20 peserta.
+                </p>
+              ) : (
+                <p
+                  id="capacity-warning"
+                  role="alert"
+                  className="text-xs text-red-600 dark:text-red-400"
+                >
+                  {ERRORS.INVALID_CAPACITY}
+                </p>
+              )}
             </div>
           </fieldset>
 

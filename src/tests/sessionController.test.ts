@@ -60,11 +60,13 @@ describe("processSessionCreation", () => {
     expect(session.createSession).not.toHaveBeenCalled();
   });
 
-  it("rejects capacities outside the supported range", async () => {
-    await expect(processSessionCreation({ ...validInput(), capacity: 21 })).resolves.toEqual({
-      ok: false,
-      error: "INVALID_CAPACITY",
-    });
+  it("rejects capacities outside the supported range or that are not integers", async () => {
+    for (const capacity of [0, 21, 2.5]) {
+      await expect(processSessionCreation({ ...validInput(), capacity })).resolves.toEqual({
+        ok: false,
+        error: "INVALID_CAPACITY",
+      });
+    }
     expect(session.createSession).not.toHaveBeenCalled();
   });
 
