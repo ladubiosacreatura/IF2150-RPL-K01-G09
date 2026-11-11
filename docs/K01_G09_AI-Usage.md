@@ -78,13 +78,14 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 ### Milestone 7
 | Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |
 | :--- | :--- | :--- | :--- |
-| *-* | *-* | *"-"* | *-* |
+| *Claude* | *Menyusun draf BAB 3 Realisasi Use Case untuk UC01–UC15 berdasarkan skenario dan kelas pada SKPL: tabel identifikasi kelas, sequence diagram untuk setiap skenario normal dan alternatif dalam PlantUML.* | "based on DPPL1 and SKPL draft the scenario and class for use cases with PlantUML". | *Draf ditinjau terlebih dahulu sebelum di-commit. Diagram kelas buatan AI kami hapus dan diganti dengan gambar diagram kelas dari SKPL. Keputusan desain yang ditandai AI untuk dicek (misalnya soft delete pada UC11, siapa yang boleh mengonfirmasi sesi pada UC05, dan feedback hanya oleh Mentee pada UC07)* |
 
 ### Milestone 8
 | Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |
 | :--- | :--- | :--- | :--- |
 | *Gemini* | *Menentukan contoh format pseudocode untuk web based functions* | *Untuk merealisasikan fungsi seperti ini .... , berikan contoh pseudocode secara web based (seperti realisasi promise)* | *Output gemini dibandingkan dengan function aktual javascript atau typescript* |
 | *Gemini* | *Menentukan format query CRUD pada kelas entitas* | *Untuk merealisasikan fungsi seperti ini .... , berikan contoh query untuk melakukan ini* | *Output gemini dibandingkan dengan query yang valid* |
+| *Claude* | *Menyusun daftar layar yang perlu dirancang untuk BAB 6 Perancangan Antarmuka, berdasarkan template DPPL2, kelas View pada Tabel 2.3, dan skenario BAB 3.* | *"based on bab 6 give me list of interfaces that i need to design"* | *Daftar dari AI hanya dipakai sebagai acuan. Interface dibuat di Figma, dan susunan akhirnya (I-01 sampai I-16 beserta varian seperti I-02a) kami tentukan sendiri.* |
 
 ---
 ### Pernyataan Integritas dan Persetujuan
