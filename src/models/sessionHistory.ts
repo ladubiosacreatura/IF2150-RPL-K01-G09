@@ -8,10 +8,7 @@ type ProfileNameRow = { id_user: string; name: string };
 type FeedbackSummaryRow = { id_session: string; rating: number; comment: string };
 
 export class SessionHistory {
-  static async findForUser(
-    idSession: string,
-    idUser: string,
-  ): Promise<SessionHistoryEntry | null> {
+  static async findForUser(idSession: string, idUser: string): Promise<SessionHistoryEntry | null> {
     const entries = await SessionHistory.listForUser(idUser);
     return entries.find((entry) => entry.idSession === idSession) ?? null;
   }
@@ -19,11 +16,7 @@ export class SessionHistory {
   static async listForUser(idUser: string): Promise<SessionHistoryEntry[]> {
     const supabase = await createClient();
     const [mentorSessions, participations] = await Promise.all([
-      supabase
-        .from("sessions")
-        .select()
-        .eq("id_mentor", idUser)
-        .returns<SessionRow[]>(),
+      supabase.from("sessions").select().eq("id_mentor", idUser).returns<SessionRow[]>(),
       supabase
         .from("session_participants")
         .select("id_session")
