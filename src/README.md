@@ -87,7 +87,7 @@ Any account can act as a mentor (create a session) or a mentee (join one). Regis
 | Mentor Sessions      | UC03, UC05, UC11, UC12 | `controllers/sessionController.ts`, `models/session.ts`, `app/sessions/new`, `app/sessions/[id]`, `app/sessions/[id]/edit`, `components/HostSessionPanel.tsx`, `components/DeleteSessionButton.tsx`                           | _[NIM – Nama]_ |
 | Discovery & Join     | UC04, UC10, UC14       | `controllers/sessionParticipationController.ts`, `app/dashboard`, `app/discover`, `app/sessions/[id]`, `components/ParticipantSessionPanel.tsx`                                                                          | _[NIM – Nama]_ |
 | Chat & Notifications | UC08, UC09             | `controllers/chatController.ts`, `controllers/notificationController.ts`, `lib/adapters/realtimeAdapter.ts`, `lib/adapters/cronAdapter.ts`, `app/sessions/[id]/chat`, `app/api/cron`, `components/PopUpNotification.tsx` | _[NIM – Nama]_ |
-| Feedback & History   | UC06, UC07, UC13       | `controllers/feedbackController.ts`, `controllers/sessionHistoryController.ts`, `app/sessions/[id]/feedback`, `app/history`, `components/FeedbackForm.tsx`                                                               | _[NIM – Nama]_ |
+| Feedback & History   | UC06, UC07, UC13       | `controllers/sessionHistoryController.ts`, `models/sessionHistory.ts`, `models/feedback.ts`, `app/sessions/[id]/feedback`, `app/history`, `components/SessionHistoryView.tsx`, `components/FeedbackForm.tsx`              | _[NIM – Nama]_ |
 
 Shared files (`models/types.ts`, `lib/validator.ts`, `supabase/migrations/`) change only in their own PR.
 
@@ -110,6 +110,8 @@ Schema: `supabase/migrations/20261102000000_init.sql`. Every table has Row Level
 Enums: `session_status` (`TERJADWAL`, `SELESAI`, `TIDAK_TERLAKSANA`, `DIBATALKAN`), `session_format` (`DARING`, `LURING`), `format_preference` (`DARING`, `LURING`, `BOTH`). A trigger creates the group chat when a session is inserted.
 
 Only the mentor can update a `sessions` row directly. To confirm whether an ended session took place (UC05), mentor and mentee both call `supabase.rpc("confirm_session", { p_session, p_status, p_reason })` with `p_status` `SELESAI` or `TIDAK_TERLAKSANA`. A mentee can insert feedback only for a `SELESAI` session they joined, with `id_mentor` set to that session's mentor.
+
+The history page groups a user's sessions by status and lets either session member confirm an ended session. Mentees can submit one 1–5 star rating with an optional comment for each completed session; skipped ratings remain available from the history list.
 
 ## Contributing
 
