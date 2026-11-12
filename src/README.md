@@ -102,7 +102,14 @@ npm run build
 
 ## Scheduled jobs
 
-`/api/cron/reminders` creates the 15-minute session reminders (KF09). It accepts `GET` or `POST` with the header `Authorization: Bearer <CRON_SECRET>` and answers 401 without it. A scheduler should call it every minute; repeated calls are safe, because each session is reminded only once. To trigger it by hand while `npm run dev` is running:
+Both endpoints accept `GET` or `POST` with the header `Authorization: Bearer <CRON_SECRET>` and answer 401 without it. A scheduler should call them every minute; repeated calls are safe.
+
+| Endpoint                 | Job                                                                                     |
+| ------------------------ | --------------------------------------------------------------------------------------- |
+| `/api/cron/reminders`    | Creates the 15-minute session reminders (KF09). Each session is reminded once.          |
+| `/api/cron/chat-cleanup` | Closes group chats 48 hours after their session ends and deletes their messages (KF12). |
+
+To trigger one by hand while `npm run dev` is running:
 
 ```bash
 curl -X POST -H "Authorization: Bearer <CRON_SECRET>" http://localhost:3000/api/cron/reminders
@@ -122,13 +129,13 @@ Any account can act as a mentor (create a session) or a mentee (join one). Regis
 
 ## Modules
 
-| Module               | Use cases              | Main files                                                                                                                                                                                                                                                    |
-| -------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Auth & Profile       | UC01, UC02, UC15       | `controllers/userController.ts`, `lib/adapters/authAdapter.ts`, `app/login`, `app/register`, `app/profile`                                                                                                                                                    |
-| Mentor Sessions      | UC03, UC05, UC11, UC12 | `controllers/sessionController.ts`, `models/session.ts`, `app/sessions/new`, `app/sessions/[id]`, `app/sessions/[id]/edit`, `components/HostSessionPanel.tsx`, `components/DeleteSessionButton.tsx`                                                           |
-| Discovery & Join     | UC04, UC10, UC14       | `controllers/sessionParticipationController.ts`, `app/dashboard`, `app/discover`, `app/sessions/[id]`, `components/ParticipantSessionPanel.tsx`                                                                                                               |
-| Chat & Notifications | UC08, UC09             | `controllers/chatController.ts`, `controllers/notificationController.ts`, `controllers/reminderController.ts`, `lib/adapters/realtimeAdapter.ts`, `lib/adapters/cronAdapter.ts`, `app/sessions/[id]/chat`, `app/api/cron`, `components/PopUpNotification.tsx` |
-| Feedback & History   | UC06, UC07, UC13       | `controllers/sessionHistoryController.ts`, `models/sessionHistory.ts`, `models/feedback.ts`, `app/sessions/[id]/feedback`, `app/history`, `components/SessionHistoryView.tsx`, `components/FeedbackForm.tsx`                                                  |
+| Module               | Use cases              | Main files                                                                                                                                                                                                                                                                                            |
+| -------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Auth & Profile       | UC01, UC02, UC15       | `controllers/userController.ts`, `lib/adapters/authAdapter.ts`, `app/login`, `app/register`, `app/profile`                                                                                                                                                                                            |
+| Mentor Sessions      | UC03, UC05, UC11, UC12 | `controllers/sessionController.ts`, `models/session.ts`, `app/sessions/new`, `app/sessions/[id]`, `app/sessions/[id]/edit`, `components/HostSessionPanel.tsx`, `components/DeleteSessionButton.tsx`                                                                                                   |
+| Discovery & Join     | UC04, UC10, UC14       | `controllers/sessionParticipationController.ts`, `app/dashboard`, `app/discover`, `app/sessions/[id]`, `components/ParticipantSessionPanel.tsx`                                                                                                                                                       |
+| Chat & Notifications | UC08, UC09             | `controllers/chatController.ts`, `controllers/chatCleanupController.ts`, `controllers/notificationController.ts`, `controllers/reminderController.ts`, `lib/adapters/realtimeAdapter.ts`, `lib/adapters/cronAdapter.ts`, `app/sessions/[id]/chat`, `app/api/cron`, `components/PopUpNotification.tsx` |
+| Feedback & History   | UC06, UC07, UC13       | `controllers/sessionHistoryController.ts`, `models/sessionHistory.ts`, `models/feedback.ts`, `app/sessions/[id]/feedback`, `app/history`, `components/SessionHistoryView.tsx`, `components/FeedbackForm.tsx`                                                                                          |
 
 Shared files (`models/types.ts`, `models/session.ts`, `lib/validator.ts`, `supabase/migrations/`) change only in their own PR. `models/session.ts` belongs to the Mentor Sessions module but is used by every other session module, so merge its public methods early and keep their signatures stable.
 

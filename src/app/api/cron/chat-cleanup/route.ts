@@ -1,5 +1,8 @@
-import { NextResponse } from "next/server";
+import { closeExpiredChats } from "@/controllers/chatCleanupController";
+import { runCronJob } from "@/lib/adapters/cronAdapter";
 
-export async function POST() {
-  return NextResponse.json({ error: "not implemented" }, { status: 501 });
+function handler(request: Request) {
+  return runCronJob(request, async () => ({ closed: await closeExpiredChats(new Date()) }));
 }
+
+export { handler as GET, handler as POST };

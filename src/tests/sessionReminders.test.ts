@@ -1,19 +1,6 @@
-import { PGlite } from "@electric-sql/pglite";
-import { btree_gist } from "@electric-sql/pglite/contrib/btree_gist";
-import { readdirSync, readFileSync } from "node:fs";
-import { join } from "node:path";
-import { fileURLToPath } from "node:url";
+import type { PGlite } from "@electric-sql/pglite";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
-
-const MIGRATIONS = fileURLToPath(new URL("../supabase/migrations", import.meta.url));
-const SUPABASE_STUBS = `
-  create schema auth;
-  create table auth.users (id uuid primary key);
-  create function auth.uid() returns uuid language sql as $$ select null::uuid $$;
-  create role anon; create role authenticated; create role service_role;
-  create publication supabase_realtime;
-  create schema extensions;
-`;
+import { addUsers, createTestDatabase } from "./support/database";
 
 const USERS = {
   mentor: "00000000-0000-0000-0000-000000000001",
@@ -78,19 +65,8 @@ async function notifications() {
 }
 
 beforeAll(async () => {
-  db = new PGlite({ extensions: { btree_gist } });
-  await db.exec(SUPABASE_STUBS);
-  for (const file of readdirSync(MIGRATIONS).sort()) {
-    await db.exec(readFileSync(join(MIGRATIONS, file), "utf8"));
-  }
-  for (const [username, id] of Object.entries(USERS)) {
-    await db.query("insert into auth.users (id) values ($1)", [id]);
-    await db.query("insert into public.users (id_user, username, email) values ($1, $2, $3)", [
-      id,
-      username.toLowerCase(),
-      `${username.toLowerCase()}@itb.ac.id`,
-    ]);
-  }
+  db = await createTestDatabase();
+  await addUsers(db, USERS);
 }, 60_000);
 
 afterAll(async () => {
