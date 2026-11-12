@@ -7,7 +7,7 @@ const USERS = {
   mentee: "00000000-0000-0000-0000-00000000000a",
   outsider: "00000000-0000-0000-0000-00000000000f",
 };
-const NOW = new Date("2026-11-12T12:00:00Z");
+const NOW = new Date();
 
 let db: PGlite;
 let nextSession = 0;
@@ -110,6 +110,14 @@ describe("group chat access", () => {
     await db.query("update public.group_chats set is_active = false where id_group_chat = $1", [
       idGroupChat,
     ]);
+    await asUser(db, USERS.mentee, async () => {
+      await expect(post(idGroupChat, USERS.mentee)).rejects.toThrow(/row-level security/);
+    });
+  });
+
+  it("rejects messages 48 hours after the session ends even before the cleanup runs", async () => {
+    const { idGroupChat } = await addSession(-49);
+
     await asUser(db, USERS.mentee, async () => {
       await expect(post(idGroupChat, USERS.mentee)).rejects.toThrow(/row-level security/);
     });

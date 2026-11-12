@@ -10,12 +10,7 @@ import type { SessionFormat } from "@/models/types";
 const MESSAGE_MAX_LENGTH = 2000;
 
 export type ChatError =
-  | "NOT_AUTHENTICATED"
-  | "CHAT_NOT_FOUND"
-  | "CHAT_EXPIRED"
-  | "EMPTY_MESSAGE"
-  | "MESSAGE_TOO_LONG"
-  | "SEND_FAILED";
+  "NOT_AUTHENTICATED" | "CHAT_EXPIRED" | "EMPTY_MESSAGE" | "MESSAGE_TOO_LONG" | "SEND_FAILED";
 
 export type ChatMessageItem = {
   idMessage: string;
@@ -104,14 +99,10 @@ export async function sendMessage(idGroupChat: string, text: string): Promise<Se
   if (body.length > MESSAGE_MAX_LENGTH) return fail("MESSAGE_TOO_LONG");
 
   try {
-    const chat = await GroupChat.findById(idGroupChat);
-    if (!chat) return fail("CHAT_NOT_FOUND");
-    const session = await Session.findById(chat.idSession);
-    if (!session || !chat.isActive(new Date(session.endTime), new Date())) {
-      return fail("CHAT_EXPIRED");
-    }
-    return { ok: true, data: toItem(await ChatMessage.create(chat.idGroupChat, idSender, body)) };
-  } catch {
-    return fail("SEND_FAILED");
+    return { ok: true, data: toItem(await ChatMessage.create(idGroupChat, idSender, body)) };
+  } catch (error) {
+    return fail(
+      error instanceof Error && error.message === "CHAT_CLOSED" ? "CHAT_EXPIRED" : "SEND_FAILED",
+    );
   }
 }

@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, useTransition, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef, useState, useTransition, type FormEvent } from "react";
 import { Alert, UserProfileLink, inputClass, inputNormal, secondaryButton } from "@/components/ui";
 import {
   sendMessage,
@@ -14,7 +15,6 @@ import { CHAT_RETENTION_HOURS } from "@/models/types";
 
 const ERRORS: Record<ChatError, string> = {
   NOT_AUTHENTICATED: "Sesi login berakhir. Silakan masuk kembali.",
-  CHAT_NOT_FOUND: "Grup obrolan tidak ditemukan.",
   CHAT_EXPIRED: "Group chat untuk sesi ini telah berakhir",
   EMPTY_MESSAGE: "Pesan tidak boleh kosong.",
   MESSAGE_TOO_LONG: "Pesan maksimal 2000 karakter.",
@@ -55,6 +55,16 @@ function addMessage(messages: ChatMessageItem[], message: ChatMessageItem): Chat
   return [...messages, message].sort((a, b) => a.timeStamp.localeCompare(b.timeStamp));
 }
 
+function withLabels(messages: ChatMessageItem[]) {
+  let previousDay = "";
+  return messages.map((message) => {
+    const day = formatDay(message.timeStamp);
+    const newDay = day !== previousDay;
+    previousDay = day;
+    return { ...message, day, newDay, time: clock.format(new Date(message.timeStamp)) };
+  });
+}
+
 function Icon({ d }: { d: string }) {
   return (
     <svg
@@ -73,18 +83,28 @@ function Icon({ d }: { d: string }) {
 }
 
 export default function ChatRoom({ chat }: { chat: GroupChatData }) {
+  const router = useRouter();
   const [messages, setMessages] = useState(chat.messages);
   const [text, setText] = useState("");
   const [error, setError] = useState<ChatError | null>(chat.active ? null : "CHAT_EXPIRED");
   const [pending, startTransition] = useTransition();
   const bottom = useRef<HTMLDivElement>(null);
+  const atBottom = useRef(true);
+  const sentOwn = useRef(false);
+  const knownSenders = useRef(chat.names);
+  const rows = useMemo(() => withLabels(messages), [messages]);
   const active = chat.active && error !== "CHAT_EXPIRED";
   const { session } = chat;
   const href = meetingHref(session.meetingLink);
 
   useEffect(() => {
+    knownSenders.current = chat.names;
+  }, [chat.names]);
+
+  useEffect(() => {
     if (!chat.active) return;
-    return subscribeToChatMessages(chat.idGroupChat, (row) =>
+    return subscribeToChatMessages(chat.idGroupChat, (row) => {
+      if (!(row.id_sender in knownSenders.current)) router.refresh();
       setMessages((current) =>
         addMessage(current, {
           idMessage: row.id_message,
@@ -92,12 +112,13 @@ export default function ChatRoom({ chat }: { chat: GroupChatData }) {
           text: row.text,
           timeStamp: row.time_stamp,
         }),
-      ),
-    );
-  }, [chat.active, chat.idGroupChat]);
+      );
+    });
+  }, [chat.active, chat.idGroupChat, router]);
 
   useEffect(() => {
-    bottom.current?.scrollIntoView({ block: "end" });
+    if (atBottom.current || sentOwn.current) bottom.current?.scrollIntoView({ block: "end" });
+    sentOwn.current = false;
   }, [messages.length]);
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -106,6 +127,7 @@ export default function ChatRoom({ chat }: { chat: GroupChatData }) {
     startTransition(async () => {
       const result = await sendMessage(chat.idGroupChat, text);
       if (!result.ok) return setError(result.error);
+      sentOwn.current = true;
       setMessages((current) => addMessage(current, result.data));
       setText("");
       setError(null);
@@ -138,24 +160,30 @@ export default function ChatRoom({ chat }: { chat: GroupChatData }) {
           </span>
         </header>
 
-        <div role="log" aria-live="polite" className="flex-1 overflow-y-auto px-4 py-6 sm:px-8">
+        <div
+          role="log"
+          aria-live="polite"
+          onScroll={(event) => {
+            const log = event.currentTarget;
+            atBottom.current = log.scrollHeight - log.scrollTop - log.clientHeight < 80;
+          }}
+          className="flex-1 overflow-y-auto px-4 py-6 sm:px-8"
+        >
           {messages.length === 0 && (
             <p className="mt-10 text-center text-sm text-neutral-500">
               {active ? "Belum ada pesan. Mulai obrolan!" : "Tidak ada pesan."}
             </p>
           )}
           <ol className="space-y-4">
-            {messages.map((message, index) => {
+            {rows.map((message) => {
               const own = message.idSender === chat.idViewer;
               const name = own ? "Kamu" : (chat.names[message.idSender] ?? "Pengguna");
-              const day = formatDay(message.timeStamp);
-              const newDay = index === 0 || formatDay(messages[index - 1].timeStamp) !== day;
               return (
                 <li key={message.idMessage}>
-                  {newDay && (
+                  {message.newDay && (
                     <p className="my-6 text-center">
                       <span className="rounded-full bg-neutral-100 px-3 py-1 text-xs text-neutral-500 dark:bg-neutral-900">
-                        {day}
+                        {message.day}
                       </span>
                     </p>
                   )}
@@ -170,7 +198,7 @@ export default function ChatRoom({ chat }: { chat: GroupChatData }) {
                         <span className="font-semibold text-neutral-800 dark:text-neutral-200">
                           {name}
                         </span>{" "}
-                        {clock.format(new Date(message.timeStamp))}
+                        {message.time}
                       </p>
                       <p
                         className={`mt-1 inline-block rounded-xl px-3.5 py-2 text-left text-sm break-words whitespace-pre-wrap ${

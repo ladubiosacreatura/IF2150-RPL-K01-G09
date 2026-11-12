@@ -15,22 +15,11 @@ export class GroupChat {
   }
 
   static async findBySession(idSession: string): Promise<GroupChat | null> {
-    return GroupChat.findOne("id_session", idSession);
-  }
-
-  static async findById(idGroupChat: string): Promise<GroupChat | null> {
-    return GroupChat.findOne("id_group_chat", idGroupChat);
-  }
-
-  private static async findOne(
-    column: "id_session" | "id_group_chat",
-    value: string,
-  ): Promise<GroupChat | null> {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("group_chats")
       .select()
-      .eq(column, value)
+      .eq("id_session", idSession)
       .maybeSingle<GroupChatRow>();
 
     if (error?.code === "22P02") return null;

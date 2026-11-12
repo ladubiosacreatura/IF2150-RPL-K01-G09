@@ -1,3 +1,14 @@
+drop policy chat_messages_insert on public.chat_messages;
+
+create policy chat_messages_insert on public.chat_messages for insert to authenticated
+  with check (id_sender = auth.uid() and exists (
+    select 1 from public.group_chats g
+    join public.sessions s on s.id_session = g.id_session
+    where g.id_group_chat = chat_messages.id_group_chat
+      and g.is_active
+      and now() < s.end_time + interval '48 hours'
+      and public.is_session_member(g.id_session)));
+
 create function public.close_expired_group_chats(
   p_now timestamptz default now(),
   p_retention_hours integer default 48

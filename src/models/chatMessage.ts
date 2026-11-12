@@ -29,6 +29,7 @@ export class ChatMessage {
       .select()
       .single<ChatMessageRow>();
 
+    if (error?.code === "42501") throw new Error("CHAT_CLOSED");
     if (error) throw new Error(error.message);
     return ChatMessage.fromRow(data);
   }

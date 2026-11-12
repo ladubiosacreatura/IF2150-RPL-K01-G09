@@ -3,7 +3,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const auth = vi.hoisted(() => ({ getSessionUserId: vi.fn() }));
 const groupChat = vi.hoisted(() => ({
   findBySession: vi.fn(),
-  findById: vi.fn(),
   findMenteeIds: vi.fn(),
   closeExpired: vi.fn(),
 }));
@@ -50,7 +49,6 @@ beforeEach(() => {
   vi.stubEnv("CRON_SECRET", "secret");
   auth.getSessionUserId.mockResolvedValue("mentee");
   groupChat.findBySession.mockResolvedValue(chatFor(true));
-  groupChat.findById.mockResolvedValue(chatFor(true));
   groupChat.findMenteeIds.mockResolvedValue(["mentee"]);
   session.findById.mockResolvedValue(SESSION);
   chatMessage.findByGroupChat.mockResolvedValue([MESSAGE]);
@@ -124,23 +122,19 @@ describe("sendMessage", () => {
       ok: false,
       error: "MESSAGE_TOO_LONG",
     });
-    expect(groupChat.findById).not.toHaveBeenCalled();
+    expect(chatMessage.create).not.toHaveBeenCalled();
   });
 
-  it("rejects chats the user cannot see or that have ended", async () => {
-    groupChat.findById.mockResolvedValueOnce(null);
-    expect(await sendMessage("g1", "Halo")).toEqual({ ok: false, error: "CHAT_NOT_FOUND" });
-
-    groupChat.findById.mockResolvedValueOnce(chatFor(false));
+  it("reports a chat the database refuses as ended", async () => {
+    chatMessage.create.mockRejectedValueOnce(new Error("CHAT_CLOSED"));
     expect(await sendMessage("g1", "Halo")).toEqual({ ok: false, error: "CHAT_EXPIRED" });
-    expect(chatMessage.create).not.toHaveBeenCalled();
   });
 
   it("requires a logged-in user and reports database failures", async () => {
     auth.getSessionUserId.mockResolvedValueOnce(null);
     expect(await sendMessage("g1", "Halo")).toEqual({ ok: false, error: "NOT_AUTHENTICATED" });
 
-    chatMessage.create.mockRejectedValueOnce(new Error("row-level security"));
+    chatMessage.create.mockRejectedValueOnce(new Error("connection reset"));
     expect(await sendMessage("g1", "Halo")).toEqual({ ok: false, error: "SEND_FAILED" });
   });
 });
