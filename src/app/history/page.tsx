@@ -1,20 +1,16 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import SessionHistoryView from "@/components/SessionHistoryView";
-import { getCurrentUser } from "@/controllers/userController";
-import { SessionHistory } from "@/models/sessionHistory";
+import { fetchUserHistory } from "@/controllers/sessionHistoryController";
 
 export const metadata: Metadata = { title: "Riwayat · PeerUP" };
 
 export default async function Page() {
-  const user = await getCurrentUser();
-  if (!user) redirect("/login");
+  const history = await fetchUserHistory();
+  if (!history.ok) {
+    if (history.error === "UNAUTHORIZED") redirect("/login");
+    throw new Error("Riwayat sesi gagal dimuat.");
+  }
 
-  const entries = await SessionHistory.listForUser(user.idUser);
-  const sessions = entries.map((entry) => ({
-    ...entry,
-    canConfirm: new Date(entry.endTime).getTime() <= Date.now(),
-  }));
-
-  return <SessionHistoryView sessions={sessions} />;
+  return <SessionHistoryView sessions={history.data} />;
 }

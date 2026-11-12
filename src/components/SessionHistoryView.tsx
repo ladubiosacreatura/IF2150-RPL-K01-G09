@@ -3,9 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import FeedbackForm from "@/components/FeedbackForm";
-import type { SessionHistoryEntry } from "@/models/sessionHistoryTypes";
+import { getGroupedByStatus, type HistorySession } from "@/models/sessionHistoryTypes";
 
-type HistorySession = SessionHistoryEntry & { canConfirm: boolean };
 type Filter = "ALL" | "MENTEE" | "MENTOR";
 
 const SECTIONS = [
@@ -50,10 +49,12 @@ function formatDay(session: HistorySession) {
 
 export default function SessionHistoryView({ sessions }: { sessions: HistorySession[] }) {
   const [filter, setFilter] = useState<Filter>("ALL");
-  const [selected, setSelected] = useState<{ session: HistorySession; mode: "confirm" | "feedback" } | null>(
-    null,
-  );
+  const [selected, setSelected] = useState<{
+    session: HistorySession;
+    mode: "confirm" | "feedback";
+  } | null>(null);
   const visibleSessions = sessions.filter((session) => filter === "ALL" || session.role === filter);
+  const groupedSessions = getGroupedByStatus(visibleSessions);
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
@@ -80,7 +81,7 @@ export default function SessionHistoryView({ sessions }: { sessions: HistorySess
 
       <div className="mt-7 space-y-8">
         {SECTIONS.map((section) => {
-          const sectionSessions = visibleSessions.filter((session) => session.status === section.status);
+          const sectionSessions = groupedSessions[section.status];
           if (sectionSessions.length === 0) return null;
 
           return (
@@ -98,9 +99,8 @@ export default function SessionHistoryView({ sessions }: { sessions: HistorySess
                 {sectionSessions.map((session) => {
                   const isScheduled = session.status === "TERJADWAL";
                   const canRate =
-                    session.status === "SELESAI" &&
-                    session.role === "MENTEE" &&
-                    !session.feedback;
+                    session.status === "SELESAI" && session.role === "MENTEE" && !session.feedback;
+                  const canViewFeedback = session.status === "SELESAI" && session.role === "MENTOR";
                   const scheduleDay = formatDay(session);
 
                   return (
@@ -110,9 +110,7 @@ export default function SessionHistoryView({ sessions }: { sessions: HistorySess
                     >
                       <div className="flex min-w-0 items-center gap-4">
                         <div className="grid size-12 shrink-0 place-items-center rounded-lg bg-neutral-800 text-center">
-                          <span className="text-lg font-semibold leading-5">
-                            {scheduleDay.day}
-                          </span>
+                          <span className="text-lg font-semibold leading-5">{scheduleDay.day}</span>
                           <span className="text-[10px] text-neutral-400">{scheduleDay.month}</span>
                         </div>
                         <div className="min-w-0">
@@ -161,7 +159,10 @@ export default function SessionHistoryView({ sessions }: { sessions: HistorySess
                             Konfirmasi
                           </button>
                         ) : isScheduled ? (
-                          <Link href={`/sessions/${session.idSession}/chat`} className={buttonClass}>
+                          <Link
+                            href={`/sessions/${session.idSession}/chat`}
+                            className={buttonClass}
+                          >
                             Buka Obrolan
                           </Link>
                         ) : canRate ? (
@@ -172,6 +173,13 @@ export default function SessionHistoryView({ sessions }: { sessions: HistorySess
                           >
                             Beri Penilaian
                           </button>
+                        ) : canViewFeedback ? (
+                          <Link
+                            href={`/sessions/${session.idSession}/feedback`}
+                            className={buttonClass}
+                          >
+                            Lihat Feedback
+                          </Link>
                         ) : (
                           <Link href={`/sessions/${session.idSession}`} className={buttonClass}>
                             Lihat Detail

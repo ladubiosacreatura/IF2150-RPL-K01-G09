@@ -3,71 +3,46 @@ import { createClient } from "@/lib/supabase/server";
 import type { SessionHistoryEntry } from "./sessionHistoryTypes";
 import type { SessionRow } from "./types";
 
-type ParticipantRow = { id_session: string };
+type ParticipationRow = { sessions: SessionRow | null };
 type ProfileNameRow = { id_user: string; name: string };
 type FeedbackSummaryRow = { id_session: string; rating: number; comment: string };
 
 export class SessionHistory {
-  static async findForUser(
-    idSession: string,
-    idUser: string,
-  ): Promise<SessionHistoryEntry | null> {
+  static async findForUser(idSession: string, idUser: string): Promise<SessionHistoryEntry | null> {
     const entries = await SessionHistory.listForUser(idUser);
     return entries.find((entry) => entry.idSession === idSession) ?? null;
   }
 
   static async listForUser(idUser: string): Promise<SessionHistoryEntry[]> {
     const supabase = await createClient();
-    const [mentorSessions, participations] = await Promise.all([
-      supabase
-        .from("sessions")
-        .select()
-        .eq("id_mentor", idUser)
-        .returns<SessionRow[]>(),
+    const [mentorSessions, participations, feedbacks] = await Promise.all([
+      supabase.from("sessions").select().eq("id_mentor", idUser).returns<SessionRow[]>(),
       supabase
         .from("session_participants")
-        .select("id_session")
+        .select("sessions(*)")
         .eq("id_mentee", idUser)
-        .returns<ParticipantRow[]>(),
-    ]);
-
-    if (mentorSessions.error) throw new Error(mentorSessions.error.message);
-    if (participations.error) throw new Error(participations.error.message);
-
-    const sessionIds = [
-      ...new Set([
-        ...mentorSessions.data.map((session) => session.id_session),
-        ...participations.data.map((participant) => participant.id_session),
-      ]),
-    ];
-    if (sessionIds.length === 0) return [];
-
-    const { data: sessions, error: sessionsError } = await supabase
-      .from("sessions")
-      .select()
-      .in("id_session", sessionIds)
-      .returns<SessionRow[]>();
-    if (sessionsError) throw new Error(sessionsError.message);
-
-    const mentorIds = [...new Set(sessions.map((session) => session.id_mentor))];
-    const [profiles, feedbacks] = await Promise.all([
-      supabase
-        .from("profiles")
-        .select("id_user, name")
-        .in("id_user", mentorIds)
-        .returns<ProfileNameRow[]>(),
+        .returns<ParticipationRow[]>(),
       supabase
         .from("feedbacks")
         .select("id_session, rating, comment")
         .eq("id_mentee", idUser)
-        .in("id_session", sessionIds)
         .returns<FeedbackSummaryRow[]>(),
     ]);
 
-    if (profiles.error) throw new Error(profiles.error.message);
+    if (mentorSessions.error) throw new Error(mentorSessions.error.message);
+    if (participations.error) throw new Error(participations.error.message);
     if (feedbacks.error) throw new Error(feedbacks.error.message);
 
-    const mentorNames = new Map(profiles.data.map((profile) => [profile.id_user, profile.name]));
+    const sessionsById = new Map<string, SessionRow>();
+    for (const session of mentorSessions.data) sessionsById.set(session.id_session, session);
+    for (const { sessions: session } of participations.data) {
+      if (session) sessionsById.set(session.id_session, session);
+    }
+    const sessions = [...sessionsById.values()];
+
+    const mentorNames = await SessionHistory.findMentorNames(
+      sessions.map((session) => session.id_mentor).filter((idMentor) => idMentor !== idUser),
+    );
     const feedbackBySession = new Map(
       feedbacks.data.map((feedback) => [
         feedback.id_session,
@@ -90,6 +65,21 @@ export class SessionHistory {
         feedback: feedbackBySession.get(session.id_session) ?? null,
       }))
       .sort((left, right) => right.scheduledTime.localeCompare(left.scheduledTime));
+  }
+
+  private static async findMentorNames(mentorIds: string[]): Promise<Map<string, string>> {
+    const uniqueIds = [...new Set(mentorIds)];
+    if (uniqueIds.length === 0) return new Map();
+
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("id_user, name")
+      .in("id_user", uniqueIds)
+      .returns<ProfileNameRow[]>();
+
+    if (error) throw new Error(error.message);
+    return new Map(data.map((profile) => [profile.id_user, profile.name]));
   }
 
   static async confirmSession(
