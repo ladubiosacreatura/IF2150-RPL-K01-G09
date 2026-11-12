@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   fetchRecentNotifications,
   markAsRead,
@@ -12,10 +12,11 @@ import { subscribeToNotifications } from "@/lib/adapters/realtimeAdapter";
 export default function PopUpNotification({ idUser }: { idUser: string }) {
   const router = useRouter();
   const [items, setItems] = useState<NotificationItem[]>([]);
+  const dismissed = useRef(new Set<string>());
 
   const refresh = useCallback(() => {
     fetchRecentNotifications()
-      .then(setItems)
+      .then((fetched) => setItems(fetched.filter((i) => !dismissed.current.has(i.notificationId))))
       .catch(() => {});
   }, []);
 
@@ -25,6 +26,7 @@ export default function PopUpNotification({ idUser }: { idUser: string }) {
   }, [idUser, refresh]);
 
   function dismiss(item: NotificationItem) {
+    dismissed.current.add(item.notificationId);
     setItems((current) => current.filter((i) => i.notificationId !== item.notificationId));
     return markAsRead(item.notificationId).catch(() => false);
   }

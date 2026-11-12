@@ -33,7 +33,10 @@ begin
     select
       r.id_user,
       r.id_session,
-      format('Sesi dimulai %s menit lagi', p_lead_minutes),
+      format(
+        'Sesi dimulai %s menit lagi',
+        ceil(extract(epoch from r.scheduled_time - p_now) / 60)::integer
+      ),
       format('%s · %s WIB', r.topic, to_char(r.scheduled_time at time zone 'Asia/Jakarta', 'HH24.MI'))
     from recipients r
     returning 1
