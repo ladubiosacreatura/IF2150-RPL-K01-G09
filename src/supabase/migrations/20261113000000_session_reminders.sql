@@ -1,5 +1,3 @@
--- UC09: one transaction, so a failed run leaves reminder_sent = false for the next cron
--- call to retry (KNF03); SKIP LOCKED stops overlapping runs from notifying twice.
 create function public.send_session_reminders(
   p_now timestamptz default now(),
   p_lead_minutes integer default 15
