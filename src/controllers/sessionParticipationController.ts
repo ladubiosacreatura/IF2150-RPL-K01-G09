@@ -47,6 +47,17 @@ export type JoinSessionError =
   | "SESSION_FULL"
   | "JOIN_SESSION_FAILED";
 
+export type CancelSessionError =
+  | "UNAUTHORIZED"
+  | "INVALID_SESSION_ID"
+  | "SESSION_NOT_FOUND"
+  | "NOT_PARTICIPANT"
+  | "SESSION_ALREADY_STARTED"
+  | "CANCEL_SESSION_FAILED";
+
+export type CancelSessionResult =
+  { ok: true; data: { idSession: string } } | { ok: false; error: CancelSessionError };
+
 export type JoinSessionResult =
   { ok: true; data: { idSession: string } } | { ok: false; error: JoinSessionError };
 
@@ -168,4 +179,37 @@ export async function processRegistration(
   idMentee?: string,
 ): Promise<ActionResult<{ idSession: string }>> {
   return joinSession(idSession, idMentee);
+}
+
+export async function cancelSession(
+  idSession: string,
+  idMentee?: string,
+): Promise<CancelSessionResult> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "UNAUTHORIZED" };
+  if (idMentee !== undefined && idMentee.trim() !== user.idUser) {
+    return { ok: false, error: "UNAUTHORIZED" };
+  }
+  if (typeof idSession !== "string" || !SESSION_ID_PATTERN.test(idSession)) {
+    return { ok: false, error: "INVALID_SESSION_ID" };
+  }
+
+  let detail: SessionDetail | null;
+  try {
+    detail = await Session.getSessionDetail(idSession, user.idUser);
+  } catch {
+    return { ok: false, error: "CANCEL_SESSION_FAILED" };
+  }
+  if (!detail) return { ok: false, error: "SESSION_NOT_FOUND" };
+  if (!detail.isParticipant) return { ok: false, error: "NOT_PARTICIPANT" };
+  if (detail.status !== "TERJADWAL" || new Date(detail.scheduledTime).getTime() <= Date.now()) {
+    return { ok: false, error: "SESSION_ALREADY_STARTED" };
+  }
+
+  try {
+    const removed = await Session.removeParticipant(idSession, user.idUser);
+    return removed ? { ok: true, data: { idSession } } : { ok: false, error: "NOT_PARTICIPANT" };
+  } catch {
+    return { ok: false, error: "CANCEL_SESSION_FAILED" };
+  }
 }
