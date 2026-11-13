@@ -223,11 +223,11 @@ Tabel B.2. Bukti Best Practices
 
 - Beberapa PR saling bergantung (KF10a, KF16, KF17 dan KF13, KF15), sehingga urutan *merge* sempat salah dan menimbulkan konflik. Konflik diselesaikan dengan menggabungkan ulang sesuai urutan ketergantungan.
 - PR KF13 dan KF15 awalnya dibuat dari `main` dan mengganti berkas secara utuh. Kodenya dipindahkan ke branch baru dari `development` dengan *cherry-pick* sehingga riwayat kontribusi penulis tetap terlihat (PR #128 dan #129).
-- Migrasi tidak otomatis diterapkan ke basis data *hosted*; satu anggota menerapkannya setelah PR digabung.
+- Migrasi tidak otomatis diterapkan ke basis data *hosted*; satu anggota menerapkannya setelah PR digabung. Migrasi `20261110` hingga `20261116` sempat tertinggal dan diterapkan sekaligus melalui SQL Editor Supabase pada 13 November 2026 karena Supabase CLI tidak dapat login.
 
 **Known issues**
 
-- Pemeriksaan tabrakan jadwal mentee saat bergabung ke sesi (`validateParticipantSchedule()`, galat `PARTICIPANT_SCHEDULE_CONFLICT`) belum diimplementasikan; yang sudah ada adalah pemeriksaan tabrakan jadwal mentor (KF06).
+- Pemeriksaan tabrakan jadwal Mentee (KF21) hanya berjalan saat Mentee bergabung ke sesi. Jika Mentor kemudian mengubah jadwal sesi sehingga beririsan dengan sesi lain yang diikuti Mentee, perubahan tersebut tidak ditolak.
 - Pengukuran KNF05 baru dilakukan di sisi server (B.2.1), belum melalui pengukuran *browser* (Lighthouse).
 - Pengingat (KF09) dan pembersihan grup obrolan (KF12) hanya berjalan bila *endpoint* cron dipanggil oleh penjadwal; tanpa penjadwal, panggil manual (lihat di bawah).
 
@@ -247,7 +247,7 @@ Tabel B.4. Kontribusi Anggota
 | 13525001 | Matthew Allen Reynaldo | Modul Sesi Mentor: KF05 membuat sesi, KF06 menolak jadwal bentrok, KF14 validasi kapasitas, KF17 edit sesi, KF16 hapus sesi, KF10a konfirmasi keterlaksanaan sesi (UC03, UC05, UC11, UC12) | 20% |
 | 13525010 | Fabian Amzar Susanto | Modul Bergabung Sesi: KF13 menolak bergabung saat sesi penuh, KF15 membatalkan keikutsertaan (UC04, UC10); *review* PR #85 dan #128 | 20% |
 | 13525025 | David Christian | *Scaffold* proyek dan README; modul Autentikasi dan Preferensi: KF01 registrasi, KF02 login, KF03 tag preferensi, KF04 jadwal ketersediaan (UC01, UC02); modul Obrolan dan Notifikasi: KF09 pengingat sesi, KF12 grup obrolan sementara (UC08, UC09); *review* PR #102–#105, #107, #119–#121 | 20% |
-| 13525028 | Markus Christiano Simanjuntak | Modul Feedback dan Riwayat: KF10b penilaian setelah sesi, KF18 melihat feedback sesi, KF11 halaman riwayat sesi, optimasi kueri riwayat (UC06, UC07, UC13); *review* PR #98, #99, #106, #108, #122–#124, #127 | 20% |
+| 13525028 | Markus Christiano Simanjuntak | Modul Feedback dan Riwayat: KF10b penilaian setelah sesi, KF18 melihat feedback sesi, KF11 halaman riwayat sesi, optimasi kueri riwayat (UC06, UC07, UC13); KF20 aturan waktu sesi dan KF21 larangan Mentee mengikuti sesi bertabrakan (UC03, UC04, UC12); *review* PR #98, #99, #106, #108, #122–#124, #127 | 20% |
 | 13525049 | Hugo Daniel Johansen Napitupulu | Modul Profil dan Beranda: KF19 halaman profil, KF07 beranda dan *matchmaking* sesi, KF08 bergabung ke sesi (UC04, UC14, UC15); *review* PR #100, #101 | 20% |
 
 ## B.5 Traceability Kelas Perancangan ke Implementasi
