@@ -92,7 +92,6 @@
 | *17-09-2026* | *Markus Christiano Simanjuntak* | *Mengikuti asistensi bersama asisten dan merangkum aturan pembagian kelas menjadi 3 layer (Boundary, Controller, Entity) beserta notasi panah UML* | *1.5* | *Done* | *-* |
 | *18-09-2026* | *David Christian* | *Membuat usecase diagram* | *1* | *Done* | *-* |
 | *19-09-2026* | *Markus Christiano Simanjuntak* | *Menambahkan kebutuhan dan skenario baru pada M2 dan M3 (US-25, US-26, A16, R26, KF19, UC14 Beranda Utama, dan UC15 Melihat Profil) serta merombak skenario UC06* | *1.5* | *Done* | *-* |
-| *20-09-2026* | *Markus Christiano Simanjuntak* | *-* | *1* | *Done* | *-* |
 | *21-09-2026* | *Markus Christiano Simanjuntak* | *Merevisi Tabel 4.1 Identifikasi Kelas (C01-C24) agar sesuai dengan arsitektur 3-layer (Boundary, Controller, Entity) dan menambahkan kelas HistoryPage (C24)* | *1* | *Done* | *Kelas pada draf awal masih tercampur antara urusan UI dan database sehingga harus dipecah ulang* |
 | *22-09-2026* | *Markus Christiano Simanjuntak* | *Merancang ulang Class Diagram dan tabel atribut/metode untuk UC05 dan UC06, serta memperbaiki kesalahan copy-paste tabel pada dokumen Bab 4.2* | *1.5* | *Done* | *-* |
 | *22-09-2026* | *Matthew Allen Reynaldo* | *Menyusun diagram kelas serta atribut dan metode kelas pada UC08 hingga UC12 (Bab 4.2)* | *2* | *Done* | *Diagram UC9 sulit dipahami karena kelas notifikasi masih sangat abstrak* |
@@ -120,7 +119,7 @@
 
 | Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
 |---|---|---|---|---|---|
-| *28-10-2026* | *Markus Christiano Simanjuntak* | *Mengerjakan Bab 1, 2, dan 3* | *6* | *Done* | *Keos, pada matil di milestone ini. Instruksi kurang jelas, banyak materi yang outside resources-nya terlalu outdated ataupun memang kurang dari sananya* |
+| *08-10-2026* | *Markus Christiano Simanjuntak* | *Mengerjakan Bab 1, 2, dan 3* | *6* | *Done* | *Keos, pada matil di milestone ini. Instruksi kurang jelas, banyak materi yang outside resources-nya terlalu outdated ataupun memang kurang dari sananya* |
 
 ---
 ### Milestone 7
