@@ -21,9 +21,9 @@ const { SessionScheduleConflictError } = await import("@/models/session");
 const validInput = () => ({
   topic: "  Struktur Data  ",
   description: "  Pohon biner  ",
-  schedule: new Date().toISOString().slice(0, 10),
-  startTime: new Date(Date.now() + 60 * 60 * 1000),
-  endTime: new Date(Date.now() + 2 * 60 * 60 * 1000),
+  schedule: "2099-01-15",
+  startTime: new Date("2099-01-15T10:00:00+07:00"),
+  endTime: new Date("2099-01-15T11:00:00+07:00"),
   format: "DARING" as const,
   capacity: 5,
 });
@@ -110,6 +110,22 @@ describe("processSessionCreation", () => {
     expect(session.createSession).not.toHaveBeenCalled();
   });
 
+  it("rejects sessions that cross midnight or fall outside 10 minutes to 12 hours", async () => {
+    const input = validInput();
+    const at = (time: string) => new Date(`2099-01-15T${time}+07:00`);
+    for (const [startTime, endTime] of [
+      [at("23:30:00"), new Date("2099-01-16T00:30:00+07:00")],
+      [at("10:00:00"), at("10:05:00")],
+      [at("06:00:00"), at("18:30:00")],
+    ]) {
+      await expect(processSessionCreation({ ...input, startTime, endTime })).resolves.toEqual({
+        ok: false,
+        error: "INVALID_SCHEDULE",
+      });
+    }
+    expect(session.createSession).not.toHaveBeenCalled();
+  });
+
   it("reports persistence failures without returning a successful result", async () => {
     session.createSession.mockRejectedValue(new Error("database unavailable"));
 
@@ -189,6 +205,17 @@ describe("processSessionCreation", () => {
         },
         input.schedule,
       );
+    });
+
+    it("rejects edits that make the session cross midnight or exceed 12 hours", async () => {
+      const input = validUpdateInput();
+      await expect(
+        processSessionUpdate("session-1", {
+          ...input,
+          endTime: new Date("2099-01-16T00:30:00+07:00"),
+        }),
+      ).resolves.toEqual({ ok: false, error: "INVALID_SCHEDULE" });
+      expect(session.updateSession).not.toHaveBeenCalled();
     });
 
     it("rejects unauthenticated callers and sessions they do not own", async () => {

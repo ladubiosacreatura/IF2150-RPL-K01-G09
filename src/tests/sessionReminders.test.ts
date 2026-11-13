@@ -30,7 +30,7 @@ async function addSession(
       idSession,
       idMentor,
       minutesFromNow(startsInMinutes),
-      minutesFromNow(startsInMinutes + 5),
+      minutesFromNow(startsInMinutes + 10),
       status,
       reminded,
     ],
