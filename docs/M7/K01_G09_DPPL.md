@@ -9,9 +9,7 @@ DESKRIPSI PERANCANGAN PERANGKAT LUNAK (DPPL)
 
 ## PeerUP
 
-### 
-
-<img alt="Arsitektur MVC PeerUP" src="./assets/Logo_PeerUP.jpeg" width="30%">
+<img alt="Logo PeerUP" src="./assets/Logo_PeerUP.jpeg" width="30%">
 
 
 ### Untuk: Mikhael Andrian Yonatan
@@ -37,20 +35,10 @@ Dipersiapkan oleh:
 
 | Revisi | Deskripsi |
 | :--- | :--- |
-| *A* | *Deskripsikan perubahan yang dilakukan dari dokumen sebelumnya pada dokumen ini. Jika tidak terdapat perubahan, harap kosongkan tabel.* |
-| *B* |  |
-| *C* |  |
-| ... |  |
+| *A* | *Revisi November 2026: Mengganti penomoran aktor menjadi AKXX, memperbaiki tingkat judul Subbab 2.3 dan 2.4.2, teks alternatif logo dan diagram, serta penyebutan dokumen SKPL pada Subbab 2.2.2.* |
+| *B* | *Revisi November 2026: Menyesuaikan penyebutan KNF04 menjadi Keamanan Validasi Email serta menghapus sisa petunjuk pengerjaan template.* |
 
 ---
-
-<br>
-
-> **Petunjuk pengerjaan:** *[Silahkan hapus bagian ini setelah selesai mengerjakan]*
->
-> Dokumen ini melanjutkan **Spesifikasi Kebutuhan Perangkat Lunak (SKPL)** dan **Arsitektur Perangkat Lunak (APL)**. Gunakan nama, ID, kebutuhan, dan use case yang konsisten dengan kedua dokumen tersebut. Contoh pola ID baru di bawah dapat disesuaikan dengan kesepakatan kelompok, ID yang sudah ada tetap dipertahankan.
-
-<br>
 
 ---
 
@@ -94,7 +82,7 @@ Tabel 1.4. Aturan Penomoran
 | *Kebutuhan* | *RXX* | *XX menyatakan dua digit nomor urut pemetaan kebutuhan (contoh: R01).* |
 | *Kebutuhan Fungsional* | *KFXX* | *XX menyatakan dua digit nomor urut kebutuhan fungsional (contoh: KF01).* |
 | *Kebutuhan Non-Fungsional* | *KNFXX* | *XX menyatakan dua digit nomor urut kebutuhan non-fungsional (contoh: KNF01).* |
-| *Aktor* | *AXX* | *XX menyatakan dua digit nomor urut aktor pada pemodelan use case (contoh: A01).* |
+| *Aktor* | *AKXX* | *XX menyatakan dua digit nomor urut aktor pada pemodelan use case (contoh: AK01).* |
 | *Use Case* | *UCXX* | *XX menyatakan dua digit nomor urut use case (contoh: UC01).* |
 | *Kelas* | *CXX* | *XX menyatakan dua digit nomor urut kelas pada diagram kelas (contoh: C01).* |
 
@@ -119,8 +107,6 @@ Dokumen ini dibagi menjadi enam bab utama:
 
 ## 2.1 Rancangan Lingkungan Implementasi
 
-Sebutkan *operating system*, DBMS, *development tools*, *filing system*, dan bahasa pemrograman yang digunakan.
-
 | Komponen | Spesifikasi |
 | :--- | :--- |
 | *Sistem Operasi Pengembangan* | *Windows, Linux, atau macOS yang mendukung Node.js dan perkakas pengembangan web.* |
@@ -139,7 +125,7 @@ Sebutkan *operating system*, DBMS, *development tools*, *filing system*, dan bah
 ## 2.2 Style/Pattern Arsitektur Acuan
 
 ### 2.2.1 Style/Pattern Arsitektur yang Dipilih
-Perangkat lunak PeerUp akan memakai *style* **Model-View-Controller (MVC)** yang berjalan di atas **Client-Server Architecture**. *Style* *Client-Server* memisahkan sistem menjadi sisi *frontend* dan sisi *backend*, sementara *MVC* mengatur struktur pada kode perangkat lunaknya. Berikut adalah rincian peran setiap bagiannya.
+Perangkat lunak PeerUP akan memakai *style* **Model-View-Controller (MVC)** yang berjalan di atas **Client-Server Architecture**. *Style* *Client-Server* memisahkan sistem menjadi sisi *frontend* dan sisi *backend*, sementara *MVC* mengatur struktur pada kode perangkat lunaknya. Berikut adalah rincian peran setiap bagiannya.
 
 1. **Client (Sisi Pengguna):**
    * Mewadahi lapisan **View**, yang bertanggung jawab menampilkan antarmuka, menyajikan informasi, dan menangkap *input* atau interaksi dari pengguna.
@@ -149,12 +135,12 @@ Perangkat lunak PeerUp akan memakai *style* **Model-View-Controller (MVC)** yang
    * Mewadahi lapisan **Helper** dan **Integrasi Eksternal (Adapter)** untuk mendelegasikan tugas-tugas spesifik seperti validasi, autentikasi, serta tugas terjadwal (*cron*) tanpa membebani *Controller* utama.
 
 ### 2.2.2 Alasan Pemilihan Style/Pattern Arsitektur
-Kombinasi *MVC* dan *Client-Server* dipilih karena sesuai dengan karakteristik teknis, pemodelan objek, dan pemenuhan spesifikasi Kebutuhan Non-Fungsional (KNF) pada dokumen PeerUP:
+Kombinasi *MVC* dan *Client-Server* dipilih karena sesuai dengan karakteristik teknis, pemodelan objek, dan pemenuhan spesifikasi Kebutuhan Non-Fungsional (KNF) pada dokumen SKPL PeerUP:
 
 1. **Karakteristik Pengguna & Proses Bisnis:** Dua aktor utama (*Mentor* dan *Mentee*) akan banyak berinteraksi secara bersamaan (*real-time*) pada antarmuka dinamis (pencarian sesi, pembuatan sesi, ruang obrolan) yang semuanya mengakses dan mengubah keadaan data (sesi) yang sama. Pemisahan *Client-Server* memastikan data tetap tersinkronisasi secara terpusat.
-2. **Keselarasan dengan Pemodelan Kelas:** Desain perangkat lunak pada dokumen menggunakan pola *Boundary-Controller-Entity* (BCE). Pola ini terpetakan secara langsung ke dalam arsitektur *View-Controller-Model*, sehingga mempermudah lokalisasi dampak apabila terjadi perubahan pada satu komponen (misalnya perubahan antarmuka tidak akan merusak algoritma *matchmaking*).
+2. **Keselarasan dengan Pemodelan Kelas:** Desain perangkat lunak pada dokumen SKPL menggunakan pola *Boundary-Controller-Entity* (BCE). Pola ini terpetakan secara langsung ke dalam arsitektur *View-Controller-Model*, sehingga mempermudah lokalisasi dampak apabila terjadi perubahan pada satu komponen (misalnya perubahan antarmuka tidak akan merusak algoritma *matchmaking*).
 3. **Pemenuhan 5 Kebutuhan Non-Fungsional (KNF):**
-   * **KNF01 (Keamanan Hashing) & KNF04 (Reliabilitas Validasi Email):** Pemisahan arsitektur menempatkan `Validator` dan integrasi autentikasi di sisi server (*Controller/Adapter*) sehingga sistem keamanan dan validasi tidak dapat dimanipulasi dari peramban *Client*.
+   * **KNF01 (Keamanan Hashing) & KNF04 (Keamanan Validasi Email):** Pemisahan arsitektur menempatkan `Validator` dan integrasi autentikasi di sisi server (*Controller/Adapter*) sehingga sistem keamanan dan validasi tidak dapat dimanipulasi dari peramban *Client*.
    * **KNF02 (Waktu Respons Matchmaking < 3 detik) & KNF05 (Waktu Respons Riwayat < 3 detik):** Komputasi pencocokan algoritma dan penarikan data yang berat dilakukan secara efisien oleh *Controller* di server, sehingga *Client (View)* hanya bertugas merender hasil akhirnya saja.
    * **KNF03 (Reliabilitas Notifikasi 15 Menit):** Logika waktu (*Cron*) dipusatkan di sisi server, memastikan pemicu notifikasi otomatis berjalan $\ge 99\%$ meskipun *Client* sedang menutup aplikasinya.
 
@@ -185,7 +171,7 @@ Gambar 1 menjabarkan siklus interaksi komponen PeerUP di dalam struktur MVC. Ali
 
 ---
 
-##   2.3 Identifikasi Komponen / Modul / Subsistem
+## 2.3 Identifikasi Komponen / Modul / Subsistem
 
 Tabel 2.3. Identifikasi Komponen/Modul/Subsistem
 
@@ -228,7 +214,7 @@ Development View dipilih untuk memperlihatkan bagaimana 26 komponen arsitektur p
 
 
 <p align="center">
-<img alt="Devolopment View P/L PeerUp" src="./assets/diagram/M6_Diagram-Devolopment-View.png" width="80%">
+<img alt="Development View P/L PeerUP" src="./assets/diagram/M6_Diagram-Devolopment-View.png" width="80%">
 </p>
 <p align="center">
 <i>Gambar 2. Development View (Package Diagram) pada Perangkat Lunak PeerUP</i>
@@ -238,12 +224,12 @@ Gambar 2 memperlihatkan pengorganisasian modul dan ketergantungan antarpaket. Ga
 
 Layanan Supabase ditampilkan sebagai sistem eksternal untuk memperjelas batas antara modul kode PeerUP dan layanan yang digunakannya. Nama komponen pada diagram diselaraskan dengan Tabel 2.1, sedangkan nama kelas dicantumkan sebagai pemetaan komponen.
 
-## 2.4.2 Physical View (Deployment Diagram)
+### 2.4.2 Physical View (Deployment Diagram)
 
 Physical View dipilih untuk menggambarkan penempatan perangkat lunak PeerUP pada perangkat pengguna, lingkungan hosting aplikasi, dan layanan cloud yang digunakan. Deployment Diagram memperlihatkan node, lingkungan eksekusi, artefak perangkat lunak, serta jalur komunikasi antarnode sesuai lingkungan operasi yang ditetapkan pada dokumen ini.
 
 <p align="center">
-<img alt="Physical View P/L PeerUp" src="./assets/diagram/M6_Diagram-Physical-View.png" width="80%">
+<img alt="Physical View P/L PeerUP" src="./assets/diagram/M6_Diagram-Physical-View.png" width="80%">
 </p>
 <p align="center">
 <i>Gambar 3. Physical View (Deployment Diagram) pada Perangkat Lunak PeerUP</i>
