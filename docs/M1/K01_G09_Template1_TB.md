@@ -70,9 +70,9 @@ Perangkat lunak yang kami kembangkan hadir untuk membantu mengisi celah ini mela
 
 PeerUP merupakan perangkat lunak yang menjadi jawaban bagi pelajar yang ingin belajar tanpa menguras biaya pada bimbingan belajar dan pelajar yang ingin belajar bersama dalam study group. PeerUP hadir sebagai situs web agar pengguna dapat memanfaatkan fitur-fitur tanpa perlu mengunduh aplikasi khusus. Bentuk situs web juga memungkinkan untuk melakukan penambahan fitur dan pemeliharaan perangkat lunak tanpa menuntut update dari pengguna.
 
-Dari sudut pandang pengguna, situs web ini akan menampung semua sesi tutor sebaya yang tersedia dalam bentuk dashboard yang dapat diakses oleh semua pengguna. Selain itu, pengguna juga dapat memafaatkan fitur matching berbasis preferensi belajar mereka agar bertemu dengan pengguna lain yang seminat atau sefrekuensi.
+Dari sudut pandang pengguna, situs web ini akan menampung semua sesi tutor sebaya yang tersedia dalam bentuk dashboard yang dapat diakses oleh semua pengguna. Selain itu, pengguna juga dapat memanfaatkan fitur matching berbasis preferensi belajar mereka agar bertemu dengan pengguna lain yang seminat atau sefrekuensi.
 
-Nilai inovasi dari PeerUP terletak pada layanan peer tutoring yang terjangkau dan ekonomis dan sistem matchmaking dalam satu ekosistem perangkat lunak yang terstruktur.Berbeda dengan perangkat lunak edukatif lain seperti Zenius dan Pahamify yang berbasis sistem langganan berbayar dan fokus pada materi modul searah, PeerUP mengedepankan interaksi sosial dan diskusi antarpelajar.
+Nilai inovasi dari PeerUP terletak pada layanan peer tutoring yang terjangkau dan ekonomis dan sistem matchmaking dalam satu ekosistem perangkat lunak yang terstruktur. Berbeda dengan perangkat lunak edukatif lain seperti Zenius dan Pahamify yang berbasis sistem langganan berbayar dan fokus pada materi modul searah, PeerUP mengedepankan interaksi sosial dan diskusi antarpelajar.
 
 ## 2.2 Asumsi dan Batasan
 
@@ -137,10 +137,10 @@ Ketentuan Hukum:
 | ID  | Aktivitas                                  | Penjelasan                                                                      | ID User Story           |
 | :-- | :----------------------------------------- | :------------------------------------------------------------------------------ | :---------------------- |
 | A01 | Melakukan Registrasi dan Autentikasi       | User mendaftar dan masuk menggunakan akun universitas valid                     | US-01 US-09             |
-| A02 | Mengisi Kebutuhan Materi                   | User memilih materi yang ingin dipelajari dan dikuasai                          | US-02 US-010            |
+| A02 | Mengisi Kebutuhan Materi                   | User memilih materi yang ingin dipelajari dan dikuasai                          | US-02 US-10            |
 | A03 | Mengisi Ketersediaan Waktu                 | User menandai waktu saat mereka bisa                                            | US-11                   |
 | A04 | Membuat Sesi Baru                          | User membuat sesi baru dan mengisi slot                                         | US-03 US-04             |
-| A05 | Menjalankan Pencocokan Jadwal              | Sistem mencocokan mentee untuk membuat study group berdasarkan materi dan waktu | US-11 US-10             |
+| A05 | Menjalankan Pencocokan Jadwal              | Sistem mencocokkan mentee untuk membuat study group berdasarkan materi dan waktu | US-11 US-10             |
 | A06 | Melaksanakan Sesi Belajar                  | Kedua pihak bertemu sesuai kesepakatan bisa offline atau online                 | US-04 US-12 US-16 US-17 |
 | A07 | Konfirmasi Sesi                            | Sistem menanyakan dan mencatat sesi                                             | US-06 US-13             |
 | A08 | Melihat History Sesi                       | User bisa melihat daftar sesi yang pernah dijalaninya sebagai tutor atau mentee | US-07 US-14             |
@@ -149,7 +149,7 @@ Ketentuan Hukum:
 
 ## 3.4 Model Proses Bisnis
 
-[PDF Model Proses bisnis](IF2150-RPL-K01-G09/docs/M1/assets/diagram/BMD.drawio.pdf)
+[PDF Model Proses bisnis](./assets/diagram/BMD.drawio.pdf)
 <br>
 
 # Referensi

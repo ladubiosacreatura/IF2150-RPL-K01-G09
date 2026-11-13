@@ -36,7 +36,9 @@ Dipersiapkan oleh:
 | *C* | *Menyelaraskan pesan peringatan pada skenario alternatif pembatasan kapasitas peserta sesi belajar agar konsisten dengan aturan bisnis (maksimal 20 peserta).* |
 | *D* | *Mengoreksi urutan subbab pada pemodelan Use Case dan merapikan pemetaan Kebutuhan Fungsional (Traceability) agar seluruh KF (terutama KF02, KF04, KF06, KF08, KF13, KF14) terpetakan dengan kelas yang mengimplementasikannya.* |
 | *E* | *Melengkapi Subbab 2.2 dengan daftar komponen eksternal (Supabase dan Vercel) yang berinteraksi dengan perangkat lunak.* |
+| *F* | *Revisi November 2026: Menetapkan pemberi penilaian pada UC07 dan kelas C06 hanya Mentee; memperbaiki pemetaan KF19 menjadi R26 saja; mengganti penomoran aktor menjadi AKXX agar tidak bentrok dengan ID Aktivitas (AXX); menyeragamkan istilah Mentor pada KF dan skenario; memperbaiki ID kelas HistoryPage (C24) pada Subbab 5.2.6, teks alternatif gambar, nama UC10, dan salah ketik.* |
 <br>
+| *G* | *Revisi November 2026: Mengubah parameter KNF04 menjadi Security, menyamakan pemetaan use case C09, C12, dan C23 pada Subbab 5.1 dengan BAB 6, serta menyeragamkan nama atribut/operasi kelas.* |
 
 # BAB 1: Pendahuluan
 
@@ -77,7 +79,7 @@ Tabel 1.4. Aturan Penomoran
 | *Kebutuhan* | *RXX* | *XX menyatakan dua digit nomor urut pemetaan kebutuhan (contoh: R01).* |
 | *Kebutuhan Fungsional* | *KFXX* | *XX menyatakan dua digit nomor urut kebutuhan fungsional (contoh: KF01).* |
 | *Kebutuhan Non-Fungsional* | *KNFXX* | *XX menyatakan dua digit nomor urut kebutuhan non-fungsional (contoh: KNF01).* |
-| *Aktor* | *AXX* | *XX menyatakan dua digit nomor urut aktor pada pemodelan use case (contoh: A01).* |
+| *Aktor* | *AKXX* | *XX menyatakan dua digit nomor urut aktor pada pemodelan use case (contoh: AK01).* |
 | *Use Case* | *UCXX* | *XX menyatakan dua digit nomor urut use case (contoh: UC01).* |
 | *Kelas* | *CXX* | *XX menyatakan dua digit nomor urut kelas pada diagram kelas (contoh: C01).* |
 
@@ -109,7 +111,7 @@ Dari sisi mahasiswa atau peserta didik, mereka mengekspektasikan sebuah metode p
 
 Sementara itu, dari sisi tutor, ekspektasinya adalah mendapatkan wadah untuk menambah pengalaman mengajar (*volunteering experience*), memperluas relasi, dan berpotensi mendapatkan insentif tambahan secara mandiri.
 
-Harapan dari penerapan solusi ini adalah platform ini mampu memfasilitasi para pelajar untuk menemukan *study buddy* atau grup belajar yang paling cocok dengan preferensi mereka masing-masing, menggantikan batasan biaya bimbingan dan subskripsi aplikasi pembelajaran yang mahal, demi mencapai menuntut ilmu bersama-sama.
+Harapan dari penerapan solusi ini adalah platform ini mampu memfasilitasi para pelajar untuk menemukan *study buddy* atau grup belajar yang paling cocok dengan preferensi mereka masing-masing, menggantikan batasan biaya bimbingan dan subskripsi aplikasi pembelajaran yang mahal, demi mewujudkan kegiatan menuntut ilmu bersama-sama.
 
 Berikut adalah gambaran proses bisnis utama perangkat lunak PeerUP dalam bentuk *Activity Diagram*:
 
@@ -122,10 +124,10 @@ Berikut adalah gambaran proses bisnis utama perangkat lunak PeerUP dalam bentuk 
 <br>
 
 <p align="center">
-<img alt="Activity Diagram Pembuatan Sesi Tutor dan Pencarian Sesi Mentee" src="./assets/diagram/diagram-proses-bisnis-2.png" width="70%">
+<img alt="Activity Diagram Pembuatan Sesi Mentor dan Pencarian Sesi Mentee" src="./assets/diagram/diagram-proses-bisnis-2.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 2. Activity Diagram Pembuatan Sesi Tutor dan Pencarian Sesi Mentee</i>
+<i>Gambar 2. Activity Diagram Pembuatan Sesi Mentor dan Pencarian Sesi Mentee</i>
 </p>
 <br>
 
@@ -163,7 +165,7 @@ Perangkat lunak berinteraksi dengan komponen eksternal berikut:
 ## 2.4 Batasan Perangkat Lunak
 1. *Registrasi akun hanya dapat dilakukan menggunakan email yang berdomain institusi universitas yang valid.*
 2. *Kapasitas peserta dalam setiap sesi belajar dibatasi minimal satu partisipan dan maksimal dua puluh orang partisipan.*
-3. *Sistem mencegah Tutor untuk membuat dua sesi pada rentang waktu yang saling bertabrakan (overlapping).*
+3. *Sistem mencegah Mentor untuk membuat dua sesi pada rentang waktu yang saling bertabrakan (overlapping).*
 4. *Ruang obrolan grup (group chat) bersifat sementara dan datanya otomatis dinonaktifkan serta dibersihkan dari sistem 48 jam setelah sesi belajar berakhir.*
 5. *Perangkat lunak beroperasi pada peramban web browser dan memerlukan koneksi internet aktif.*
 6. *Kata sandi pengguna wajib dienkripsi menggunakan fungsi hashing kriptografi yang aman (seperti bcrypt atau Argon2) sebelum disimpan dalam basis data, dan tidak disimpan dalam bentuk plain-text.*
@@ -196,21 +198,21 @@ Tabel 3.1. Kebutuhan Fungsional
 | *KF02* | *R03, R05* | *Ketika pengguna memasukkan kredensial yang sesuai dengan basis data sistem untuk login ke perangkat lunak, sistem harus memberikan hak akses akun pengguna dan mengarahkan pengguna ke beranda.* |
 | *KF03* | *R17* | *Sistem harus merekam dan memodifikasi tag preferensi materi pelajaran pada profil pengguna (Mentor dan Mentee).* |
 | *KF04* | *R18* | *Sistem harus menyimpan data ketersediaan waktu yang dipilih pengguna ke dalam kalender internal sistem.* |
-| *KF05* | *R06* | *Ketika Tutor menekan tombol simpan sesi baru, sistem harus merekam detail sesi: topik, jadwal, format (daring/luring), dan batas peserta.* |
-| *KF06* | *R07* | *Jika Tutor mengatur waktu sesi yang saling bertabrakan, maka sistem harus menolak masukan dan menampilkan peringatan.* |
+| *KF05* | *R06* | *Ketika Mentor menekan tombol simpan sesi baru, sistem harus merekam detail sesi: topik, jadwal, format (daring/luring), dan batas peserta.* |
+| *KF06* | *R07* | *Jika Mentor mengatur waktu sesi yang saling bertabrakan, maka sistem harus menolak masukan dan menampilkan peringatan.* |
 | *KF07* | *R19* | *Ketika pengguna masuk ke aplikasi, sistem harus menampilkan hasil matchmaking jadwal dan materi dalam bentuk daftar rekomendasi di halaman Beranda.* |
 | *KF08* | *R08, R20* | *Ketika Mentee memilih untuk mengikuti sebuah sesi, sistem harus mendaftarkannya sebagai anggota dan memunculkan informasi detail sesi tersebut.* |
 | *KF09* | *R09* | *Ketika waktu menunjukkan 15 menit sebelum sesi dimulai, sistem harus mengirimkan notifikasi pengingat kepada seluruh partisipan sesi tersebut.* |
 | *KF10* | *R11, R12, R14* | *Ketika sebuah sesi telah selesai ataupun melewati batas waktu pelaksanaannya, sistem harus menampilkan formulir konfirmasi otomatis dan formulir penilaian.* |
 | *KF11* | *R13* | *Ketika pengguna menekan navigasi Riwayat, sistem harus menampilkan daftar riwayat sesi yang pernah diikuti atau dibuat (berstatus Selesai atau Batal) pada halaman khusus Riwayat.* |
 | *KF12* | *R15, R16* | *Ketika sebuah sesi berhasil dibentuk dan disetujui, sistem harus secara otomatis membuat group chat sementara bagi pesertanya.* |
-| *KF13* | *R21* | *Jika jumlah partisipan sesi telah mencapai batas kapasitas maksimum yang ditetapkan Tutor, sistem harus menolak permintaan bergabung dari Mentee selanjutnya dan menampilkan notifikasi sesi penuh.* |
-| *KF14* | *R22* | *Jika Tutor memasukkan jumlah partisipan yang tidak valid saat pembuatan sesi (minimum 1 partisipan dan maksimum 20 partisipan), sistem harus menolak masukan dan menampilkan peringatan.* |
+| *KF13* | *R21* | *Jika jumlah partisipan sesi telah mencapai batas kapasitas maksimum yang ditetapkan Mentor, sistem harus menolak permintaan bergabung dari Mentee selanjutnya dan menampilkan notifikasi sesi penuh.* |
+| *KF14* | *R22* | *Jika Mentor memasukkan jumlah partisipan yang tidak valid saat pembuatan sesi (minimum 1 partisipan dan maksimum 20 partisipan), sistem harus menolak masukan dan menampilkan peringatan.* |
 | *KF15* | *R23* | *Ketika Mentee mengonfirmasi pembatalan keikutsertaan pada suatu sesi, maka sistem harus menghapus data Mentee tersebut dari basis data pendaftar sesi.* |
 | *KF16* | *R23* | *Ketika Mentor mengonfirmasi penghapusan sesi buatannya, sistem harus menghapus sesi tersebut dan memperbarui basis data agar tidak lagi ditampilkan.* |
 | *KF17* | *R24* | *Ketika Mentor menyimpan pembaruan data sesi, sistem harus merekam revisi tersebut ke dalam basis data agar rincian terbaru segera ditampilkan.* |
 | *KF18* | *R25* | *Ketika Mentor mengakses riwayat sesi yang telah selesai, sistem harus menampilkan riwayat penilaian yang diberikan oleh Mentee.* |
-| *KF19* | *R25, R26* | *Ketika pengguna menekan nama atau foto profil, sistem harus menampilkan halaman detail profil pengguna yang memuat informasi identitas dan tag materi.* |
+| *KF19* | *R26* | *Ketika pengguna menekan nama atau foto profil, sistem harus menampilkan halaman detail profil pengguna yang memuat informasi identitas dan tag materi.* |
 
 ## 3.2 Kebutuhan Non-Fungsional (KNF)
 Tabel 3.2. Kebutuhan Non-Fungsional
@@ -220,7 +222,7 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | *KNF01* | *R03* | *Security* | *Kata sandi pengguna harus di-hash menggunakan algoritma kriptografi yang aman (seperti bcrypt/Argon2) sebelum disimpan dalam basis data dan tidak disimpan dalam bentuk plain-text.* |
 | *KNF02* | *R19* | *Response Time* | *Sistem pencocokan jadwal (matchmaking) berdasarkan irisan materi dan waktu kosong pengguna harus menampilkan hasil rekomendasi dalam waktu kurang dari 3 detik.* |
 | *KNF03* | *R09* | *Reliability* | *Pengiriman notifikasi pengingat sesi (15 menit sebelum sesi dimulai) harus terkirim secara tepat waktu dengan tingkat keberhasilan minimal 99%.* |
-| *KNF04* | *R02* | *Reliability* | *Ketika pengguna meregistrasikan akun non universitas, sistem harus menolak registrasi akun.* |
+| *KNF04* | *R02* | *Security* | *Ketika pengguna meregistrasikan akun non universitas, sistem harus menolak registrasi akun.* |
 | *KNF05* | *R13* | *Response Time* | *Waktu loading saat membuka riwayat sesi pengguna tidak boleh lebih dari 3 detik.* |
 
 ---
@@ -231,8 +233,8 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 
 | ID Aktor | Aktor | Deskripsi |
 | :--- | :--- | :--- |
-| *A01* | *Mentee (Siswa/Mahasiswa)* | *Pengguna yang bertindak sebagai pihak yang membutuhkan bimbingan atau rekan belajar. Mentee berinteraksi dengan sistem untuk mengatur preferensi materi dan jadwal, mencari rekomendasi sesi (matchmaking), bergabung ke dalam sesi, serta memberikan penilaian (rating) setelah sesi selesai.* |
-| *A02* | *Mentor (Tutor)* | *Pengguna sebaya yang memiliki penguasaan materi lebih dan bersedia meluangkan waktu untuk mengajar. Mentor berinteraksi dengan sistem untuk membuat sesi belajar baru, menetapkan jadwal dan batas maksimum peserta, serta mengonfirmasi keterlaksanaan sesi.* |
+| *AK01* | *Mentee (Siswa/Mahasiswa)* | *Pengguna yang bertindak sebagai pihak yang membutuhkan bimbingan atau rekan belajar. Mentee berinteraksi dengan sistem untuk mengatur preferensi materi dan jadwal, mencari rekomendasi sesi (matchmaking), bergabung ke dalam sesi, serta memberikan penilaian (rating) setelah sesi selesai.* |
+| *AK02* | *Mentor (Tutor)* | *Pengguna sebaya yang memiliki penguasaan materi lebih dan bersedia meluangkan waktu untuk mengajar. Mentor berinteraksi dengan sistem untuk membuat sesi belajar baru, menetapkan jadwal dan batas maksimum peserta, serta mengonfirmasi keterlaksanaan sesi.* |
 
 ## 4.2 Identifikasi Use Case
 
@@ -244,7 +246,7 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | *UC04* | *Mencari dan Bergabung ke Sesi* | *Mentee melihat daftar rekomendasi sesi yang cocok dengan preferensinya, lalu mendaftar ke sesi yang dia inginkan.* | *Mentee* | *KF07, KF08, KF13* |
 | *UC05* | *Mengonfirmasi Keterlaksanaan Sesi* | *Pengguna menandai dan mengonfirmasi apakah sesi yang telah dijadwalkan benar-benar terlaksana.* | *Mentor, Mentee* | *KF10* |
 | *UC06* | *Melihat Riwayat Sesi* | *Pengguna melihat daftar arsip sesi yang telah selesai atau dibatalkan pada halaman khusus riwayat.* | *Mentor, Mentee* | *KF11, KF18* |
-| *UC07* | *Memberikan Penilaian Sehabis Sesi* | *Pengguna memberi penilaian dan catatan terhadap sesi yang telah dikonfirmasi selesai.* | *Mentor, Mentee* | *KF10* |
+| *UC07* | *Memberikan Penilaian Sehabis Sesi* | *Mentee memberi penilaian dan catatan terhadap sesi yang telah dikonfirmasi selesai.* | *Mentee* | *KF10* |
 | *UC08* | *Berkomunikasi Menggunakan Grup Obrolan Sementara* | *Pengguna bertukar pesan dalam grup obrolan sementara yang dibuat untuk suatu sesi belajar.* | *Mentor, Mentee* | *KF12* |
 | *UC09* | *Menerima Notifikasi Sesi* | *Pengguna mendapatkan pengingat otomatis sebelum sesi belajar dimulai.* | *Mentor, Mentee* | *KF09* |
 | *UC10* | *Membatalkan Keikutsertaan Sesi* | *Mentee dapat membatalkan pengikutsertaan sesi yang sudah didaftarkan sebelumnya.* | *Mentee* | *KF15* |
@@ -397,7 +399,7 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | No | Aksi Aktor | Reaksi Perangkat Lunak |
 | :--- | :--- | :--- |
 | 1 | *Pengguna membuka software setelah sesi selesai berdasarkan waktu yang tercatat pada sistem* | *Sistem menampilkan tombol konfirmasi "Terlaksana" dan "Tidak Terlaksana" pada sesi terkait* |
-| 2 | *Pengguna memilih "Tidak Terlaksana"* | *Sistem menampilkan kolom alasan singkat yangg bersifat opsional* |
+| 2 | *Pengguna memilih "Tidak Terlaksana"* | *Sistem menampilkan kolom alasan singkat yang bersifat opsional* |
 | 3 | *Pengguna mengisi alasan atau melewatinya, lalu menekan "Kirim"* | *Sistem mencatat status sesi menjadi "Tidak Terlaksana" beserta alasan yang diisi (optional)* |
 | 4 | *Pengguna menerima konfirmasi* | *Sistem menampilkan pesan "Status sesi berhasil diperbarui"* |
 
@@ -411,7 +413,7 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | :--- | :--- | :--- |
 | 1 | *Pengguna menekan tombol "Riwayat" pada bilah navigasi di Beranda* | *Sistem mengambil seluruh data sesi milik pengguna yang berstatus "Selesai", "Tidak Terlaksana", atau "Dibatalkan" dari database* |
 | 2 | *Pengguna menunggu pemuatan data* | *Sistem menampilkan halaman Riwayat yang berisi daftar arsip sesi masa lalu, dikelompokkan berdasarkan status akhirnya (Berlangsung, Terlaksana, dan Tidak Terlaksana)* |
-| 3 | *Pengguna memilih salah satu sesi dari daftar* | *Sistem menampilkan detail sesi tersebut, termasuk peran Pengguna (Tutor/Mentee), materi, jadwal, dan status* |
+| 3 | *Pengguna memilih salah satu sesi dari daftar* | *Sistem menampilkan detail sesi tersebut, termasuk peran Pengguna (Mentor/Mentee), materi, jadwal, dan status* |
  
 <br>
 
@@ -430,9 +432,9 @@ Tabel 3.2. Kebutuhan Non-Fungsional
  
 | No | Aksi Aktor | Reaksi Perangkat Lunak |
 | :--- | :--- | :--- |
-| 1 | *Pengguna membuka sesi yang telah berstatus "Selesai"* | *Sistem menampilkan form feedback beserta catatan opsional* |
-| 2 | *Pengguna memberi feedback dan menuliskan catatan, lalu menekan "Kirim"* | *Sistem memvalidasi bahwa feedback telah diisi* |
-| 3 | *Pengguna menunggu konfirmasi* | *Sistem menyimpan feedback dan menampilkan pesan "Terima kasih atas feedback Anda"* |
+| 1 | *Mentee membuka sesi yang telah berstatus "Selesai"* | *Sistem menampilkan form feedback beserta catatan opsional* |
+| 2 | *Mentee memberi feedback dan menuliskan catatan, lalu menekan "Kirim"* | *Sistem memvalidasi bahwa feedback telah diisi* |
+| 3 | *Mentee menunggu konfirmasi* | *Sistem menyimpan feedback dan menampilkan pesan "Terima kasih atas feedback Anda"* |
  
 <br>
 
@@ -440,8 +442,8 @@ Tabel 3.2. Kebutuhan Non-Fungsional
  
 | No | Aksi Aktor | Reaksi Perangkat Lunak |
 | :--- | :--- | :--- |
-| 1 | *Pengguna membuka sesi yang telah berstatus "Selesai"* | *Sistem menampilkan form feedback beserta catatan opsional dan tombol "Skip"* |
-| 2 | *Pengguna menekan tombol "Skip" tanpa mengisi feedback* | *Sistem menutup form tanpa menyimpan feedback dan status sesi tetap "Selesai"* |
+| 1 | *Mentee membuka sesi yang telah berstatus "Selesai"* | *Sistem menampilkan form feedback beserta catatan opsional dan tombol "Skip"* |
+| 2 | *Mentee menekan tombol "Skip" tanpa mengisi feedback* | *Sistem menutup form tanpa menyimpan feedback dan status sesi tetap "Selesai"* |
 
 ### 4.4.8 Skenario UC08
  
@@ -478,7 +480,7 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 
 ### 4.4.10 Skenario UC10
 
-**Nama Use Case:** *Membatalkan Mengikuti Sesi*
+**Nama Use Case:** *Membatalkan Keikutsertaan Sesi*
  
 **Skenario Normal**
  
@@ -624,13 +626,13 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | *C03* | *Mentee* | *Kelas turunan dari User yang merepresentasikan siswa. Memiliki hak untuk mencari rekomendasi sesi, mendaftarkan ke sesi, serta membatalkan ikutsertaan sesi.* | *UC01, UC02, UC04, UC05, UC06, UC07, UC08, UC09, UC10, UC14, UC15* |
 | *C04* | *Session* | *Kelas yang merepresentasikan sesi belajar yang menyimpan atribut seperti topic materi, schedule, capacity, daftar peserta, dan status sesi.* | *UC03, UC04, UC05, UC06, UC07, UC08, UC09, UC10, UC11, UC12, UC13, UC14* |
 | *C05* | *GroupChat* | *Kelas yang merepresentasikan ruang obrolan sementara untuk komunikasi antar pengguna.* | *UC08* |
-| *C06* | *Feedback* | *Kelas yang merepresentasikan rating dan ulasan yang diberikan oleh Mentee ataupun Mentor pada saat sebuah sesi belajar telah selesai.* | *UC07, UC13* |
+| *C06* | *Feedback* | *Kelas yang merepresentasikan rating dan ulasan yang diberikan oleh Mentee pada saat sebuah sesi belajar telah selesai.* | *UC07, UC13* |
 | *C07* | *SessionHistory* | *Kelas yang menyimpan kumpulan riwayat sesi milik seorang pengguna dengan mengelompokkannya berdasarkan status (Berlangsung, Terlaksana, Tidak Terlaksana).* | *UC05, UC06, UC10, UC11, UC12, UC13* |
 | *C08* | *ChatMessage* | *Kelas yang merepresentasikan pesan yang dikirimkan oleh pengguna ke dalam sebuah GroupChat. Menyimpan informasi pengirim, isi pesan teks, dan timestamp pesan dikirim.* | *UC08* |
-| *C09* | *Preference* | *Kelas yang menyimpan pengaturan pengguna, seperti tag mata pelajaran, ketersediaan jadwal pada kalender, dan preferensi metode belajar (luring/daring) agar digunakan oleh algoritma matchmaking.* | *UC02, UC04, UC14* |
+| *C09* | *Preference* | *Kelas yang menyimpan pengaturan pengguna, seperti tag mata pelajaran, ketersediaan jadwal pada kalender, dan preferensi metode belajar (luring/daring) agar digunakan oleh algoritma matchmaking.* | *UC02, UC04, UC14, UC15* |
 | *C10* | *Profile* | *Kelas yang merepresentasikan data identitas pengguna (nama, universitas, program studi, bio) yang dihubungkan dengan akun User.* | *UC01, UC02, UC15* |
 | *C11* | *Dashboard* | *Kelas antarmuka utama yang menampilkan rangkuman jadwal sesi terdekat, notifikasi, dan rekomendasi matchmaking untuk Mentee.* | *UC01, UC04, UC06, UC09, UC14* |
-| *C12* | *UserControl* | *Kelas pengontrol yang mengautentikasi login, memvalidasi format email, dan pembaruan profil pengguna.* | *UC01, UC02* |
+| *C12* | *UserControl* | *Kelas pengontrol yang mengautentikasi login, memvalidasi format email, dan pembaruan profil pengguna.* | *UC01, UC02, UC15* |
 | *C13* | *SessionControl* | *Kelas pengontrol yang menangani tabrakan jadwal, menjalankan algoritma matchmaking, dan memproses pendaftaran atau pembuatan sesi.* | *UC03, UC04, UC05, UC06, UC10, UC11, UC12, UC14* |
 | *C14* | *FeedbackControl* | *Kelas pengontrol yang memvalidasi feedback dan rating untuk mentor.* | *UC07, UC13* |
 | *C15* | *LoginPage* | *Kelas antarmuka tempat pengguna dapat memasukkan kredensial untuk membuat akun atau masuk ke akun.* | *UC01* |
@@ -641,7 +643,7 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | *C20* | *FeedbackForm* | *Kelas antarmuka dalam bentuk formulir yang diisi Mentee sebagai penilaian terhadap Mentor sehabis sesi.* | *UC07, UC13* |
 | *C21* | *GroupChatPage* | *Kelas antarmuka yang menampilkan antarmuka kotak pesan dan riwayat obrolan antarpengguna.* | *UC08* |
 | *C22* | *Notification* | *Kelas yang merepresentasikan pesan pengingat dari sistem yang menyimpan detail pesan, waktu, dan status terbaca.* | *UC09* |
-| *C23* | *PopUpNotification* | *Kelas yang menampilkan notifikasi pada layar pengguna untuk mengingatkan pengguna akan sesi yang akan segera dimulai, sekaligus akan membawa pengguna ke aplikasi apabila ditekan.* | *UC08, UC09* |
+| *C23* | *PopUpNotification* | *Kelas yang menampilkan notifikasi pada layar pengguna untuk mengingatkan pengguna akan sesi yang akan segera dimulai, sekaligus akan membawa pengguna ke aplikasi apabila ditekan.* | *UC09* |
 | *C24* | *HistoryPage* | *Kelas antarmuka tempat pengguna dapat melihat daftar lengkap arsip sesi masa lalunya yang berstatus selesai, batal, atau tidak terlaksana.* | *UC06* |
 
 ## 5.2 Diagram Kelas per Use Case
@@ -709,7 +711,7 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | *C01* | *User* | *idUser, username, profile, email, passwordHash* | *getProfile()* |
 | *C02* | *Mentor* | *-* | *inherit dari User* |
 | *C03* | *Mentee* | *-* | *inherit dari User* |
-| *C09* | *Preference* | *materialTag, availability, sesionFormatSession* | *updatePreference()* |
+| *C09* | *Preference* | *materialTag, availability, sessionFormatPreference* | *updatePreference()* |
 | *C10* | *Profile* | *name, university, studyProgram, bio* | *updateProfile()* |
 | *C12* | *UserControl* | *-* | *saveProfile(), savePreference()* |
 | *C16* | *ProfilePage* | *-* | *displayProfile(), submitUpdate()* |
@@ -743,7 +745,7 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
 | :--- | :--- | :--- | :--- |
 | *C02* | *Mentor* | *listSessionsMade* | *inherit dari User* |
-| *C04* | *Session* | *idSession, topic, schedule, format, capacity, listParticipants, status* | *saveSession()* |
+| *C04* | *Session* | *idSession, topic, schedule, format, capacity, userList, status* | *saveSession()* |
 | *C13* | *SessionControl* | *-* | *validateScheduleConflict(), processSessionCreation()* |
 | *C17* | *SessionPage* | *-* | *showSessionDetails()* |
 | *C18* | *HostSessionPage* | *-* | *showCreateForm(), submitSessionData()* |
@@ -779,9 +781,9 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
 | :--- | :--- | :--- | :--- |
 | *C03* | *Mentee* | *attendedSessions* | *inherit dari User* |
-| *C04* | *Session* | *idSession, topic, schedule, format, capacity, listParticipants, status* | *addParticipant(), checkCapacity()* |
+| *C04* | *Session* | *idSession, topic, schedule, format, capacity, userList, status* | *addParticipant(), checkCapacity()* |
 | *C07* | *SessionHistory* | *historyList* | *addSessionToHistory()* |
-| *C09* | *Preference* | *materialTag, availability, preferensiFormatSesi* | *getPreference()* |
+| *C09* | *Preference* | *materialTag, availability, sessionFormatPreference* | *getPreference()* |
 | *C11* | *Dashboard* | *listSessions* | *showRecommendation()* |
 | *C13* | *SessionControl* | *-* | *findRecommendation(), validateCapacity(), processRegistration()* |
 | *C19* | *ParticipantSessionPage* | *-* | *showSessionDetails(), submitJoinRequest()* |
@@ -806,7 +808,7 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 #### Diagram Kelas
  
 <p align="center">
-<img alt="Class Diagram UC04" src="./assets/diagram/diagram-uc05.png" width="70%">
+<img alt="Class Diagram UC05" src="./assets/diagram/diagram-uc05.png" width="70%">
 </p>
 <p align="center">
 <i>Gambar 10. Diagram Kelas Use Case UC05</i>
@@ -836,12 +838,12 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | *C04* | *Session* | *Kelas entitas tunggal (Entity) yang rinciannya ditampilkan di dalam riwayat.* | 
 | *C07* | *SessionHistory* | *Kelas koleksi (Entity) yang menyimpan arsip sesi berstatus Selesai, Tidak Terlaksana, atau Dibatalkan.* |
 | *C13* | *SessionControl* | *Kelas pengontrol (Controller) yang bertugas mengambil (fetch) data arsip dari entitas riwayat untuk dikirimkan ke antarmuka.* | 
-| *C23* | *HistoryPage* | *Kelas antarmuka (Boundary) baru tempat pengguna melihat daftar sesi masa lalunya secara lengkap.* | 
+| *C24* | *HistoryPage* | *Kelas antarmuka (Boundary) baru tempat pengguna melihat daftar sesi masa lalunya secara lengkap.* | 
  
 #### Diagram Kelas
  
 <p align="center">
-<img alt="Class Diagram UC04" src="./assets/diagram/diagram-uc06.png" width="70%">
+<img alt="Class Diagram UC06" src="./assets/diagram/diagram-uc06.png" width="70%">
 </p>
 <p align="center">
 <i>Gambar 11. Diagram Kelas Use Case UC06</i>
@@ -889,8 +891,8 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | :--- | :--- | :--- | :--- |
 | *C02* | *Mentor* | *feedbackList* | *receiveFeedback()* |
 | *C03* | *Mentee* | *attendedSessions* | *giveFeedback(), checkCompletedSession()* |
-| *C04* | *Session* | *sessionID, topic, schedule, format, capacity, userList, status* | *getSessionStatus(), isCompleted()* |
-| *C06* | *Feedback* | *feedbackID, rating, comment, date* | *setRating(), setComment(), getRating(), getComment()* |
+| *C04* | *Session* | *idSession, topic, schedule, format, capacity, userList, status* | *getSessionStatus(), isCompleted()* |
+| *C06* | *Feedback* | *idFeedback, rating, comment, date* | *setRating(), setComment(), getRating(), getComment()* |
 | *C07* | *SessionHistory* | *historyList* | *getCompletedSessions()* |
 | *C14* | *FeedbackControl* | *feedbackList* | *validateFeedback(), submitFeedback(), saveFeedback()* |
 | *C20* | *FeedbackForm* | *rating, comment* | *showForm(), submitFeedback()* |
@@ -1089,7 +1091,7 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | :--- | :--- | :--- | :--- |
 | *C02* | *Mentor* | *feedbackList* | *inherit dari User, viewFeedback()* |
 | *C04* | *Session* | *idSession, status* | *getSessionID(), isCompleted()* |
-| *C06* | *Feedback* | *idFeedback, rating, content, date* | *getRating(), getComment(), getDate()* |
+| *C06* | *Feedback* | *idFeedback, rating, comment, date* | *getRating(), getComment(), getDate()* |
 | *C07* | *SessionHistory* | *listSession* | *getCompletedSessions()* |
 | *C14* | *FeedbackControl* | *-* | *retrieveFeedbackBySession()* |
 | *C18* | *HostSessionPage* | *-* | *showFeedbackList()* |
@@ -1126,10 +1128,10 @@ Tabel 3.2. Kebutuhan Non-Fungsional
  
 | ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
 | :--- | :--- | :--- | :--- |
-| *C01* | *User* | *userID, email, password* | *isActive()* |
+| *C01* | *User* | *idUser, email, passwordHash* | *isActive()* |
 | *C02* | *Mentor* | *attendedSessions* | *inherit dari user* |
 | *C03* | *Mentee* | *attendedSessions* | *inherit dari user* |
-| *C04* | *Session* | *sessionID, topic, schedule, format, capacity, userList, status* | *getSessionDetails()* |
+| *C04* | *Session* | *idSession, topic, schedule, format, capacity, userList, status* | *getSessionDetails()* |
 | *C09* | *Preference* | *materialTag, availability, sessionTypePreference* | *getPreference()* |
 | *C11* | *Dashboard* | *upcomingSessions, sessionRecommendation* | *showSession(), matchMakeSession(), searchSession(), showRecommendation()* |
 | *C13* | *SessionControl* | *sessionList* | *getUpcomingSessions(), findRecommendation(), matchSession()* |
