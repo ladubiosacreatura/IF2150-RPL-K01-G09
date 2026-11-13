@@ -154,6 +154,7 @@
 | *02-11-2026* | *David Christian* | *Membuat scaffold aplikasi Next.js, struktur MVC, skema basis data beserta RLS dan seed, validator, serta README* | *4* | *Done* | *-* |
 | *03-11-2026* | *David Christian* | *Memperbaiki aturan RLS agar hanya mentor yang dapat mengubah sesi dan feedback hanya dapat diberikan peserta sesi* | *1* | *Done* | *-* |
 | *05-11-2026* | *David Christian* | *Menyusun template issue dan membuat issue untuk setiap KF* | *1* | *Done* | *-* |
+| *05-11-2026* | *Fabian Amzar Susanto* | *Me-review dan merge PR scaffold aplikasi (#85)* | *0.5* | *Done* | *-* |
 | *08-11-2026* | *David Christian* | *Implementasi KF01 registrasi, KF02 login, KF03 tag preferensi, dan KF04 jadwal ketersediaan* | *4* | *Done* | *-* |
 | *09-11-2026* | *David Christian* | *Memperbaiki temuan code review KF01-KF04 (logout, validasi slot waktu, sinkronisasi form preferensi)* | *2* | *Done* | *Akun baru tidak bisa login karena konfirmasi email aktif di Supabase* |
 | *09-11-2026* | *Markus Christiano Simanjuntak* | *Me-review PR KF01 (#98) dan KF02 (#99)* | *1* | *Done* | *-* |
@@ -173,5 +174,7 @@
 | *13-11-2026* | *Hugo Daniel J N* | *Implementasi KF08 bergabung ke sesi* | *2* | *Done* | *-* |
 | *13-11-2026* | *Markus Christiano Simanjuntak* | *Menambahkan spesifikasi sesi tidak lintas hari, durasi 10 menit–12 jam, dan larangan Mentee mengikuti sesi bertabrakan (R27, R28, KF20, KF21) pada M2–M8 serta mengimplementasikannya beserta unit test (PR #133)* | *1* | *Done* | *-* |
 | *13-11-2026* | *Markus Christiano Simanjuntak* | *Menyinkronkan `main` ke `development` (PR #132), merge `development` ke `main` (PR #130), dan menerapkan migrasi yang tertinggal ke basis data Supabase bersama* | *0.5* | *Done* | *Supabase CLI tidak dapat login, migrasi diterapkan lewat SQL Editor* |
+| *13-11-2026* | *Fabian Amzar Susanto* | *Implementasi KF13 penolakan bergabung saat sesi penuh beserta unit test dan merge PR #128* | *2* | *Done* | *PR awal dibuat dari `main` sehingga perlu dipindahkan ke branch dari `development`* |
+| *13-11-2026* | *Fabian Amzar Susanto* | *Implementasi KF15 pembatalan keikutsertaan sesi beserta unit test dan merge PR #129* | *2* | *Done* | *-* |
 
 ``Gunakan format penulisan Logbook yang sama untuk setiap Milestone dan pastikan pembuatan Daftar Isi juga sudah sesuai sebelum Logbook dikumpulkan. ``
