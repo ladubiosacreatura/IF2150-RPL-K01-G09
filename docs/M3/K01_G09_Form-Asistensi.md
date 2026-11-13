@@ -5,12 +5,12 @@
 | Informasi                | Keterangan  |
 | ------------------------ | ----------- |
 | **Hari**                 | Senin       |
-| **Tanggal**              | 07/09/2026  |
-| **Kelas**                | K-1         |
-| **Nomor Kelompok**       | 9           |
+| **Tanggal**              | 14/09/2026  |
+| **Kelas**                | K01         |
+| **Nomor Kelompok**       | G09         |
 | **Nama Kelompok**        | PindahCSUI  |
-| **Nama Perangkat Lunak** | PeerUp      |
-| **Dokumen**              | Milestone 2 |
+| **Nama Perangkat Lunak** | PeerUP      |
+| **Dokumen**              | Milestone 3 |
 
 ### Anggota Kelompok
 

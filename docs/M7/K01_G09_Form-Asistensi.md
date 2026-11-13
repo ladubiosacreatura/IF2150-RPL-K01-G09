@@ -4,18 +4,16 @@
 
 | Informasi | Keterangan |
 | --- | --- |
-| **Hari** | *[Hari]* |
-| **Tanggal** | *[DD/MM/YYYY]* |
+| **Hari** | *Jumat* |
+| **Tanggal** | *09/10/2026* |
 | **Kelas** | K01 |
 | **Nomor Kelompok** | G09 |
 | **Nama Kelompok** | PindahCSUI |
 | **Nama Perangkat Lunak** | PeerUP |
-| **Dokumen** | DESKRIPSI PERANCANGAN PERANGKAT LUNAK (DPPL) |
+| **Dokumen** | Deskripsi Perancangan Perangkat Lunak (DPPL) |
 
 ### Anggota Kelompok
 
-| NIM | Nama |
-| --- | --- |
 | NIM      | Nama                            |
 | -------- | ------------------------------- |
 | 13525049 | Hugo Daniel Johansen Napitupulu |
@@ -23,6 +21,7 @@
 | 13525010 | Fabian Amzar Susanto            |
 | 13525025 | David Christian                 |
 | 13525028 | Markus Christiano Simanjuntak   |
+ 
 ### Catatan
 
 | Catatan |
