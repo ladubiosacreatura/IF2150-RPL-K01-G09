@@ -156,6 +156,8 @@
 | *05-11-2026* | *David Christian* | *Menyusun template issue dan membuat issue untuk setiap KF* | *1* | *Done* | *-* |
 | *08-11-2026* | *David Christian* | *Implementasi KF01 registrasi, KF02 login, KF03 tag preferensi, dan KF04 jadwal ketersediaan* | *4* | *Done* | *-* |
 | *09-11-2026* | *David Christian* | *Memperbaiki temuan code review KF01-KF04 (logout, validasi slot waktu, sinkronisasi form preferensi)* | *2* | *Done* | *Akun baru tidak bisa login karena konfirmasi email aktif di Supabase* |
+| *10-11-2026* | *Matthew Allen Reynaldo* | *Implementasi KF05 session creation, KF06 penolakan pembuatan sesi yang bertabrakan dengan jadwal* | *2* | *Done* | *-* |
+| *11-11-2026* | *Matthew Allen Reynaldo* | *Implementasi KF14 validasi kapasitas sesi, KF17 edit sesi, KF16 hapus sesi, KF10a konfirmasi penuntasan sesi* | *4* | *Done* | *-* |
 | *11-11-2026* | *David Christian* | *Memperbarui README (opsi setup Supabase bersama dan lokal, aturan branch dan PR)* | *1* | *Done* | *-* |
 | *12-11-2026* | *David Christian* | *Implementasi KF09 notifikasi pengingat sesi dan KF12 grup obrolan sementara beserta unit test* | *5* | *Done* | *-* |
 | *13-11-2026* | *David Christian* | *Mengisi B.4 dan B.5 laporan implementasi serta mengembalikan entri AI usage yang hilang saat merge* | *2* | *Done* | *Konflik merge `main` ke `development` pada dokumen AI usage* |
