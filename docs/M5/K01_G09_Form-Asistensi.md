@@ -4,8 +4,8 @@
 
 | Informasi | Keterangan |
 | --- | --- |
-| **Hari** | *[Hari]* |
-| **Tanggal** | *[DD/MM/YYYY]* |
+| **Hari** | *-* |
+| **Tanggal** | *-* |
 | **Kelas** | K01 |
 | **Nomor Kelompok** | G09 |
 | **Nama Kelompok** | PindahCSUI |
@@ -26,13 +26,12 @@
 
 | Catatan |
 | --- |
-| 1. *\[Berikan catatan hasil asistensi\]*  |
-| 2. ... |
-| 3. ... |
-| 4. ... |
+| 1. *Diagram kelas keseluruhan sudah yang sekarang sudah cukup baik, walau tidak terlalu rapi.*  |
+| 2. *Intersesction itu biasanya terjadi jika ada rancangan yang overengineered. Untuk sekarang, masih aman.* |
+| 3. *Deploy tidak wajib dilakukan melalui provider tertentu, melainkan dapat dilakukan melalui local.* |
 
 **Notes for this section:**  
-*Catatan dapat dituliskan dalam bentuk paragraf atau poin-poin, disesuaikan saja.* 
+*Asistensi dilakukan melalui group chat line. Ada beberapa chat yang dikirim dalam beberapa hari, jadi tidak ada tanggal asistensi yang pasti.*
 
 ## Dokumentasi
 
