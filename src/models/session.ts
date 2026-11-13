@@ -17,6 +17,13 @@ export class SessionScheduleConflictError extends Error {
   }
 }
 
+export class SessionAlreadyJoinedError extends Error {
+  constructor() {
+    super("Mentee is already a participant in this session.");
+    this.name = "SessionAlreadyJoinedError";
+  }
+}
+
 export type UpcomingSession = {
   idSession: string;
   idMentor: string;
@@ -51,8 +58,51 @@ export type SessionCandidate = {
   participantIds: string[];
 };
 
+export type SessionParticipantDetail = {
+  idUser: string;
+  name: string;
+  university: string;
+  studyProgram: string;
+};
+
+export type SessionDetail = {
+  idSession: string;
+  idMentor: string;
+  mentorName: string;
+  mentorUniversity: string;
+  mentorStudyProgram: string;
+  topic: string;
+  description: string;
+  materialTag: string;
+  schedule: string;
+  scheduledTime: string;
+  endTime: string;
+  meetingLink: string;
+  format: SessionFormat;
+  capacity: number;
+  status: SessionStatus;
+  createdAt: string;
+  participantCount: number;
+  participants: SessionParticipantDetail[];
+  isMentor: boolean;
+  isParticipant: boolean;
+};
+
+export type SearchCriteria = {
+  query?: string;
+  format?: SessionFormat | "ALL";
+  schedule?: string;
+  day?: number | null;
+};
+
 type ParticipationSessionRow = { sessions: SessionRow | null };
 type ProfileNameRow = { id_user: string; name: string };
+type ProfileSummaryRow = {
+  id_user: string;
+  name: string;
+  university: string;
+  study_program: string;
+};
 type ParticipantRefRow = { id_session: string; id_mentee: string };
 
 const WIB_OFFSET_MS = 7 * 60 * 60 * 1000;
@@ -152,6 +202,45 @@ export function matchSession(
       (left, right) =>
         new Date(left.scheduledTime).getTime() - new Date(right.scheduledTime).getTime(),
     );
+}
+
+export function searchSession(
+  sessions: SessionCandidate[],
+  criteria: SearchCriteria,
+): SessionCandidate[] {
+  const normalizedQuery = normalizeTag(criteria.query ?? "");
+  const formatFilter = criteria.format && criteria.format !== "ALL" ? criteria.format : null;
+  const scheduleFilter = criteria.schedule?.trim() ?? "";
+  const dayFilter =
+    typeof criteria.day === "number" && Number.isInteger(criteria.day) ? criteria.day : null;
+
+  return sessions.filter((session) => {
+    if (normalizedQuery) {
+      const topicMatch = normalizeTag(session.topic).includes(normalizedQuery);
+      const tagMatch = normalizeTag(session.materialTag).includes(normalizedQuery);
+      if (!topicMatch && !tagMatch) return false;
+    }
+    if (formatFilter && session.format !== formatFilter) return false;
+    if (scheduleFilter) {
+      const startWib = toWib(new Date(session.scheduledTime));
+      if (session.schedule !== scheduleFilter && startWib.dateKey !== scheduleFilter) return false;
+    }
+    if (dayFilter !== null) {
+      const startWib = toWib(new Date(session.scheduledTime));
+      if (startWib.day !== dayFilter) return false;
+    }
+    return true;
+  });
+}
+
+export function checkCapacity(participantCount: number, capacity: number): boolean {
+  return (
+    Number.isInteger(capacity) &&
+    capacity >= 1 &&
+    capacity <= 20 &&
+    participantCount >= 0 &&
+    participantCount < capacity
+  );
 }
 
 export class Session {
@@ -388,6 +477,82 @@ export class Session {
         participantIds,
       };
     });
+  }
+
+  static checkCapacity = checkCapacity;
+
+  static async getSessionDetail(idSession: string, idUser: string): Promise<SessionDetail | null> {
+    const supabase = await createClient();
+    const [sessionResult, participantsResult] = await Promise.all([
+      supabase.from("sessions").select().eq("id_session", idSession).maybeSingle<SessionRow>(),
+      supabase
+        .from("session_participants")
+        .select("id_session, id_mentee")
+        .eq("id_session", idSession)
+        .order("joined_at", { ascending: true })
+        .returns<ParticipantRefRow[]>(),
+    ]);
+
+    if (sessionResult.error) throw new Error(sessionResult.error.message);
+    if (participantsResult.error) throw new Error(participantsResult.error.message);
+    const row = sessionResult.data;
+    if (!row) return null;
+
+    const participantIds = participantsResult.data.map((item) => item.id_mentee);
+    const userIds = [...new Set([row.id_mentor, ...participantIds])];
+    const { data: profileRows, error: profileError } = await supabase
+      .from("profiles")
+      .select("id_user, name, university, study_program")
+      .in("id_user", userIds)
+      .returns<ProfileSummaryRow[]>();
+
+    if (profileError) throw new Error(profileError.message);
+    const profilesById = new Map(profileRows.map((profile) => [profile.id_user, profile]));
+    const mentorProfile = profilesById.get(row.id_mentor);
+
+    const isMentor = row.id_mentor === idUser;
+    const isParticipant = participantIds.includes(idUser);
+
+    return {
+      idSession: row.id_session,
+      idMentor: row.id_mentor,
+      mentorName: mentorProfile?.name ?? "Mentor",
+      mentorUniversity: mentorProfile?.university ?? "",
+      mentorStudyProgram: mentorProfile?.study_program ?? "",
+      topic: row.topic,
+      description: row.description,
+      materialTag: row.material_tag,
+      schedule: row.schedule,
+      scheduledTime: row.scheduled_time,
+      endTime: row.end_time,
+      meetingLink: isMentor || isParticipant ? row.meeting_link : "",
+      format: row.format,
+      capacity: row.capacity,
+      status: row.status,
+      createdAt: row.created_at,
+      participantCount: participantIds.length,
+      participants: participantIds.map((idMentee) => {
+        const profile = profilesById.get(idMentee);
+        return {
+          idUser: idMentee,
+          name: profile?.name ?? "Mentee",
+          university: profile?.university ?? "",
+          studyProgram: profile?.study_program ?? "",
+        };
+      }),
+      isMentor,
+      isParticipant,
+    };
+  }
+
+  static async addParticipant(idSession: string, idMentee: string): Promise<void> {
+    const supabase = await createClient();
+    const { error } = await supabase
+      .from("session_participants")
+      .insert({ id_session: idSession, id_mentee: idMentee });
+
+    if (error?.code === "23505") throw new SessionAlreadyJoinedError();
+    if (error) throw new Error(error.message);
   }
 
   private static async findMentorNames(mentorIds: string[]): Promise<Map<string, string>> {
