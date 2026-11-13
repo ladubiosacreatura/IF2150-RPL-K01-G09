@@ -11,6 +11,7 @@ const sessionMocks = vi.hoisted(() => ({
   getAvailableSessions: vi.fn(),
   getSessionDetail: vi.fn(),
   addParticipant: vi.fn(),
+  removeParticipant: vi.fn(),
 }));
 
 vi.mock("@/controllers/userController", () => user);
@@ -25,6 +26,7 @@ vi.mock("@/models/session", async (importOriginal) => {
       getAvailableSessions: sessionMocks.getAvailableSessions,
       getSessionDetail: sessionMocks.getSessionDetail,
       addParticipant: sessionMocks.addParticipant,
+      removeParticipant: sessionMocks.removeParticipant,
     },
   };
 });
@@ -32,6 +34,7 @@ vi.mock("@/models/session", async (importOriginal) => {
 const { Session, SessionAlreadyJoinedError, SessionFullError, matchSession, searchSession } =
   await import("@/models/session");
 const {
+  cancelSession,
   findRecommendation,
   getOpenSessions,
   getSessionDetail,
@@ -435,6 +438,84 @@ describe("joinSession / processRegistration", () => {
     await expect(joinSession(VALID_SESSION_ID)).resolves.toEqual({
       ok: false,
       error: "SESSION_FULL",
+    });
+  });
+});
+
+describe("cancelSession (KF15)", () => {
+  beforeEach(() => {
+    sessionMocks.getSessionDetail.mockResolvedValue(makeDetail({ isParticipant: true }));
+    sessionMocks.removeParticipant.mockResolvedValue(true);
+  });
+
+  it("removes the logged-in mentee from an upcoming session", async () => {
+    await expect(cancelSession(VALID_SESSION_ID)).resolves.toEqual({
+      ok: true,
+      data: { idSession: VALID_SESSION_ID },
+    });
+    expect(sessionMocks.removeParticipant).toHaveBeenCalledWith(VALID_SESSION_ID, "mentee-1");
+  });
+
+  it("rejects mentees who are not registered without touching the database", async () => {
+    sessionMocks.getSessionDetail.mockResolvedValueOnce(makeDetail({ isParticipant: false }));
+    await expect(cancelSession(VALID_SESSION_ID)).resolves.toEqual({
+      ok: false,
+      error: "NOT_PARTICIPANT",
+    });
+    expect(sessionMocks.removeParticipant).not.toHaveBeenCalled();
+  });
+
+  it("rejects cancelling a session that has started or is no longer scheduled", async () => {
+    sessionMocks.getSessionDetail.mockResolvedValueOnce(
+      makeDetail({ isParticipant: true, scheduledTime: "2020-01-01T00:00:00.000Z" }),
+    );
+    await expect(cancelSession(VALID_SESSION_ID)).resolves.toEqual({
+      ok: false,
+      error: "SESSION_ALREADY_STARTED",
+    });
+
+    sessionMocks.getSessionDetail.mockResolvedValueOnce(
+      makeDetail({ isParticipant: true, status: "SELESAI" }),
+    );
+    await expect(cancelSession(VALID_SESSION_ID)).resolves.toEqual({
+      ok: false,
+      error: "SESSION_ALREADY_STARTED",
+    });
+    expect(sessionMocks.removeParticipant).not.toHaveBeenCalled();
+  });
+
+  it("requires login, a matching mentee id, and an existing session", async () => {
+    user.getCurrentUser.mockResolvedValueOnce(null);
+    await expect(cancelSession(VALID_SESSION_ID)).resolves.toEqual({
+      ok: false,
+      error: "UNAUTHORIZED",
+    });
+    await expect(cancelSession(VALID_SESSION_ID, "someone-else")).resolves.toEqual({
+      ok: false,
+      error: "UNAUTHORIZED",
+    });
+    await expect(cancelSession("bad-id")).resolves.toEqual({
+      ok: false,
+      error: "INVALID_SESSION_ID",
+    });
+    sessionMocks.getSessionDetail.mockResolvedValueOnce(null);
+    await expect(cancelSession(VALID_SESSION_ID)).resolves.toEqual({
+      ok: false,
+      error: "SESSION_NOT_FOUND",
+    });
+  });
+
+  it("maps a concurrent removal to NOT_PARTICIPANT and other failures to CANCEL_SESSION_FAILED", async () => {
+    sessionMocks.removeParticipant.mockResolvedValueOnce(false);
+    await expect(cancelSession(VALID_SESSION_ID)).resolves.toEqual({
+      ok: false,
+      error: "NOT_PARTICIPANT",
+    });
+
+    sessionMocks.removeParticipant.mockRejectedValueOnce(new Error("network"));
+    await expect(cancelSession(VALID_SESSION_ID)).resolves.toEqual({
+      ok: false,
+      error: "CANCEL_SESSION_FAILED",
     });
   });
 });

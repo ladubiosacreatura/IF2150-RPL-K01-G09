@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { Alert, inputClass, inputNormal, primaryButton, secondaryButton } from "@/components/ui";
 import {
+  cancelSession,
   joinSession,
+  type CancelSessionError,
   type JoinSessionError,
   type RecommendationResult,
 } from "@/controllers/sessionParticipationController";
@@ -22,6 +24,18 @@ const JOIN_ERRORS: Record<JoinSessionError, string> = {
   SESSION_FULL: "Sesi penuh. Kuota peserta sudah terpenuhi, kamu tidak bisa bergabung.",
   JOIN_SESSION_FAILED: "Gagal bergabung ke sesi. Coba lagi beberapa saat lagi.",
 };
+
+const CANCEL_ERRORS: Record<CancelSessionError, string> = {
+  UNAUTHORIZED: "Sesi kamu berakhir. Silakan masuk kembali.",
+  INVALID_SESSION_ID: "Sesi tidak valid.",
+  SESSION_NOT_FOUND: "Sesi tidak ditemukan.",
+  NOT_PARTICIPANT: "Kamu tidak terdaftar pada sesi ini.",
+  SESSION_ALREADY_STARTED: "Sesi sudah dimulai sehingga keikutsertaan tidak dapat dibatalkan.",
+  CANCEL_SESSION_FAILED: "Gagal membatalkan keikutsertaan. Coba lagi beberapa saat lagi.",
+};
+
+const dangerButton =
+  "rounded-lg border border-red-400 px-4 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-red-500/70 dark:text-red-400 dark:hover:bg-red-950/40";
 
 const DAYS = [
   { value: "", label: "Semua Hari" },
@@ -109,9 +123,11 @@ export default function ParticipantSessionPanel({
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [justJoined, setJustJoined] = useState(false);
+  const [cancelled, setCancelled] = useState(false);
+  const [confirming, setConfirming] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const joined = isParticipant || justJoined;
+  const joined = (isParticipant && !cancelled) || justJoined;
   const isFull = participantCount >= capacity;
   const showFullNotice = !isMentor && !joined && isFull && error !== JOIN_ERRORS.SESSION_FULL;
 
@@ -121,9 +137,25 @@ export default function ParticipantSessionPanel({
       const result = await joinSession(idSession, idUser);
       if (result.ok) {
         setJustJoined(true);
+        setCancelled(false);
         router.refresh();
       } else {
         setError(JOIN_ERRORS[result.error]);
+      }
+    });
+  }
+
+  function onCancel() {
+    setError(null);
+    startTransition(async () => {
+      const result = await cancelSession(idSession, idUser);
+      setConfirming(false);
+      if (result.ok || result.error === "NOT_PARTICIPANT") {
+        setJustJoined(false);
+        setCancelled(true);
+        router.refresh();
+      } else {
+        setError(CANCEL_ERRORS[result.error]);
       }
     });
   }
@@ -133,6 +165,7 @@ export default function ParticipantSessionPanel({
       {showFullNotice && <Alert>{JOIN_ERRORS.SESSION_FULL}</Alert>}
       {error && <Alert>{error}</Alert>}
       {justJoined && <Alert tone="success">Berhasil bergabung</Alert>}
+      {cancelled && !justJoined && <Alert tone="success">Berhasil Membatalkan Keikutsertaan</Alert>}
 
       {isMentor ? (
         <div className="space-y-2.5">
@@ -157,6 +190,42 @@ export default function ParticipantSessionPanel({
           >
             Buka Ruang Obrolan
           </Link>
+          {isAvailable && !confirming && (
+            <button
+              type="button"
+              onClick={() => setConfirming(true)}
+              className={`w-full ${dangerButton}`}
+            >
+              Batalkan Keikutsertaan
+            </button>
+          )}
+          {isAvailable && confirming && (
+            <div
+              role="alertdialog"
+              aria-label="Konfirmasi pembatalan"
+              className="space-y-3 rounded-lg border border-neutral-300 p-4 dark:border-neutral-700"
+            >
+              <p className="text-sm">Yakin ingin membatalkan keikutsertaanmu di sesi ini?</p>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setConfirming(false)}
+                  disabled={pending}
+                  className={`flex-1 ${secondaryButton}`}
+                >
+                  Kembali
+                </button>
+                <button
+                  type="button"
+                  onClick={onCancel}
+                  disabled={pending}
+                  className="flex-1 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {pending ? "Memproses…" : "Ya, Batalkan"}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div className="space-y-2.5">

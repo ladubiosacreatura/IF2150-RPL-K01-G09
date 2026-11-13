@@ -1,10 +1,27 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const insert = vi.hoisted(() => vi.fn());
+const removed = vi.hoisted(() => vi.fn());
+const deleteFilters = vi.hoisted(() => vi.fn());
 
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/supabase/server", () => ({
-  createClient: async () => ({ from: () => ({ insert }) }),
+  createClient: async () => ({
+    from: () => ({
+      insert,
+      delete: () => ({
+        eq: (column: string, value: string) => {
+          deleteFilters(column, value);
+          return {
+            eq: (nextColumn: string, nextValue: string) => {
+              deleteFilters(nextColumn, nextValue);
+              return { select: removed };
+            },
+          };
+        },
+      }),
+    }),
+  }),
 }));
 
 const { Session, SessionAlreadyJoinedError, SessionFullError } = await import("@/models/session");
@@ -48,5 +65,22 @@ describe("Session.addParticipant", () => {
 
     insert.mockResolvedValueOnce({ error: { code: "XX000", message: "boom" } });
     await expect(Session.addParticipant("s1", "m1")).rejects.toThrow("boom");
+  });
+});
+
+describe("Session.removeParticipant", () => {
+  it("deletes only the mentee's own registration and reports whether a row was removed", async () => {
+    removed.mockResolvedValueOnce({ data: [{ id_mentee: "m1" }], error: null });
+    await expect(Session.removeParticipant("s1", "m1")).resolves.toBe(true);
+    expect(deleteFilters).toHaveBeenCalledWith("id_session", "s1");
+    expect(deleteFilters).toHaveBeenCalledWith("id_mentee", "m1");
+
+    removed.mockResolvedValueOnce({ data: [], error: null });
+    await expect(Session.removeParticipant("s1", "m1")).resolves.toBe(false);
+  });
+
+  it("throws database errors", async () => {
+    removed.mockResolvedValueOnce({ data: null, error: { message: "boom" } });
+    await expect(Session.removeParticipant("s1", "m1")).rejects.toThrow("boom");
   });
 });

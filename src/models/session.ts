@@ -563,6 +563,19 @@ export class Session {
     if (error) throw new Error(error.message);
   }
 
+  static async removeParticipant(idSession: string, idMentee: string): Promise<boolean> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("session_participants")
+      .delete()
+      .eq("id_session", idSession)
+      .eq("id_mentee", idMentee)
+      .select("id_mentee");
+
+    if (error) throw new Error(error.message);
+    return data.length > 0;
+  }
+
   private static async findMentorNames(mentorIds: string[]): Promise<Map<string, string>> {
     const uniqueIds = [...new Set(mentorIds)];
     if (uniqueIds.length === 0) return new Map();
