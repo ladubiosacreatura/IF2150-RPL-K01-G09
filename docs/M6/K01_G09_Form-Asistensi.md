@@ -10,7 +10,7 @@
 | **Nomor Kelompok** | G09 |
 | **Nama Kelompok** | PindahCSUI |
 | **Nama Perangkat Lunak** | PeerUP |
-| **Dokumen** | Spesifikasi Kebutuhan Perangkat Lunak (SKPL) |
+| **Dokumen** | Arsitektur Perangkat Lunak (APL) |
 
 ### Anggota Kelompok
 
@@ -21,6 +21,7 @@
 | 13525010 | Fabian Amzar Susanto            |
 | 13525025 | David Christian                 |
 | 13525028 | Markus Christiano Simanjuntak   |
+
 ### Catatan
 
 Di tugas ini, fokus utama pengerjaan adalah Arsitektur Perangkat Lunak. Dokumen SKPL yang telah dibuat sebelumnya digunakan sebagai acuan dasar (seperti jenis sistem, skala, dan *tech stack*) untuk menentukan arsitektur. Terdapat tiga bagian utama yang harus diselesaikan:
@@ -42,6 +43,7 @@ Panduan pemilihan diagram untuk *View*:
 | 1. Evaluasi Kesesuaian SKPL: Arsitektur yang dipilih harus dipastikan benar-benar sesuai dengan spesifikasi yang telah dijabarkan pada SKPL. |
 | 2. Fleksibilitas View: Jumlah *view* yang dibuat tidak bergantung pada jumlah *pattern* arsitektur yang dipakai. Hal yang diutamakan adalah setiap *view* mampu menjelaskan sudut pandang yang berbeda dari sistem yang sama. |
 | 3. Ketelitian Notasi Diagram: Penggunaan notasi pada diagram yang dipilih harus diperhatikan dengan teliti (contoh: kesesuaian lima notasi utama pada *State Machine Diagram* atau arah panah dan hierarki nomor urut pada *Communication Diagram*). |
+
 ## Dokumentasi
 
 <!-- ![](./assets/foto-asistensi.jpg) -->

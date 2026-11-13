@@ -6,10 +6,10 @@
 | ------------------------ | ----------- |
 | **Hari**                 | Selasa      |
 | **Tanggal**              | 01/09/2026  |
-| **Kelas**                | K-1         |
-| **Nomor Kelompok**       | 9           |
+| **Kelas**                | K01         |
+| **Nomor Kelompok**       | G09         |
 | **Nama Kelompok**        | PindahCSUI  |
-| **Nama Perangkat Lunak** | Nama P/L    |
+| **Nama Perangkat Lunak** | PeerUP      |
 | **Dokumen**              | Milestone 1 |
 
 ### Anggota Kelompok
@@ -42,7 +42,7 @@ _Catatan dapat dituliskan dalam bentuk paragraf atau poin-poin, disesuaikan saja
 
 <!-- ![](./assets/foto-asistensi.jpg) -->
 <p align="center">
-  <img src="./assets/foto-asistensi.png" width="100%">
+  <img src="./assets/foto-asistensi.jpg" width="100%">
 </p>
 
 <p align="center">

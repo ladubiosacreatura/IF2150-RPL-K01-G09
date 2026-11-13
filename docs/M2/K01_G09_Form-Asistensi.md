@@ -6,10 +6,10 @@
 | ------------------------ | ----------- |
 | **Hari**                 | Senin       |
 | **Tanggal**              | 07/09/2026  |
-| **Kelas**                | K-1         |
-| **Nomor Kelompok**       | 9           |
+| **Kelas**                | K01         |
+| **Nomor Kelompok**       | G09         |
 | **Nama Kelompok**        | PindahCSUI  |
-| **Nama Perangkat Lunak** | PeerUp      |
+| **Nama Perangkat Lunak** | PeerUP      |
 | **Dokumen**              | Milestone 2 |
 
 ### Anggota Kelompok
@@ -48,7 +48,7 @@
 
 <!-- ![](./assets/foto-asistensi.jpg) -->
 <p align="center">
-  <img src="./assets/foto-asistensi.jpg" width="100%">
+  <img src="./assets/foto-asistensi.png" width="100%">
 </p>
 
 <p align="center">

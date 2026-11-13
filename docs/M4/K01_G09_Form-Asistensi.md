@@ -4,13 +4,13 @@
 
 | Informasi                | Keterangan  |
 | ------------------------ | ----------- |
-| **Hari**                 | Senin       |
-| **Tanggal**              | 07/09/2026  |
-| **Kelas**                | K-1         |
-| **Nomor Kelompok**       | 9           |
+| **Hari**                 | Kamis       |
+| **Tanggal**              | 17/09/2026  |
+| **Kelas**                | K01         |
+| **Nomor Kelompok**       | G09         |
 | **Nama Kelompok**        | PindahCSUI  |
-| **Nama Perangkat Lunak** | PeerUp      |
-| **Dokumen**              | Milestone 3 |
+| **Nama Perangkat Lunak** | PeerUP      |
+| **Dokumen**              | Milestone 4 |
 
 ### Anggota Kelompok
 
@@ -70,7 +70,7 @@ Buat lebih jelasnya ini yah,
 6. Realization (Interface)
 * Visual: Garis putus-putus dengan segitiga kosong
 * Arah Panah: Nunjuk dari kelas yang mengimplementasikan ke interface
-* Kasus penggunaan: Kelas induk mewarisi atribut dan methodnya ke kelas anak
+* Kasus penggunaan: Kelas mengimplementasikan seluruh operasi yang didefinisikan oleh sebuah interface (kontrak), tanpa mewarisi atribut
 * Contoh: Kelas DataBaseConnection mengimplementasikan interface IDatabase yang mewajibkan keduanya memiliki fungsi connect() dan query().
 
 **Notes for this section:**  

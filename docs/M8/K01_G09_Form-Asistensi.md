@@ -5,17 +5,15 @@
 | Informasi | Keterangan |
 | --- | --- |
 | **Hari** | *Selasa* |
-| **Tanggal** | *27/10/2027* |
+| **Tanggal** | *27/10/2026* |
 | **Kelas** | K01 |
 | **Nomor Kelompok** | G09 |
 | **Nama Kelompok** | PindahCSUI |
 | **Nama Perangkat Lunak** | PeerUP |
-| **Dokumen** | DESKRIPSI PERANCANGAN PERANGKAT LUNAK (DPPL) |
+| **Dokumen** | Deskripsi Perancangan Perangkat Lunak (DPPL) Lanjutan |
 
 ### Anggota Kelompok
 
-| NIM | Nama |
-| --- | --- |
 | NIM      | Nama                            |
 | -------- | ------------------------------- |
 | 13525049 | Hugo Daniel Johansen Napitupulu |

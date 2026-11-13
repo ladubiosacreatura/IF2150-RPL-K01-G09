@@ -9,9 +9,7 @@ DESKRIPSI PERANCANGAN PERANGKAT LUNAK (DPPL)
 
 ## PeerUP
 
-### 
-
-<img alt="Arsitektur MVC PeerUP" src="./assets/Logo_PeerUP.jpeg" width="30%">
+<img alt="Logo PeerUP" src="./assets/Logo_PeerUP.jpeg" width="30%">
 
 
 ### Untuk: Mikhael Andrian Yonatan
@@ -36,10 +34,10 @@ Dipersiapkan oleh:
 
 | Revisi | Deskripsi |
 | :--- | :--- |
-| *A* | *Deskripsikan perubahan yang dilakukan dari dokumen sebelumnya pada dokumen ini. Jika tidak terdapat perubahan, harap kosongkan tabel.* |
-| *B* |  |
-| *C* |  |
-| ... |  |
+| *A* | *Menambahkan BAB 5 Perancangan Rinci Kelas (operasi, atribut, algoritma, dan query C01–C24), BAB 6 Perancangan Antarmuka (I-01–I-16), serta memindahkan Matriks Kerunutan ke BAB 7.* |
+| *B* | *Revisi November 2026: Menambahkan atribut `endTime` dan `meetingLink` pada kelas Session (C04) beserta kolom `end_time` dan `meeting_link` pada Q-C04-01 dan Q-C04-02, mengubah Q-C04-04 menjadi pemeriksaan irisan rentang waktu, serta menyesuaikan `needsConfirmation()`, `editSchedule()`, dan Algo-C13-01.* |
+| *C* | *Revisi November 2026: Mengganti penomoran aktor menjadi AKXX, menyeragamkan istilah Mentor, memperbaiki tingkat judul Subbab 2.3 dan 2.4.2, teks alternatif logo dan diagram, serta penyebutan dokumen SKPL pada Subbab 2.2.2.* |
+| *D* | *Revisi November 2026: Menyesuaikan penyebutan KNF04 menjadi Keamanan Validasi Email dan menandai operasi yang tidak diimplementasikan (register(), pushNotification(), editTitle(), searchMessage(), editMessage(), deleteMessage(), Q-C05-03, Q-C05-04) beserta alasannya.* |
 
 ---
 
@@ -84,7 +82,7 @@ Tabel 1.4. Aturan Penomoran
 | *Kebutuhan* | *RXX* | *XX menyatakan dua digit nomor urut pemetaan kebutuhan (contoh: R01).* |
 | *Kebutuhan Fungsional* | *KFXX* | *XX menyatakan dua digit nomor urut kebutuhan fungsional (contoh: KF01).* |
 | *Kebutuhan Non-Fungsional* | *KNFXX* | *XX menyatakan dua digit nomor urut kebutuhan non-fungsional (contoh: KNF01).* |
-| *Aktor* | *AXX* | *XX menyatakan dua digit nomor urut aktor pada pemodelan use case (contoh: A01).* |
+| *Aktor* | *AKXX* | *XX menyatakan dua digit nomor urut aktor pada pemodelan use case (contoh: AK01).* |
 | *Use Case* | *UCXX* | *XX menyatakan dua digit nomor urut use case (contoh: UC01).* |
 | *Kelas* | *CXX* | *XX menyatakan dua digit nomor urut kelas pada diagram kelas (contoh: C01).* |
 | *Algoritma* | *Algo-CXX-YY* | *CXX menyatakan ID kelas dan YY menyatakan nomor urut algoritma pada kelas tersebut (contoh: Algo-C01-01).* |
@@ -131,7 +129,7 @@ Dokumen DPPL ini dibagi menjadi tujuh bab utama:
 ## 2.2 Style/Pattern Arsitektur Acuan
 
 ### 2.2.1 Style/Pattern Arsitektur yang Dipilih
-Perangkat lunak PeerUp akan memakai *style* **Model-View-Controller (MVC)** yang berjalan di atas **Client-Server Architecture**. *Style* *Client-Server* memisahkan sistem menjadi sisi *frontend* dan sisi *backend*, sementara *MVC* mengatur struktur pada kode perangkat lunaknya. Berikut adalah rincian peran setiap bagiannya.
+Perangkat lunak PeerUP akan memakai *style* **Model-View-Controller (MVC)** yang berjalan di atas **Client-Server Architecture**. *Style* *Client-Server* memisahkan sistem menjadi sisi *frontend* dan sisi *backend*, sementara *MVC* mengatur struktur pada kode perangkat lunaknya. Berikut adalah rincian peran setiap bagiannya.
 
 1. **Client (Sisi Pengguna):**
    * Mewadahi lapisan **View**, yang bertanggung jawab menampilkan antarmuka, menyajikan informasi, dan menangkap *input* atau interaksi dari pengguna.
@@ -141,12 +139,12 @@ Perangkat lunak PeerUp akan memakai *style* **Model-View-Controller (MVC)** yang
    * Mewadahi lapisan **Helper** dan **Integrasi Eksternal (Adapter)** untuk mendelegasikan tugas-tugas spesifik seperti validasi, autentikasi, serta tugas terjadwal (*cron*) tanpa membebani *Controller* utama.
 
 ### 2.2.2 Alasan Pemilihan Style/Pattern Arsitektur
-Kombinasi *MVC* dan *Client-Server* dipilih karena sesuai dengan karakteristik teknis, pemodelan objek, dan pemenuhan spesifikasi Kebutuhan Non-Fungsional (KNF) pada dokumen PeerUP:
+Kombinasi *MVC* dan *Client-Server* dipilih karena sesuai dengan karakteristik teknis, pemodelan objek, dan pemenuhan spesifikasi Kebutuhan Non-Fungsional (KNF) pada dokumen SKPL PeerUP:
 
 1. **Karakteristik Pengguna & Proses Bisnis:** Dua aktor utama (*Mentor* dan *Mentee*) akan banyak berinteraksi secara bersamaan (*real-time*) pada antarmuka dinamis (pencarian sesi, pembuatan sesi, ruang obrolan) yang semuanya mengakses dan mengubah keadaan data (sesi) yang sama. Pemisahan *Client-Server* memastikan data tetap tersinkronisasi secara terpusat.
-2. **Keselarasan dengan Pemodelan Kelas:** Desain perangkat lunak pada dokumen menggunakan pola *Boundary-Controller-Entity* (BCE). Pola ini terpetakan secara langsung ke dalam arsitektur *View-Controller-Model*, sehingga mempermudah lokalisasi dampak apabila terjadi perubahan pada satu komponen (misalnya perubahan antarmuka tidak akan merusak algoritma *matchmaking*).
+2. **Keselarasan dengan Pemodelan Kelas:** Desain perangkat lunak pada dokumen SKPL menggunakan pola *Boundary-Controller-Entity* (BCE). Pola ini terpetakan secara langsung ke dalam arsitektur *View-Controller-Model*, sehingga mempermudah lokalisasi dampak apabila terjadi perubahan pada satu komponen (misalnya perubahan antarmuka tidak akan merusak algoritma *matchmaking*).
 3. **Pemenuhan 5 Kebutuhan Non-Fungsional (KNF):**
-   * **KNF01 (Keamanan Hashing) & KNF04 (Reliabilitas Validasi Email):** Pemisahan arsitektur menempatkan `Validator` dan integrasi autentikasi di sisi server (*Controller/Adapter*) sehingga sistem keamanan dan validasi tidak dapat dimanipulasi dari peramban *Client*.
+   * **KNF01 (Keamanan Hashing) & KNF04 (Keamanan Validasi Email):** Pemisahan arsitektur menempatkan `Validator` dan integrasi autentikasi di sisi server (*Controller/Adapter*) sehingga sistem keamanan dan validasi tidak dapat dimanipulasi dari peramban *Client*.
    * **KNF02 (Waktu Respons Matchmaking < 3 detik) & KNF05 (Waktu Respons Riwayat < 3 detik):** Komputasi pencocokan algoritma dan penarikan data yang berat dilakukan secara efisien oleh *Controller* di server, sehingga *Client (View)* hanya bertugas merender hasil akhirnya saja.
    * **KNF03 (Reliabilitas Notifikasi 15 Menit):** Logika waktu (*Cron*) dipusatkan di sisi server, memastikan pemicu notifikasi otomatis berjalan $\ge 99\%$ meskipun *Client* sedang menutup aplikasinya.
 
@@ -177,7 +175,7 @@ Gambar 1 menjabarkan siklus interaksi komponen PeerUP di dalam struktur MVC. Ali
 
 ---
 
-##   2.3 Identifikasi Komponen / Modul / Subsistem
+## 2.3 Identifikasi Komponen / Modul / Subsistem
 
 Tabel 2.3. Identifikasi Komponen/Modul/Subsistem
 
@@ -220,7 +218,7 @@ Development View dipilih untuk memperlihatkan bagaimana 26 komponen arsitektur p
 
 
 <p align="center">
-<img alt="Devolopment View P/L PeerUp" src="./assets/diagram/M6_Diagram-Devolopment-View.png" width="80%">
+<img alt="Development View P/L PeerUP" src="./assets/diagram/M6_Diagram-Devolopment-View.png" width="80%">
 </p>
 <p align="center">
 <i>Gambar 2. Development View (Package Diagram) pada Perangkat Lunak PeerUP</i>
@@ -230,12 +228,12 @@ Gambar 2 memperlihatkan pengorganisasian modul dan ketergantungan antarpaket. Ga
 
 Layanan Supabase ditampilkan sebagai sistem eksternal untuk memperjelas batas antara modul kode PeerUP dan layanan yang digunakannya. Nama komponen pada diagram diselaraskan dengan Tabel 2.3, sedangkan nama kelas dicantumkan sebagai pemetaan komponen.
 
-## 2.4.2 Physical View (Deployment Diagram)
+### 2.4.2 Physical View (Deployment Diagram)
 
 Physical View dipilih untuk menggambarkan penempatan perangkat lunak PeerUP pada perangkat pengguna, lingkungan hosting aplikasi, dan layanan cloud yang digunakan. Deployment Diagram memperlihatkan node, lingkungan eksekusi, artefak perangkat lunak, serta jalur komunikasi antarnode sesuai lingkungan operasi yang ditetapkan pada dokumen ini.
 
 <p align="center">
-<img alt="Physical View P/L PeerUp" src="./assets/diagram/M6_Diagram-Physical-View.png" width="80%">
+<img alt="Physical View P/L PeerUP" src="./assets/diagram/M6_Diagram-Physical-View.png" width="80%">
 </p>
 <p align="center">
 <i>Gambar 3. Physical View (Deployment Diagram) pada Perangkat Lunak PeerUP</i>
@@ -1106,7 +1104,7 @@ Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 | *C01* | *User* | *idUser, username, email, activeSession* | *create(), findById(), register(), login(), logout(), saveAccount(), getProfile(), openDashboard(), openSessionDashboard(), checkSchedule(), getUserID(), getUsername(), getEmail(), isActive(), createMessage(), sendMessage()* |
 | *C02* | *Mentor* | *listSessionsMade, feedbackList* | *createFrom(), getById(), getSessionsMade(), receiveFeedback(), viewFeedback()* |
 | *C03* | *Mentee* | *attendedSessions, listSessionsJoined* | *createFrom(), getById(), getSessionsJoined(), giveFeedback(), checkCompletedSession()* |
-| *C04* | *Session* | *idSession, idMentor, topic, description, schedule, scheduledTime, format, capacity, userList, status, reasonNotConducted, reminderSent, groupChat* | *saveSession(), getSessionById(), getSessionsByMentorInRange(), getAvailableSessions(), getUpcomingByUser(), getArchivedByUser(), findStartingBetween(), addParticipant(), removeParticipant(), checkCapacity(), isParticipant(), isOwnedBy(), involves(), hasStarted(), needsConfirmation(), getSessionDetails(), getSessionStatus(), setStatus(), getStatus(), isCompleted(), markAsDeleted(), markReminderSent(), openGroupChat(), pushNotification(), getSessionID(), getTopic(), getFormat(), getScheduledTime(), editTitle(), editDescription(), editPreference(), editSchedule()* |
+| *C04* | *Session* | *idSession, idMentor, topic, description, schedule, scheduledTime, endTime, meetingLink, format, capacity, userList, status, reasonNotConducted, reminderSent, groupChat* | *saveSession(), getSessionById(), getSessionsByMentorInRange(), getAvailableSessions(), getUpcomingByUser(), getArchivedByUser(), findStartingBetween(), addParticipant(), removeParticipant(), checkCapacity(), isParticipant(), isOwnedBy(), involves(), hasStarted(), needsConfirmation(), getSessionDetails(), getSessionStatus(), setStatus(), getStatus(), isCompleted(), markAsDeleted(), markReminderSent(), openGroupChat(), pushNotification(), getSessionID(), getTopic(), getFormat(), getScheduledTime(), getEndTime(), editTitle(), editDescription(), editPreference(), editSchedule()* |
 | *C05* | *GroupChat* | *idGroupChat, idSession, listChatMessage, listMentee, mentor, active, expiresAt* | *findBySession(), findById(), getId(), isActive(), isMember(), getMessages(), searchMessage(), displayMessage(), editMessage(), deleteMessage()* |
 | *C06* | *Feedback* | *idFeedback, idSession, idMentee, rating, comment, date* | *save(), getFeedbackBySession(), existsBySessionAndAuthor(), setRating(), setComment(), getRating(), getComment(), getDate()* |
 | *C07* | *SessionHistory* | *idUser, historyList, completedSessions, cancelledSessions, oncomingSession* | *getArchivedSessions(), getCompletedSessions(), getGroupedByStatus(), isEmpty(), addSessionToHistory(), updateOncomingSession()* |
@@ -1174,7 +1172,7 @@ Tabel 5.1.1. Operasi Kelas User
 | :--- | :--- | :--- |
 | `create(idUser: string, username: string, email: string): Promise<User>` | `public` | Operasi CRUD (Create) pada kelas entitas untuk menyimpan rekaman akun pengguna baru ke dalam tabel `users` beserta persetujuan privasi data. |
 | `findById(idUser: string): Promise<User \| null>` | `public` | Operasi getter statis (Read) untuk mencari dan mengambil objek entitas `User` dari basis data berdasarkan `idUser`. |
-| `register(email: string, password: string): Promise<User>` | `public` | Meneruskan registrasi ke `UserControl`; kredensial ditangani oleh Supabase Auth melalui `AuthAdapter`. |
+| `register(email: string, password: string): Promise<User>` | `public` | Meneruskan registrasi ke `UserControl`; kredensial ditangani oleh Supabase Auth melalui `AuthAdapter`. *(Tidak diimplementasikan: registrasi ditangani langsung oleh `UserControl.processRegistration()` dan Supabase Auth, sehingga entitas tidak perlu memanggil kelas pengontrol.)* |
 | `login(email: string, password: string): Promise<User>` | `public` | Meneruskan autentikasi ke `UserControl` / Supabase Auth. |
 | `logout(): Promise<void>` | `public` | Mengakhiri sesi autentikasi aktif melalui `AuthAdapter`. |
 | `saveAccount(): Promise<void>` | `public` | Operasi setter/persistensi (Update) untuk memperbarui data akun pengguna ke dalam basis data. |
@@ -1378,7 +1376,7 @@ Tabel 5.4.1. Operasi Kelas Session
 | `isOwnedBy(idMentor: string): boolean` | `public` | Memeriksa apakah pengguna dengan `idMentor` adalah host pembuat sesi ini. |
 | `involves(idUser: string): boolean` | `public` | Memeriksa apakah pengguna terlibat dalam sesi ini, baik sebagai Mentor pembuat sesi maupun Mentee peserta sesi. |
 | `hasStarted(): boolean` | `public` | Memeriksa apakah waktu mulai sesi (`scheduledTime`) telah terlewati. |
-| `needsConfirmation(now: Date): boolean` | `public` | Memeriksa apakah waktu sesi telah berakhir namun statusnya masih `TERJADWAL` sehingga membutuhkan konfirmasi keterlaksanaan. |
+| `needsConfirmation(now: Date): boolean` | `public` | Memeriksa apakah waktu selesai sesi (`endTime`) telah terlewati namun statusnya masih `TERJADWAL` sehingga membutuhkan konfirmasi keterlaksanaan. |
 | `getSessionDetails(): SessionData` | `public` | Operasi getter untuk mengembalikan bungkusan rincian data sesi (`SessionData`). |
 | `getSessionStatus(): SessionStatus` | `public` | Operasi getter untuk mengembalikan status sesi saat ini. |
 | `setStatus(status: SessionStatus, reason?: string): Promise<Session>` | `public` | Operasi setter (Update) untuk memperbarui status keterlaksanaan sesi beserta alasan opsional di basis data. |
@@ -1387,15 +1385,16 @@ Tabel 5.4.1. Operasi Kelas Session
 | `markAsDeleted(): Promise<boolean>` | `public` | Operasi setter (*soft delete* / Update) untuk mengubah status sesi menjadi `DIBATALKAN` di basis data. |
 | `markReminderSent(): Promise<boolean>` | `public` | Operasi setter (Update) untuk menandai bahwa notifikasi pengingat 15 menit untuk sesi ini telah dikirim. |
 | `openGroupChat(): Promise<GroupChat \| null>` | `public` | Mengambil objek `GroupChat` yang terhubung dengan sesi ini (`GroupChat.findBySession(this.idSession)`). |
-| `pushNotification(): Promise<void>` | `public` | Membuat pengingat `Notification` untuk seluruh partisipan sesi. |
+| `pushNotification(): Promise<void>` | `public` | Membuat pengingat `Notification` untuk seluruh partisipan sesi. *(Tidak diimplementasikan: pemicu pengingat dipindahkan ke pekerjaan terjadwal melalui `CronAdapter` dan `NotificationController` (UC09).)* |
 | `getSessionID(): string` | `public` | Operasi getter untuk mengembalikan identitas unik sesi (`idSession`). |
 | `getTopic(): string` | `public` | Operasi getter untuk mengembalikan topik materi sesi (`topic`). |
 | `getFormat(): SessionFormat` | `public` | Operasi getter untuk mengembalikan format pelaksanaan sesi (`format`). |
-| `getScheduledTime(): Date` | `public` | Operasi getter untuk mengembalikan waktu terjadwal sesi (`scheduledTime`). |
-| `editTitle(title: string): void` | `public` | Operasi setter untuk memperbarui judul/topik sesi pada objek. |
+| `getScheduledTime(): Date` | `public` | Operasi getter untuk mengembalikan waktu mulai sesi (`scheduledTime`). |
+| `getEndTime(): Date` | `public` | Operasi getter untuk mengembalikan waktu selesai sesi (`endTime`). |
+| `editTitle(title: string): void` | `public` | Operasi setter untuk memperbarui judul/topik sesi pada objek. *(Tidak diimplementasikan: pembaruan sesi dilakukan sekaligus melalui `SessionControl.editSession()` dan `saveSession()` (Q-C04-02).)* |
 | `editDescription(description: string): void` | `public` | Operasi setter untuk memperbarui deskripsi sesi pada objek. |
 | `editPreference(format: SessionFormat, capacity: number): void` | `public` | Operasi setter untuk memperbarui format dan batas kapasitas sesi pada objek. |
-| `editSchedule(schedule: Date, scheduledTime: Date): void` | `public` | Operasi setter untuk memperbarui tanggal dan waktu jadwal sesi pada objek. |
+| `editSchedule(schedule: Date, scheduledTime: Date, endTime: Date): void` | `public` | Operasi setter untuk memperbarui tanggal, waktu mulai, dan waktu selesai sesi pada objek. |
 
 Tabel 5.4.2. Atribut Kelas Session
 
@@ -1407,6 +1406,8 @@ Tabel 5.4.2. Atribut Kelas Session
 | `description` | `private` | `string` |
 | `schedule` | `private` | `Date` |
 | `scheduledTime` | `private` | `Date` |
+| `endTime` | `private` | `Date` |
+| `meetingLink` | `private` | `string \| null` |
 | `format` | `private` | `SessionFormat` |
 | `capacity` | `private` | `number` |
 | `userList` | `private` | `User[]` |
@@ -1426,14 +1427,16 @@ FUNCTION saveSession(): Promise<Session>
     IF THIS.idSession IS NULL THEN
         row <- AWAIT Database.executeQuery(Q-C04-01, [
             THIS.idMentor, THIS.topic, THIS.description,
-            THIS.schedule, THIS.scheduledTime, THIS.format, THIS.capacity
+            THIS.schedule, THIS.scheduledTime, THIS.endTime, THIS.meetingLink,
+            THIS.format, THIS.capacity
         ])
         THIS.idSession <- row.id_session
         THIS.status <- row.status
     ELSE
         AWAIT Database.executeQuery(Q-C04-02, [
             THIS.topic, THIS.description, THIS.schedule,
-            THIS.scheduledTime, THIS.format, THIS.capacity, THIS.idSession
+            THIS.scheduledTime, THIS.endTime, THIS.meetingLink,
+            THIS.format, THIS.capacity, THIS.idSession
         ])
     END IF
     RETURN THIS
@@ -1480,10 +1483,10 @@ Tabel 5.4.3. Query Operasi Kelas Session
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *Q-C04-01* | `INSERT INTO sessions (id_mentor, topic, description, schedule, scheduled_time, format, capacity, status) VALUES ($1, $2, $3, $4, $5, $6, $7, 'TERJADWAL');` | Menyimpan sesi belajar baru ke dalam tabel `sessions` (operasi Create pada `saveSession`). |
-| *Q-C04-02* | `UPDATE sessions SET topic = $1, description = $2, schedule = $3, scheduled_time = $4, format = $5, capacity = $6 WHERE id_session = $7;` | Memperbarui rincian data sesi yang diedit oleh Mentor (operasi Update pada `saveSession`). |
+| *Q-C04-01* | `INSERT INTO sessions (id_mentor, topic, description, schedule, scheduled_time, end_time, meeting_link, format, capacity, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'TERJADWAL');` | Menyimpan sesi belajar baru ke dalam tabel `sessions` (operasi Create pada `saveSession`). |
+| *Q-C04-02* | `UPDATE sessions SET topic = $1, description = $2, schedule = $3, scheduled_time = $4, end_time = $5, meeting_link = $6, format = $7, capacity = $8 WHERE id_session = $9;` | Memperbarui rincian data sesi yang diedit oleh Mentor (operasi Update pada `saveSession`). |
 | *Q-C04-03* | `SELECT * FROM sessions WHERE id_session = $1;` | Mengambil data sesi berdasarkan `id_session` (operasi Read pada `getSessionById`). |
-| *Q-C04-04* | `SELECT * FROM sessions WHERE id_mentor = $1 AND status = 'TERJADWAL' AND scheduled_time BETWEEN $2 AND $3;` | Mengambil sesi aktif milik Mentor pada rentang waktu tertentu untuk memeriksa konflik jadwal (operasi Read pada `getSessionsByMentorInRange`). |
+| *Q-C04-04* | `SELECT * FROM sessions WHERE id_mentor = $1 AND status = 'TERJADWAL' AND scheduled_time < $3 AND end_time > $2;` | Mengambil sesi aktif milik Mentor yang rentang waktunya beririsan dengan rentang `$2`–`$3` (mulai sebelum rentang berakhir dan selesai setelah rentang dimulai) untuk memeriksa konflik jadwal (operasi Read pada `getSessionsByMentorInRange`). |
 | *Q-C04-05* | `SELECT * FROM sessions WHERE status = 'TERJADWAL' AND scheduled_time > $1;` | Mengambil kandidat sesi terbuka yang belum dimulai untuk proses *matchmaking* (operasi Read pada `getAvailableSessions`). |
 | *Q-C04-06* | `SELECT * FROM sessions WHERE id_mentor = $1 AND status = 'TERJADWAL';` | Mengambil daftar sesi aktif terdekat milik atau yang diikuti pengguna (operasi Read pada `getUpcomingByUser`). |
 | *Q-C04-07* | `SELECT * FROM sessions WHERE id_mentor = $1 AND status IN ('SELESAI', 'TIDAK_TERLAKSANA', 'DIBATALKAN');` | Mengambil riwayat arsip sesi berstatus akhir milik atau yang diikuti pengguna (operasi Read pada `getArchivedByUser`). |
@@ -1509,10 +1512,10 @@ Tabel 5.5.1. Operasi Kelas GroupChat
 | `isActive(): boolean` | `public` | Memeriksa apakah ruang obrolan sementara masih aktif (belum melewati batas retensi 48 jam setelah sesi selesai). |
 | `isMember(idUser: string): boolean` | `public` | Memeriksa apakah pengguna merupakan anggota ruang obrolan (Mentor pengampu atau Mentee yang terdaftar pada sesi). |
 | `getMessages(): Promise<ChatMessage[]>` | `public` | Operasi getter (Read) untuk mengambil daftar seluruh pesan dalam ruang obrolan dari basis data secara kronologis. |
-| `searchMessage(keyword: string): ChatMessage[]` | `public` | Menyaring pesan dalam riwayat obrolan berdasarkan kata kunci teks. |
+| `searchMessage(keyword: string): ChatMessage[]` | `public` | Menyaring pesan dalam riwayat obrolan berdasarkan kata kunci teks. *(Tidak diimplementasikan: tidak ada kebutuhan fungsional atau use case pencarian pesan; grup obrolan bersifat sementara sehingga riwayatnya pendek.)* |
 | `displayMessage(): ChatMessage[]` | `public` | Mengembalikan daftar pesan terurut secara kronologis untuk dirender oleh antarmuka. |
-| `editMessage(idMessage: string, text: string): Promise<boolean>` | `public` | Operasi setter (Update) untuk memperbarui isi teks pesan milik pengirim di dalam ruang obrolan aktif. |
-| `deleteMessage(idMessage: string): Promise<boolean>` | `public` | Operasi CRUD (Delete) untuk menghapus pesan dari ruang obrolan atau membersihkan pesan saat masa retensi 48 jam berakhir. |
+| `editMessage(idMessage: string, text: string): Promise<boolean>` | `public` | Operasi setter (Update) untuk memperbarui isi teks pesan milik pengirim di dalam ruang obrolan aktif. *(Tidak diimplementasikan: tidak ada kebutuhan fungsional atau use case pengeditan pesan (UC08 hanya mencakup pengiriman dan penerimaan pesan).)* |
+| `deleteMessage(idMessage: string): Promise<boolean>` | `public` | Operasi CRUD (Delete) untuk menghapus pesan dari ruang obrolan atau membersihkan pesan saat masa retensi 48 jam berakhir. *(Tidak diimplementasikan: penghapusan pesan per item tidak dibutuhkan oleh UC08; pembersihan retensi 48 jam dilakukan sekaligus oleh pekerjaan terjadwal pembersihan obrolan.)* |
 
 Tabel 5.5.2. Atribut Kelas GroupChat
 
@@ -1567,8 +1570,8 @@ Tabel 5.5.3. Query Operasi Kelas GroupChat
 | :--- | :--- | :--- |
 | *Q-C05-01* | `SELECT * FROM group_chats WHERE id_session = $1;` | Mengambil data ruang obrolan berdasarkan `id_session` (operasi Read pada `findBySession`). |
 | *Q-C05-02* | `SELECT * FROM group_chats WHERE id_group_chat = $1;` | Mengambil data ruang obrolan berdasarkan `id_group_chat` (operasi Read pada `findById`). |
-| *Q-C05-03* | `UPDATE chat_messages SET text = $1 WHERE id_message = $2;` | Memperbarui isi pesan pada ruang obrolan (operasi Update pada `editMessage`). |
-| *Q-C05-04* | `DELETE FROM chat_messages WHERE id_message = $1;` | Menghapus pesan tertentu dari ruang obrolan (operasi Delete pada `deleteMessage`). |
+| *Q-C05-03* | `UPDATE chat_messages SET text = $1 WHERE id_message = $2;` | Memperbarui isi pesan pada ruang obrolan (operasi Update pada `editMessage`). *(Tidak diimplementasikan, lihat operasi terkait.)* |
+| *Q-C05-04* | `DELETE FROM chat_messages WHERE id_message = $1;` | Menghapus pesan tertentu dari ruang obrolan (operasi Delete pada `deleteMessage`). *(Tidak diimplementasikan, lihat operasi terkait.)* |
 | *Q-C05-05* | `UPDATE group_chats SET is_active = FALSE WHERE id_group_chat = $1;` | Menonaktifkan ruang obrolan sementara yang telah melewati masa aktif 48 jam setelah sesi selesai. |
 
 ## 5.6 Kelas Feedback
@@ -2086,7 +2089,7 @@ FUNCTION processSessionCreation(idMentor: string, data: SessionData): Promise<Se
         THROW Error("SCHEDULE_CONFLICT")
     END IF
 
-    newSession <- NEW Session(idMentor, data.topic, data.schedule, data.format, data.capacity)
+    newSession <- NEW Session(idMentor, data.topic, data.description, data.schedule, data.startTime, data.endTime, data.meetingLink, data.format, data.capacity)
     savedSession <- AWAIT newSession.saveSession()
     THIS.session <- savedSession
     RETURN savedSession

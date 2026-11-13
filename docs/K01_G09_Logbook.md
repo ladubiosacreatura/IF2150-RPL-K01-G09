@@ -4,8 +4,8 @@
 
 | Informasi            | Keterangan   |
 | -------------------- | ------------ |
-| Kelas                | _K1_         |
-| Nomor Kelompok       | _9_          |
+| Kelas                | _K01_        |
+| Nomor Kelompok       | _G09_        |
 | Nama Kelompok        | _PindahCSUI_ |
 | Nama Perangkat Lunak | PeerUP       |
 
@@ -23,7 +23,14 @@
 
 ### Daftar Isi
 * [Milestone 1](#milestone-1)
-* Notes: Copy bagian Daftar Isi seperti Milestone 1 untuk Milestone berikutnya, contoh ``* [Milestone 2](#milestone-2)``. Ketika Daftar isi diklik maka akan langsung diarahkan ke bagian bawah sesuai dengan Milestone tujuan.
+* [Milestone 2](#milestone-2)
+* [Milestone 3](#milestone-3)
+* [Milestone 4](#milestone-4)
+* [Milestone 5](#milestone-5)
+* [Milestone 6](#milestone-6)
+* [Milestone 7](#milestone-7)
+* [Milestone 8](#milestone-8)
+* [Milestone 9](#milestone-9)
 
 
 ---
@@ -43,7 +50,7 @@
 | *02-09-2026* | *Markus Christiano Simanjuntak* | *Mengerjakan keseluruhan bab 1 versi akhir dengan topik utama SDG 4* | *1* | *Done* | *-* | 
 
 **Catatan/Evaluasi Milestone 1:**
-* *(Isi jika ada catatan khusus untuk asisten atau evaluasi singkat kerja tim)*
+* -
 
 ---
 ### Milestone 2
@@ -84,13 +91,13 @@
 | *16-09-2026* | *Hugo Daniel J N* | *Membuat beberapa classes* | *1* | *Done* | *-* |
 | *17-09-2026* | *Markus Christiano Simanjuntak* | *Mengikuti asistensi bersama asisten dan merangkum aturan pembagian kelas menjadi 3 layer (Boundary, Controller, Entity) beserta notasi panah UML* | *1.5* | *Done* | *-* |
 | *18-09-2026* | *David Christian* | *Membuat usecase diagram* | *1* | *Done* | *-* |
-| *23-09-2026* | *David Christian* | *Membuat usecase diagram dan merapihkan* | *2* | *Done* | *-* |
 | *19-09-2026* | *Markus Christiano Simanjuntak* | *Menambahkan kebutuhan dan skenario baru pada M2 dan M3 (US-25, US-26, A16, R26, KF19, UC14 Beranda Utama, dan UC15 Melihat Profil) serta merombak skenario UC06* | *1.5* | *Done* | *-* |
 | *20-09-2026* | *Markus Christiano Simanjuntak* | *-* | *1* | *Done* | *-* |
 | *21-09-2026* | *Markus Christiano Simanjuntak* | *Merevisi Tabel 4.1 Identifikasi Kelas (C01-C24) agar sesuai dengan arsitektur 3-layer (Boundary, Controller, Entity) dan menambahkan kelas HistoryPage (C24)* | *1* | *Done* | *Kelas pada draf awal masih tercampur antara urusan UI dan database sehingga harus dipecah ulang* |
 | *22-09-2026* | *Markus Christiano Simanjuntak* | *Merancang ulang Class Diagram dan tabel atribut/metode untuk UC05 dan UC06, serta memperbaiki kesalahan copy-paste tabel pada dokumen Bab 4.2* | *1.5* | *Done* | *-* |
-| *23-09-2026* | *Markus Christiano Simanjuntak* | *Menyusun Diagram Kelas Keseluruhan (Bab 4.3) beserta tabel rekapitulasi atribut/metode C01-C24 dan merapikan pemetaan Traceability (Bab 5)* | *2* | *Done* | *Menyatukan 24 kelas ke dalam satu diagram tanpa duplikasi cukup rumit dan ribet* |
 | *22-09-2026* | *Matthew Allen Reynaldo* | *Menyusun diagram kelas serta atribut dan metode kelas pada UC08 hingga UC12 (Bab 4.2)* | *2* | *Done* | *Diagram UC9 sulit dipahami karena kelas notifikasi masih sangat abstrak* |
+| *23-09-2026* | *David Christian* | *Membuat usecase diagram dan merapihkan* | *2* | *Done* | *-* |
+| *23-09-2026* | *Markus Christiano Simanjuntak* | *Menyusun Diagram Kelas Keseluruhan (Bab 4.3) beserta tabel rekapitulasi atribut/metode C01-C24 dan merapikan pemetaan Traceability (Bab 5)* | *2* | *Done* | *Menyatukan 24 kelas ke dalam satu diagram tanpa duplikasi cukup rumit dan ribet* |
 | *23-09-2026* | *Matthew Allen Reynaldo* | *Merevisi ulang diagram kelas beserta atribut dan metode kelas pada UC08 hingga UC12 (Bab 4.2)* | *2* | *Done* | *Terjadi perubahan pada kelas yang ingin diadakan* |
 | *23-09-2026* | *Matthew Allen Reynaldo* | *Menyusun diagram kelas keseluruhan (Bab 4.3)* | *2* | *Done* | *Penggabungan diagram sulit karena banyak koneksi yang bertabrakan antar kelas* |
 
@@ -100,21 +107,22 @@
 
 | Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
 |---|---|---|---|---|---|
-| *30-09-2026* | *Markus Christiano Simanjuntak* | *Menyusun tech stack untuk bab 2.5* | *0.5* | *Done* | ** |
+| *27-09-2026* | *Hugo Daniel J N* | *Menyusun sebagian besar pada bab 2.* | *1* | *Done* | *-* |
+| *30-09-2026* | *Markus Christiano Simanjuntak* | *Menyusun tech stack untuk bab 2.5* | *0.5* | *Done* | *-* |
 | *30-09-2026* | *Markus Christiano Simanjuntak* | *Menyusun dan melengkapi bagian kosong pada template SKPL (Daftar Perubahan, Bab 1, dan Bab 2.2 Komponen Eksternal)* | *0.5* | *Done* | *-* |
 | *30-09-2026* | *Markus Christiano Simanjuntak* | *Melakukan inspeksi konsistensi dokumen lintas tugas (M2 hingga M5), menemukan dan memperbaiki aktor yang terbalik pada US-21 dan US-22* | *0.5* | *Done* | *-* |
 | *30-09-2026* | *Markus Christiano Simanjuntak* | *Menyeragamkan aturan bisnis batas waktu group chat (menjadi 48 jam) dan pesan peringatan kapasitas sesi (maksimal 20 peserta) di seluruh dokumen* | *0.5* | *Done* | *-* |
 | *30-09-2026* | *Markus Christiano Simanjuntak* | *Merapikan urutan subbab pada dokumen Class Diagram dan merevisi penuh tabel Traceability agar seluruh Kebutuhan Fungsional terpetakan tanpa ada yang terlewat* | *0.5* | *Done* | *-* |
-| *30-09-2026* | *Markus Christiano Simanjuntak* | *Merapikan urutan subbab pada dokumen Class Diagram dan merevisi penuh tabel Traceability agar seluruh Kebutuhan Fungsional terpetakan tanpa ada yang terlewat* | *0.5* | *Done* | *-* |
-| *27-09-2026* | *Hugo Daniel J N* | *Menyusun sebagian besar pada bab 2.* | *1* | *Done* | *-* |
 
+---
 ### Milestone 6
 **Periode:** [30-09-2026] - [14-10-2026]
 
 | Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
 |---|---|---|---|---|---|
-| *28-10-2026* | *Markus Christiano Simanjuntak* | *Mengerjakan Bab 1, 2, dan 3* | *6* | *Done* | *Keos, pada matil di milestone ini. Instrruksi kurang jelas, banyak materi yang outside resources-nya terlalu outdated ataupun memang kurang dari sananya* |
+| *28-10-2026* | *Markus Christiano Simanjuntak* | *Mengerjakan Bab 1, 2, dan 3* | *6* | *Done* | *Keos, pada matil di milestone ini. Instruksi kurang jelas, banyak materi yang outside resources-nya terlalu outdated ataupun memang kurang dari sananya* |
 
+---
 ### Milestone 7
 **Periode:** [14-10-2026] - [21-10-2026]
 
@@ -125,6 +133,7 @@
 | *21-10-2026* | *Hugo Daniel J N* | *Menyusun Bab 5* | *1* | *Done* | *-* |
 | *21-10-2026* | *David Christian* | *Menyusun Bab 3* | *3* | *Done* | *-* |
 
+---
 ### Milestone 8
 **Periode:** [21-10-2026] - [28-10-2026]
 
@@ -136,5 +145,13 @@
 | *28-10-2026* | *Hugo Daniel J N* | *Bab 5 untuk C13 - C24* | *3* | *Done* | *-* |
 | *28-10-2026* | *David Christian* | *Bab 6* | *3* | *Done* | *-* |
 | *28-10-2026* | *Markus Christiano Simanjuntak* | *Memasukkan Bab 1, 2, 3, 4, 7, dan membuat form asistensi* | *1* | *Done* | *-* |
+
+---
+### Milestone 9
+**Periode:** [28-10-2026] - [11-11-2026]
+
+| Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
+|---|---|---|---|---|---|
+| | | | | | |
 
 ``Gunakan format penulisan Logbook yang sama untuk setiap Milestone dan pastikan pembuatan Daftar Isi juga sudah sesuai sebelum Logbook dikumpulkan. ``
