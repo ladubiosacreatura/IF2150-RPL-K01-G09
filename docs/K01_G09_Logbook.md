@@ -147,10 +147,16 @@
 
 ---
 ### Milestone 9
-**Periode:** [28-10-2026] - [11-11-2026]
+**Periode:** [28-10-2026] - [13-11-2026]
 
 | Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
 |---|---|---|---|---|---|
-| | | | | | |
+| *09-11-2026* | *Markus Christiano Simanjuntak* | *Me-review PR KF01 (#98) dan KF02 (#99)* | *1* | *Done* | *-* |
+| *11-11-2026* | *Markus Christiano Simanjuntak* | *Me-review dan merge PR KF17 (#106) dan KF10a (#108), menyelesaikan konflik merge KF10a, KF16, KF17* | *2* | *Done* | *Urutan merge PR yang saling bergantung sempat salah* |
+| *11-11-2026* | *Markus Christiano Simanjuntak* | *Implementasi KF10b (penilaian sesi) dan KF18 (melihat feedback sesi) beserta unit test* | *3* | *Done* | *-* |
+| *11-11-2026* | *Markus Christiano Simanjuntak* | *Implementasi KF11 (halaman riwayat sesi) dan profiling serta optimasi query riwayat* | *3* | *Done* | *-* |
+| *13-11-2026* | *Markus Christiano Simanjuntak* | *Merge PR KF07, KF08, KF09, KF12 dan menyelesaikan konflik* | *1.5* | *Done* | *-* |
+| *13-11-2026* | *Markus Christiano Simanjuntak* | *Memindahkan PR KF13 dan KF15 milik Fabian ke branch dari development (#128, #129) dan menyesuaikan dengan DPPL* | *2* | *Done* | *PR awal dibuat dari main sehingga bentrok dengan development* |
+| *13-11-2026* | *Markus Christiano Simanjuntak* | *Merevisi dokumen M1–M8, mengisi laporan M9 (B.1–B.3), Form Asistensi, Logbook, dan AI-Usage* | *3* | *Done* | *-* |
 
 ``Gunakan format penulisan Logbook yang sama untuk setiap Milestone dan pastikan pembuatan Daftar Isi juga sudah sesuai sebelum Logbook dikumpulkan. ``

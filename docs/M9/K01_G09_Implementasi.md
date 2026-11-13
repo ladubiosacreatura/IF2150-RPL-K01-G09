@@ -243,6 +243,7 @@ Tabel B.2. Bukti Best Practices
 
 - Jalankan dari `src/`: `npm ci`, salin `.env.example` ke `.env.local` lalu isi nilainya, `npm run db:start` dan `npm run db:reset` (membutuhkan Docker), lalu `npm run dev`. Detail ada di `src/README.md`.
 - Akun uji (kata sandi `password123`): `mentor.demo@mahasiswa.itb.ac.id`, `mentee.satu@mahasiswa.itb.ac.id`, `mentee.dua@mahasiswa.itb.ac.id`.
+- Registrasi hanya menerima email universitas yang berakhiran `.ac.id`.
 - Memicu pengingat dan pembersihan obrolan secara manual: `curl -X POST -H "Authorization: Bearer <CRON_SECRET>" http://localhost:3000/api/cron/reminders` (atau `/api/cron/chat-cleanup`).
 
 ## B.4 Kontribusi Anggota
