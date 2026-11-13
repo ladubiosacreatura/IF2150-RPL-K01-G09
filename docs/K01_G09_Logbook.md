@@ -168,5 +168,8 @@
 | *13-11-2026* | *Markus Christiano Simanjuntak* | *Memindahkan PR KF13 dan KF15 milik Fabian ke branch dari development (#128, #129) dan menyesuaikan dengan DPPL* | *2* | *Done* | *PR awal dibuat dari main sehingga bentrok dengan development* |
 | *13-11-2026* | *Markus Christiano Simanjuntak* | *Merevisi dokumen M1–M8, mengisi laporan M9 (B.1–B.3), Form Asistensi, Logbook, dan AI-Usage* | *3* | *Done* | *-* |
 | *13-11-2026* | *David Christian* | *Mengisi B.4 dan B.5 laporan implementasi serta mengembalikan entri AI usage yang hilang saat merge* | *2* | *Done* | *Konflik merge `main` ke `development` pada dokumen AI usage* |
+| *10-11-2026* | *Hugo Daniel J N* | *Implement KF19 profile view* | *2.5* | *Done* | *-* |
+| *13-11-2026* | *Hugo Daniel J N* | *Implement KF07 home dashboard and session matchmaking* | *3* | *Done* | *-* |
+| *13-11-2026* | *Hugo Daniel J N* | *Implement KF08 implement join session* | *2* | *Done* | *-* |
 
 ``Gunakan format penulisan Logbook yang sama untuk setiap Milestone dan pastikan pembuatan Daftar Isi juga sudah sesuai sebelum Logbook dikumpulkan. ``

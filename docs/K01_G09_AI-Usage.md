@@ -107,7 +107,8 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 | *Claude* | *Meninjau `src/README.md` terhadap kode dan konfigurasi, lalu memperbaruinya: dua opsi setup (Supabase bersama dan lokal), catatan WSL, serta aturan branch dan PR ke `development`.* | *"review README in src does it align with the actual project"* | *Isi README kami cek ulang terhadap alur kerja kelompok yang sebenarnya. Kolom pemilik modul tetap kami isi sendiri.* |
 | Claude Code (Claude Opus 5.5) | Membantu merge PR yang terbuka secara berurutan dan memindahkan PR KF13 dan KF15 milik Fabian ke branch baru dari `development` dengan tetap mempertahankan commit penulisnya. | "Merge PR yang ada satu per satu dengan urutan yang tepat. Untuk PR Fabian, sesuaikan dengan spesifikasi tapi kontribusinya tetap terlihat." | Konflik besar dan perubahan kode dilaporkan dulu sebelum dieksekusi. Kode hasil port dicocokkan dengan DPPL2, diuji dengan lint, typecheck, test, dan build, lalu di-review Fabian sebelum merge. |
 | Claude Code (Claude Opus 5.5) | Menyusun draf laporan M9 bagian B.1–B.3 dan Logbook M9. | "Di M9, kerjakan B1, B2, dan B3." | Draf dicek terhadap kode di `development` dan riwayat PR; klaim yang tidak bisa dibuktikan di kode dihapus. Isi akhir diperiksa dan disesuaikan oleh kelompok. |
-
+| *Gemini Argon* | *Memahami issue spesifikasi dan rancangan implementasi untuk KF19, KF07, KF08* | *"Buatlah alur implementasi dan analisis rancangan untuk issue KFXX"* | *Memahami dengan konteks SKPL untuk memastikan tidak jauh dari DPPL* |
+| *Gemini Argon* | *Merealisasikan styling UI di HTML sesuai dengan yang di DPPL* | *"Buatlah style HTML untuk komponen ini"* | *Mengecek ulang hasil UInya dan memastikan output sesuai* |
 ---
 ### Pernyataan Integritas dan Persetujuan
 
