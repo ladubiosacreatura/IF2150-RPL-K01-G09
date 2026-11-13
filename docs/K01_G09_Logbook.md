@@ -147,10 +147,17 @@
 
 ---
 ### Milestone 9
-**Periode:** [28-10-2026] - [11-11-2026]
+**Periode:** [28-10-2026] - [13-11-2026]
 
 | Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
 |---|---|---|---|---|---|
-| | | | | | |
+| *02-11-2026* | *David Christian* | *Membuat scaffold aplikasi Next.js, struktur MVC, skema basis data beserta RLS dan seed, validator, serta README* | *4* | *Done* | *-* |
+| *03-11-2026* | *David Christian* | *Memperbaiki aturan RLS agar hanya mentor yang dapat mengubah sesi dan feedback hanya dapat diberikan peserta sesi* | *1* | *Done* | *-* |
+| *05-11-2026* | *David Christian* | *Menyusun template issue dan membuat issue untuk setiap KF* | *1* | *Done* | *-* |
+| *08-11-2026* | *David Christian* | *Implementasi KF01 registrasi, KF02 login, KF03 tag preferensi, dan KF04 jadwal ketersediaan* | *4* | *Done* | *-* |
+| *09-11-2026* | *David Christian* | *Memperbaiki temuan code review KF01-KF04 (logout, validasi slot waktu, sinkronisasi form preferensi)* | *2* | *Done* | *Akun baru tidak bisa login karena konfirmasi email aktif di Supabase* |
+| *11-11-2026* | *David Christian* | *Memperbarui README (opsi setup Supabase bersama dan lokal, aturan branch dan PR)* | *1* | *Done* | *-* |
+| *12-11-2026* | *David Christian* | *Implementasi KF09 notifikasi pengingat sesi dan KF12 grup obrolan sementara beserta unit test* | *5* | *Done* | *-* |
+| *13-11-2026* | *David Christian* | *Mengisi B.4 dan B.5 laporan implementasi serta mengembalikan entri AI usage yang hilang saat merge* | *2* | *Done* | *Konflik merge `main` ke `development` pada dokumen AI usage* |
 
 ``Gunakan format penulisan Logbook yang sama untuk setiap Milestone dan pastikan pembuatan Daftar Isi juga sudah sesuai sebelum Logbook dikumpulkan. ``
