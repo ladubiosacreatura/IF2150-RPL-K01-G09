@@ -1,6 +1,8 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import type {
+  Availability,
+  PreferenceData,
   SessionData,
   SessionFormat,
   SessionRow,
@@ -13,6 +15,143 @@ export class SessionScheduleConflictError extends Error {
     super("Tutor already has an overlapping scheduled session.");
     this.name = "SessionScheduleConflictError";
   }
+}
+
+export type UpcomingSession = {
+  idSession: string;
+  idMentor: string;
+  mentorName: string;
+  topic: string;
+  description: string;
+  materialTag: string;
+  schedule: string;
+  scheduledTime: string;
+  endTime: string;
+  format: SessionFormat;
+  capacity: number;
+  status: SessionStatus;
+  participantCount: number;
+  role: "MENTOR" | "MENTEE";
+};
+
+export type SessionCandidate = {
+  idSession: string;
+  idMentor: string;
+  mentorName: string;
+  topic: string;
+  description: string;
+  materialTag: string;
+  schedule: string;
+  scheduledTime: string;
+  endTime: string;
+  format: SessionFormat;
+  capacity: number;
+  status: SessionStatus;
+  participantCount: number;
+  participantIds: string[];
+};
+
+type ParticipationSessionRow = { sessions: SessionRow | null };
+type ProfileNameRow = { id_user: string; name: string };
+type ParticipantRefRow = { id_session: string; id_mentee: string };
+
+const WIB_OFFSET_MS = 7 * 60 * 60 * 1000;
+const MINUTES_PER_DAY = 24 * 60;
+
+function normalizeTag(value: string): string {
+  return value.trim().replace(/\s+/g, " ").toLowerCase();
+}
+
+function parseMinutes(value: string): number | null {
+  const match = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(value.trim());
+  if (!match) return null;
+  return Number(match[1]) * 60 + Number(match[2]);
+}
+
+function toWib(date: Date): { day: number; minutes: number; dateKey: string } {
+  const shifted = new Date(date.getTime() + WIB_OFFSET_MS);
+  const year = shifted.getUTCFullYear();
+  const month = String(shifted.getUTCMonth() + 1).padStart(2, "0");
+  const dayOfMonth = String(shifted.getUTCDate()).padStart(2, "0");
+  return {
+    day: shifted.getUTCDay(),
+    minutes: shifted.getUTCHours() * 60 + shifted.getUTCMinutes(),
+    dateKey: `${year}-${month}-${dayOfMonth}`,
+  };
+}
+
+function matchesAvailability(
+  slots: Availability[],
+  scheduledTime: string,
+  endTime: string,
+): boolean {
+  const startDate = new Date(scheduledTime);
+  const endDate = new Date(endTime);
+  if (!Number.isFinite(startDate.getTime()) || !Number.isFinite(endDate.getTime())) return false;
+  if (endDate <= startDate) return false;
+
+  const startWib = toWib(startDate);
+  const endWib = toWib(endDate);
+  const crossesDay = endWib.dateKey !== startWib.dateKey;
+  const sessionEndMinutes = crossesDay ? MINUTES_PER_DAY : endWib.minutes;
+
+  return slots.some((slot) => {
+    if (slot.day !== startWib.day) return false;
+    const slotStart = parseMinutes(slot.start);
+    const slotEnd = parseMinutes(slot.end);
+    if (slotStart === null || slotEnd === null || slotStart >= slotEnd) return false;
+    if (crossesDay && slot.end.trim() !== "23:59") return false;
+    const effectiveSlotEnd = slot.end.trim() === "23:59" ? MINUTES_PER_DAY : slotEnd;
+    return slotStart <= startWib.minutes && sessionEndMinutes <= effectiveSlotEnd;
+  });
+}
+
+export function matchSession(
+  preference: PreferenceData & { idUser?: string },
+  candidates: SessionCandidate[],
+  now: Date = new Date(),
+): SessionCandidate[] {
+  const formatPref = preference.sessionFormatPreference;
+  if (!formatPref || preference.availability.length === 0 || preference.materialTag.length === 0) {
+    return [];
+  }
+
+  const prefTags = new Set(preference.materialTag.map(normalizeTag).filter(Boolean));
+  if (prefTags.size === 0) return [];
+
+  const nowMs = now.getTime();
+  const idUser = preference.idUser;
+
+  return candidates
+    .filter((candidate) => {
+      if (candidate.status !== "TERJADWAL") return false;
+      if (idUser && candidate.idMentor === idUser) return false;
+      if (idUser && candidate.participantIds.includes(idUser)) return false;
+      if (candidate.capacity < 1 || candidate.participantCount >= candidate.capacity) return false;
+
+      const startMs = new Date(candidate.scheduledTime).getTime();
+      if (!Number.isFinite(startMs) || startMs <= nowMs) return false;
+
+      const formatMatch = formatPref === "BOTH" || candidate.format === formatPref;
+      if (!formatMatch) return false;
+
+      const candidateTag = normalizeTag(candidate.materialTag);
+      const candidateTopic = normalizeTag(candidate.topic);
+      const tagMatch =
+        (candidateTag !== "" && prefTags.has(candidateTag)) ||
+        (candidateTopic !== "" && prefTags.has(candidateTopic));
+      if (!tagMatch) return false;
+
+      return matchesAvailability(
+        preference.availability,
+        candidate.scheduledTime,
+        candidate.endTime,
+      );
+    })
+    .sort(
+      (left, right) =>
+        new Date(left.scheduledTime).getTime() - new Date(right.scheduledTime).getTime(),
+    );
 }
 
 export class Session {
@@ -147,7 +286,145 @@ export class Session {
 
     if (error) throw new Error(error.message);
     if (data === null) return null;
-    if (typeof data !== "number") throw new Error("Unable to read deleted session participant count.");
+    if (typeof data !== "number")
+      throw new Error("Unable to read deleted session participant count.");
     return data;
+  }
+
+  static async getUpcomingByUser(idUser: string): Promise<UpcomingSession[]> {
+    const supabase = await createClient();
+    const [mentorSessions, participations] = await Promise.all([
+      supabase
+        .from("sessions")
+        .select()
+        .eq("id_mentor", idUser)
+        .eq("status", "TERJADWAL")
+        .returns<SessionRow[]>(),
+      supabase
+        .from("session_participants")
+        .select("sessions(*)")
+        .eq("id_mentee", idUser)
+        .returns<ParticipationSessionRow[]>(),
+    ]);
+
+    if (mentorSessions.error) throw new Error(mentorSessions.error.message);
+    if (participations.error) throw new Error(participations.error.message);
+
+    const sessionsById = new Map<string, SessionRow>();
+    for (const session of mentorSessions.data) {
+      if (session.status === "TERJADWAL") sessionsById.set(session.id_session, session);
+    }
+    for (const { sessions: session } of participations.data) {
+      if (session && session.status === "TERJADWAL") {
+        sessionsById.set(session.id_session, session);
+      }
+    }
+
+    const sessions = [...sessionsById.values()];
+    if (sessions.length === 0) return [];
+
+    const [mentorNames, participantsBySession] = await Promise.all([
+      Session.findMentorNames(sessions.map((session) => session.id_mentor)),
+      Session.findParticipantsBySessions(sessions.map((session) => session.id_session)),
+    ]);
+
+    return sessions
+      .map((session) => ({
+        idSession: session.id_session,
+        idMentor: session.id_mentor,
+        mentorName: mentorNames.get(session.id_mentor) ?? "Mentor",
+        topic: session.topic,
+        description: session.description,
+        materialTag: session.material_tag,
+        schedule: session.schedule,
+        scheduledTime: session.scheduled_time,
+        endTime: session.end_time,
+        format: session.format,
+        capacity: session.capacity,
+        status: session.status,
+        participantCount: participantsBySession.get(session.id_session)?.length ?? 0,
+        role: session.id_mentor === idUser ? ("MENTOR" as const) : ("MENTEE" as const),
+      }))
+      .sort(
+        (left, right) =>
+          new Date(left.scheduledTime).getTime() - new Date(right.scheduledTime).getTime(),
+      );
+  }
+
+  static async getAvailableSessions(now: Date = new Date()): Promise<SessionCandidate[]> {
+    const supabase = await createClient();
+    const { data: sessions, error } = await supabase
+      .from("sessions")
+      .select()
+      .eq("status", "TERJADWAL")
+      .gt("scheduled_time", now.toISOString())
+      .order("scheduled_time", { ascending: true })
+      .returns<SessionRow[]>();
+
+    if (error) throw new Error(error.message);
+    if (sessions.length === 0) return [];
+
+    const [mentorNames, participantsBySession] = await Promise.all([
+      Session.findMentorNames(sessions.map((session) => session.id_mentor)),
+      Session.findParticipantsBySessions(sessions.map((session) => session.id_session)),
+    ]);
+
+    return sessions.map((session) => {
+      const participantIds = participantsBySession.get(session.id_session) ?? [];
+      return {
+        idSession: session.id_session,
+        idMentor: session.id_mentor,
+        mentorName: mentorNames.get(session.id_mentor) ?? "Mentor",
+        topic: session.topic,
+        description: session.description,
+        materialTag: session.material_tag,
+        schedule: session.schedule,
+        scheduledTime: session.scheduled_time,
+        endTime: session.end_time,
+        format: session.format,
+        capacity: session.capacity,
+        status: session.status,
+        participantCount: participantIds.length,
+        participantIds,
+      };
+    });
+  }
+
+  private static async findMentorNames(mentorIds: string[]): Promise<Map<string, string>> {
+    const uniqueIds = [...new Set(mentorIds)];
+    if (uniqueIds.length === 0) return new Map();
+
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("id_user, name")
+      .in("id_user", uniqueIds)
+      .returns<ProfileNameRow[]>();
+
+    if (error) throw new Error(error.message);
+    return new Map(data.map((profile) => [profile.id_user, profile.name]));
+  }
+
+  private static async findParticipantsBySessions(
+    sessionIds: string[],
+  ): Promise<Map<string, string[]>> {
+    const uniqueIds = [...new Set(sessionIds)];
+    if (uniqueIds.length === 0) return new Map();
+
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("session_participants")
+      .select("id_session, id_mentee")
+      .in("id_session", uniqueIds)
+      .returns<ParticipantRefRow[]>();
+
+    if (error) throw new Error(error.message);
+    const result = new Map<string, string[]>();
+    for (const row of data) {
+      const existing = result.get(row.id_session) ?? [];
+      existing.push(row.id_mentee);
+      result.set(row.id_session, existing);
+    }
+    return result;
   }
 }
