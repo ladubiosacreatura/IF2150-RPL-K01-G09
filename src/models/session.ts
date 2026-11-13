@@ -24,6 +24,13 @@ export class SessionAlreadyJoinedError extends Error {
   }
 }
 
+export class SessionFullError extends Error {
+  constructor() {
+    super("Session has reached its participant capacity.");
+    this.name = "SessionFullError";
+  }
+}
+
 export type UpcomingSession = {
   idSession: string;
   idMentor: string;
@@ -552,6 +559,7 @@ export class Session {
       .insert({ id_session: idSession, id_mentee: idMentee });
 
     if (error?.code === "23505") throw new SessionAlreadyJoinedError();
+    if (error?.message.includes("SESSION_FULL")) throw new SessionFullError();
     if (error) throw new Error(error.message);
   }
 

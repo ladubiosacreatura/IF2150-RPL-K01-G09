@@ -6,6 +6,7 @@ import { Preference } from "@/models/preference";
 import {
   Session,
   SessionAlreadyJoinedError,
+  SessionFullError,
   matchSession,
   type SessionCandidate,
   type SessionDetail,
@@ -157,6 +158,7 @@ export async function joinSession(
     return { ok: true, data: { idSession } };
   } catch (error) {
     if (error instanceof SessionAlreadyJoinedError) return { ok: false, error: "ALREADY_JOINED" };
+    if (error instanceof SessionFullError) return { ok: false, error: "SESSION_FULL" };
     return { ok: false, error: "JOIN_SESSION_FAILED" };
   }
 }

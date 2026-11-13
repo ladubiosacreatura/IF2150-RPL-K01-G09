@@ -19,7 +19,7 @@ const JOIN_ERRORS: Record<JoinSessionError, string> = {
   CANNOT_JOIN_OWN_SESSION: "Mentor tidak dapat bergabung ke sesinya sendiri.",
   ALREADY_JOINED: "Kamu sudah terdaftar pada sesi ini.",
   SESSION_NOT_AVAILABLE: "Sesi sudah dimulai atau tidak lagi tersedia.",
-  SESSION_FULL: "Sesi sudah penuh",
+  SESSION_FULL: "Sesi penuh. Kuota peserta sudah terpenuhi, kamu tidak bisa bergabung.",
   JOIN_SESSION_FAILED: "Gagal bergabung ke sesi. Coba lagi beberapa saat lagi.",
 };
 
@@ -113,6 +113,7 @@ export default function ParticipantSessionPanel({
 
   const joined = isParticipant || justJoined;
   const isFull = participantCount >= capacity;
+  const showFullNotice = !isMentor && !joined && isFull && error !== JOIN_ERRORS.SESSION_FULL;
 
   function onJoin() {
     setError(null);
@@ -129,6 +130,7 @@ export default function ParticipantSessionPanel({
 
   return (
     <div className="space-y-3">
+      {showFullNotice && <Alert>{JOIN_ERRORS.SESSION_FULL}</Alert>}
       {error && <Alert>{error}</Alert>}
       {justJoined && <Alert tone="success">Berhasil bergabung</Alert>}
 
@@ -158,18 +160,13 @@ export default function ParticipantSessionPanel({
         </div>
       ) : (
         <div className="space-y-2.5">
-          {isFull && (
-            <p className="text-center text-xs font-semibold text-amber-600 dark:text-amber-400">
-              Penuh
-            </p>
-          )}
           <button
             type="button"
             onClick={onJoin}
             disabled={pending || isFull || !isAvailable}
             className={`w-full ${primaryButton}`}
           >
-            {pending ? "Memproses…" : isFull ? "Gabung Sesi" : "Gabung Sesi"}
+            {pending ? "Memproses…" : isFull ? "Sesi Penuh" : "Gabung Sesi"}
           </button>
           <p className="text-center text-xs text-neutral-500 dark:text-neutral-400">
             Kamu akan menerima pengingat 15 menit sebelum sesi dimulai.

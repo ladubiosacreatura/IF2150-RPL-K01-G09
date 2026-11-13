@@ -29,7 +29,7 @@ vi.mock("@/models/session", async (importOriginal) => {
   };
 });
 
-const { Session, SessionAlreadyJoinedError, matchSession, searchSession } =
+const { Session, SessionAlreadyJoinedError, SessionFullError, matchSession, searchSession } =
   await import("@/models/session");
 const {
   findRecommendation,
@@ -428,5 +428,13 @@ describe("joinSession / processRegistration", () => {
       error: "SESSION_NOT_AVAILABLE",
     });
     expect(sessionMocks.addParticipant).not.toHaveBeenCalled();
+  });
+
+  it("reports SESSION_FULL when the database guard rejects a concurrent join (KF13)", async () => {
+    sessionMocks.addParticipant.mockRejectedValueOnce(new SessionFullError());
+    await expect(joinSession(VALID_SESSION_ID)).resolves.toEqual({
+      ok: false,
+      error: "SESSION_FULL",
+    });
   });
 });
