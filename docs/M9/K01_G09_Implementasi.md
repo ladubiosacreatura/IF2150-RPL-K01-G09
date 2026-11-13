@@ -7,24 +7,26 @@ IMPLEMENTASI PERANGKAT LUNAK
 </h1>
 <br>
 
-## *Nama Perangkat Lunak*
-### *[Logo Perangkat Lunak]*
+## PeerUP
 
-### Untuk: *[Nama Asisten]*
+### <img alt="Arsitektur MVC PeerUP" src="./assets/Logo_PeerUP.jpeg" width="30%">
+
+### Untuk: Mikhael Andrian Yonatan
 
 Dipersiapkan oleh:
 | Informasi | Keterangan |
 | --- | --- |
-| Kelas | *\[Kelas\]* |
-| Kelompok | *\[Nomor Kelompok\]*  |
+| Kelas | *K01* |
+| Kelompok | *G09* |
+| Nama Kelompok | *PindahCSUI*|
 
-| NIM | Nama |
-|---|---|
-| *[NIM 1]* | *[Nama Anggota 1]* |
-| *[NIM 2]* | *[Nama Anggota 2]* |
-| *[NIM 3]* | *[Nama Anggota 3]* |
-| *[NIM 4]* | *[Nama Anggota 4]* |
-| *[NIM 5]* | *[Nama Anggota 5]* |
+| NIM        | Nama                                 |
+|---         |---                                   |
+| *13525049* | *Hugo Daniel Johansen Napitupulu*    |
+| *13525001* | *Matthew Allen Reynaldo*             |
+| *13525010* | *Fabian Amzar Susanto*               |
+| *13525025* | *David Christian*                    |
+| *13525028* | *Markus Christiano Simanjuntak*      |
 ---
 
 > **Petunjuk pengerjaan:** *[Silahkan hapus bagian ini setelah selesai mengerjakan]*
@@ -33,7 +35,7 @@ Dipersiapkan oleh:
 
 ---
 
-**Deadline:** Rabu, 11 November 2026, 21.50 WIB
+**Deadline:** Jumat, 13 November 2026, 21.50 WIB
 **Asistensi akbar:** *[Hari, DD Bulan YYYY, HH.MM WIB, lokasi/link]*
 
 ---
