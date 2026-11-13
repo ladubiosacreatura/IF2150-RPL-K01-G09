@@ -32,6 +32,19 @@ export class Profile {
     return Profile.fromRow(row);
   }
 
+  static async findByUsers(idUsers: string[]): Promise<Profile[]> {
+    if (idUsers.length === 0) return [];
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("profiles")
+      .select()
+      .in("id_user", idUsers)
+      .overrideTypes<ProfileRow[], { merge: false }>();
+
+    if (error) throw new Error(error.message);
+    return data.map(Profile.fromRow);
+  }
+
   static async findByUser(idUser: string): Promise<Profile | null> {
     const supabase = await createClient();
     const { data, error } = await supabase

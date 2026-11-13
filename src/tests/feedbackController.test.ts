@@ -2,19 +2,21 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const user = vi.hoisted(() => ({ getCurrentUser: vi.fn() }));
 const history = vi.hoisted(() => ({ findForUser: vi.fn() }));
-const feedback = vi.hoisted(() => ({ create: vi.fn() }));
+const feedback = vi.hoisted(() => ({ create: vi.fn(), getFeedbackBySession: vi.fn() }));
+const session = vi.hoisted(() => ({ findForMentor: vi.fn() }));
 const feedbackErrors = vi.hoisted(() => ({
   FeedbackAlreadyExistsError: class FeedbackAlreadyExistsError extends Error {},
 }));
 
 vi.mock("@/controllers/userController", () => user);
 vi.mock("@/models/sessionHistory", () => ({ SessionHistory: history }));
+vi.mock("@/models/session", () => ({ Session: session }));
 vi.mock("@/models/feedback", () => ({
   Feedback: feedback,
   FeedbackAlreadyExistsError: feedbackErrors.FeedbackAlreadyExistsError,
 }));
 
-const { checkFeedbackEligibility, submitFeedback } =
+const { checkFeedbackEligibility, retrieveFeedbackBySession, submitFeedback } =
   await import("@/controllers/feedbackController");
 
 const idSession = "c2251aa3-8f25-4948-af2e-0421a8cedb1c";
@@ -131,6 +133,105 @@ describe("submitFeedback", () => {
     await expect(submitFeedback(idSession, 4, "")).resolves.toEqual({
       ok: false,
       error: "FEEDBACK_SUBMISSION_FAILED",
+    });
+  });
+});
+
+describe("retrieveFeedbackBySession", () => {
+  const hostedSession = (status = "SELESAI") => ({
+    session: {
+      idSession,
+      idMentor: "mentor-1",
+      topic: "Review SKPL",
+      materialTag: "RPL",
+      status,
+      schedule: "2026-10-21",
+      scheduledTime: "2026-10-21T08:00:00Z",
+      endTime: "2026-10-21T09:30:00Z",
+    },
+    participantCount: 3,
+  });
+  const entry = (idFeedback: string, rating: number) => ({
+    idFeedback,
+    idMentee: `mentee-${idFeedback}`,
+    menteeName: "Mentee Fiktif",
+    rating,
+    comment: "",
+    date: "2026-10-21T10:00:00Z",
+  });
+
+  beforeEach(() => {
+    user.getCurrentUser.mockResolvedValue({ idUser: "mentor-1" });
+    session.findForMentor.mockResolvedValue(hostedSession());
+    feedback.getFeedbackBySession.mockResolvedValue([entry("a", 5), entry("b", 5), entry("c", 4)]);
+  });
+
+  it("returns the session feedback with the average and rating distribution", async () => {
+    const result = await retrieveFeedbackBySession(idSession);
+
+    expect(session.findForMentor).toHaveBeenCalledWith(idSession, "mentor-1");
+    expect(feedback.getFeedbackBySession).toHaveBeenCalledWith(idSession);
+    expect(result).toMatchObject({
+      ok: true,
+      data: {
+        session: { idSession, topic: "Review SKPL", status: "SELESAI" },
+        participantCount: 3,
+        averageRating: 4.7,
+        ratingCounts: [
+          { rating: 5, count: 2 },
+          { rating: 4, count: 1 },
+          { rating: 3, count: 0 },
+          { rating: 2, count: 0 },
+          { rating: 1, count: 0 },
+        ],
+      },
+    });
+    expect(result.ok && result.data.feedbacks).toHaveLength(3);
+  });
+
+  it("returns an empty summary when no mentee has given feedback", async () => {
+    feedback.getFeedbackBySession.mockResolvedValueOnce([]);
+    await expect(retrieveFeedbackBySession(idSession)).resolves.toMatchObject({
+      ok: true,
+      data: { feedbacks: [], averageRating: 0 },
+    });
+  });
+
+  it("rejects guests and malformed session ids", async () => {
+    user.getCurrentUser.mockResolvedValueOnce(null);
+    await expect(retrieveFeedbackBySession(idSession)).resolves.toEqual({
+      ok: false,
+      error: "UNAUTHORIZED",
+    });
+    await expect(retrieveFeedbackBySession("bad-id")).resolves.toEqual({
+      ok: false,
+      error: "INVALID_SESSION_ID",
+    });
+  });
+
+  it("only lets the session host read the feedback", async () => {
+    session.findForMentor.mockResolvedValueOnce(null);
+    await expect(retrieveFeedbackBySession(idSession)).resolves.toEqual({
+      ok: false,
+      error: "NOT_SESSION_HOST",
+    });
+    expect(feedback.getFeedbackBySession).not.toHaveBeenCalled();
+  });
+
+  it("rejects sessions that are not completed", async () => {
+    session.findForMentor.mockResolvedValueOnce(hostedSession("TERJADWAL"));
+    await expect(retrieveFeedbackBySession(idSession)).resolves.toEqual({
+      ok: false,
+      error: "SESSION_NOT_COMPLETED",
+    });
+    expect(feedback.getFeedbackBySession).not.toHaveBeenCalled();
+  });
+
+  it("reports lookup failures", async () => {
+    feedback.getFeedbackBySession.mockRejectedValueOnce(new Error("network"));
+    await expect(retrieveFeedbackBySession(idSession)).resolves.toEqual({
+      ok: false,
+      error: "FEEDBACK_LOOKUP_FAILED",
     });
   });
 });
