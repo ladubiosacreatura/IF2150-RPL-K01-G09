@@ -186,14 +186,22 @@ Ketentuan:
 
 ## B.1 Perubahan dari DPPL
 
-Catat semua perbedaan antara perancangan (DPPL) dan implementasi akhir. Jika tidak ada perubahan, tuliskan "Tidak ada perubahan".
-
 Tabel B.1. Perubahan dari DPPL
 
 | No | Bagian DPPL | Rancangan Awal | Implementasi Akhir | Alasan |
 | :--- | :--- | :--- | :--- | :--- |
-| 1 | *[mis. Kelas C05, layar I-03, tabel `orders`]* | *[Yang direncanakan]* | *[Yang dibuat]* | *[Alasan perubahan]* |
-| *...* | *...* | *...* | *...* | *...* |
+| 1 | C02 Mentor, C03 Mentee | Kelas tersendiri yang mewarisi *User* | Tidak menjadi kelas; peran ditentukan oleh kolom `sessions.id_mentor` dan tabel `session_participants` | Satu pengguna dapat menjadi mentor sekaligus mentee, sehingga peran lebih tepat sebagai relasi daripada subkelas |
+| 2 | C13 SessionControl / *SessionController* | Satu *controller* untuk seluruh operasi sesi | Dipecah menjadi `sessionController.ts`, `sessionParticipationController.ts`, dan `sessionHistoryController.ts` | Mengikuti pembagian modul antaranggota agar perubahan tidak saling bertabrakan |
+| 3 | C17, C18, C19 *SessionView* | Satu komponen *SessionView* untuk mentor dan mentee | Halaman `app/sessions/[id]/page.tsx` dengan panel terpisah (`HostSessionPanel`, `EditSessionPanel`, `ParticipantSessionPanel`, `DeleteSessionButton`) dan *route* `/sessions/new`, `/sessions/[id]/edit` | Komponen kecil per peran lebih mudah diuji dan dikerjakan paralel |
+| 4 | C15 LoginPage | Satu halaman dengan `formMode` login/registrasi | Dua *route*: `/login` dan `/register` | Lebih sederhana dan setiap URL dapat diakses langsung |
+| 5 | UC11 Konfirmasi Keterlaksanaan, `processSessionConfirmation()` | Tombol "Terlaksana"/"Tidak Terlaksana" pada halaman detail sesi | `processSessionCompletion()` pada halaman riwayat/feedback, memanggil RPC SQL `confirm_session()` | Konfirmasi dan feedback berada pada alur yang sama setelah sesi berakhir; RPC menjamin perubahan status atomik |
+| 6 | C04 Session, `checkCapacity()` (KF13, KF14) | Pemeriksaan kapasitas di *controller* | Tetap di *controller*, ditambah *trigger* SQL `enforce_session_capacity()` (`SESSION_FULL`) | Mencegah kapasitas terlampaui saat dua mentee bergabung bersamaan (*race condition*) |
+| 7 | KF06 Tabrakan jadwal mentor | Validasi `validateScheduleConflict()` di *controller* | Validasi di *controller* ditambah *exclusion constraint* `btree_gist` pada tabel `sessions` untuk sesi `TERJADWAL` | Aturan bisnis tetap terjaga di basis data meskipun ada permintaan bersamaan |
+| 8 | C04 Session, `markAsDeleted()` (KF16) | *Soft delete* lewat `markAsDeleted()` | Fungsi SQL `delete_session()` yang mengubah status menjadi Dibatalkan dan memberi notifikasi peserta; `notifications.id_session` menjadi *nullable* (`on delete set null`) | Perubahan status dan notifikasi dijalankan dalam satu transaksi |
+| 9 | Tabel `sessions` (KF17) | Atribut sesi pada DPPL | Kolom baru `material_tag` dan `meeting_link` | Dibutuhkan oleh formulir edit sesi dan tampilan detail |
+| 10 | C22 Notification, C05 GroupChat (KF09, KF12) | Pekerjaan terjadwal dari *Cron* | *Route* `app/api/cron/reminders` dan `app/api/cron/chat-cleanup` yang dilindungi `CRON_SECRET` dan memanggil fungsi SQL `send_session_reminders()` serta `close_expired_group_chats()` | Dapat dipanggil penjadwal eksternal apa pun dan aman dipanggil berulang |
+| 11 | C06 Feedback, `existsBySessionAndAuthor()` | Operasi pemeriksaan terpisah | *Unique constraint* (`id_session`, `id_mentee`) yang memicu `FeedbackAlreadyExistsError` | Mencegah feedback ganda tanpa kueri tambahan |
+| 12 | C07 SessionHistory, `getArchivedSessions()` | Operasi pada *SessionController* | `SessionHistory.listForUser()` dengan satu kueri relasi `session_participants → sessions` dan kueri feedback paralel | Hasil optimasi profiling (B.2.1) |
 
 ## B.2 Bukti Penerapan Best Practices
 
@@ -201,29 +209,41 @@ Tabel B.2. Bukti Best Practices
 
 | Praktik | Bukti | Keterangan |
 | :--- | :--- | :--- |
-| Branching | *[Tautan ke daftar branch / graph commit]* | *[Skema yang dipakai]* |
-| Semantic commit | *[Tautan ke riwayat commit]* | *[Ringkasan]* |
-| Track tasks | *[Tautan ke Issues/Projects]* | *[Jumlah issue, pembagian]* |
-| Pull request dan review | *[Tautan ke 2-3 PR representatif]* | *[Siapa me-review siapa]* |
-| Pengujian | *[Tautan ke `src/tests/` dan hasil test]* | *[Apa yang diuji, cara menjalankan]* |
+| Branching | [Daftar branch](https://github.com/ladubiosacreatura/IF2150-RPL-K01-G09/branches/all), [graph commit](https://github.com/ladubiosacreatura/IF2150-RPL-K01-G09/network) | Skema `main` + `development`. Setiap KF dikerjakan di branch yang dibuat dari issue-nya (`<nomor-issue>-feat-kfXX-...`), digabung ke `development` lewat PR, lalu `development` digabung ke `main` untuk rilis `v9.0` |
+| Semantic commit | [Riwayat commit](https://github.com/ladubiosacreatura/IF2150-RPL-K01-G09/commits/development) | Format `<tipe>: <deskripsi>` dengan tipe `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, misalnya `feat: ...`, `fix: ...`, `test: ...` |
+| Track tasks | [Issues](https://github.com/ladubiosacreatura/IF2150-RPL-K01-G09/issues?q=is%3Aissue) | Satu issue per KF (KF01–KF19) dengan penanggung jawab sesuai Tabel B.4; PR menutup issue dengan `Closes #<n>` |
+| Pull request dan review | [#99 KF02](https://github.com/ladubiosacreatura/IF2150-RPL-K01-G09/pull/99), [#106 KF17](https://github.com/ladubiosacreatura/IF2150-RPL-K01-G09/pull/106), [#101 KF04](https://github.com/ladubiosacreatura/IF2150-RPL-K01-G09/pull/101), [#128 KF13](https://github.com/ladubiosacreatura/IF2150-RPL-K01-G09/pull/128) | Setiap PR berisi deskripsi, issue terkait, dan hasil pengujian. Contoh review: Markus me-review PR David (#98, #99) dan Matthew (#106, #108); Hugo me-review PR David (#100, #101); Fabian me-review #128. CI (lint, typecheck, test, build) berjalan di setiap PR |
+| Pengujian | [`src/tests/`](https://github.com/ladubiosacreatura/IF2150-RPL-K01-G09/tree/development/src/tests) | Vitest: 14 berkas uji untuk validator, *controller* (user, sesi, partisipasi, feedback, riwayat, chat), model, serta fungsi SQL (kapasitas, pengingat, grup obrolan) yang diuji pada PostgreSQL *in-memory* (PGlite) dengan seluruh migrasi. Jalankan `npm test` dari `src/` |
 
 ### B.2.1 Profiling dan Optimasi
 
-Pilih minimal satu fitur yang diprofil.
-
 | Informasi | Keterangan |
 | :--- | :--- |
-| Fitur / proses yang diprofil | *[Nama fitur]* |
-| Alat | *[mis. Chrome DevTools, cProfile, EXPLAIN]* |
-| Temuan (sebelum) | *[Bottleneck yang ditemukan, sertakan angka/tangkapan layar]* |
-| Perbaikan | *[Yang diubah]* |
-| Hasil (sesudah) | *[Perbandingan dengan sebelumnya]* |
-
-Jika tidak ada perbaikan yang perlu dilakukan, jelaskan hasil profiling dan alasan kenapa fitur tersebut sudah memadai.
+| Fitur / proses yang diprofil | Halaman riwayat sesi (KF11), `SessionHistory.listForUser()` |
+| Alat | Logging waktu respons (`performance.now()`) terhadap basis data Supabase *hosted*, median dari 20 kali pemanggilan per akun uji |
+| Temuan (sebelum) | Riwayat dibentuk dengan beberapa kueri berurutan (daftar ID sesi yang diikuti, lalu sesi, lalu feedback). Median: `mentor.demo` 744 ms, `mentee.dua` 598 ms, `mentee.satu` 583 ms |
+| Perbaikan | Mengambil sesi yang diikuti dalam satu kueri relasi `session_participants.select("sessions(*)")` dan menjalankan kueri feedback secara paralel (`Promise.all`) |
+| Hasil (sesudah) | Median: `mentor.demo` 242 ms (-67%), `mentee.dua` 393 ms (-34%), `mentee.satu` 429 ms (-26%); seluruhnya jauh di bawah batas 3 detik pada KNF05 |
 
 ## B.3 Kendala dan Catatan Penting
 
-Tuliskan kendala yang ditemui, fitur yang belum sempurna (*known issues*), serta hal yang perlu diketahui asisten saat menjalankan atau menilai aplikasi (misalnya akun uji khusus, urutan menjalankan, atau batasan).
+**Kendala**
+
+- Beberapa PR saling bergantung (KF10a, KF16, KF17 dan KF13, KF15), sehingga urutan *merge* sempat salah dan menimbulkan konflik. Konflik diselesaikan dengan menggabungkan ulang sesuai urutan ketergantungan.
+- PR KF13 dan KF15 awalnya dibuat dari `main` dan mengganti berkas secara utuh. Kodenya dipindahkan ke branch baru dari `development` dengan *cherry-pick* sehingga riwayat kontribusi penulis tetap terlihat (PR #128 dan #129).
+- Migrasi tidak otomatis diterapkan ke basis data *hosted*; satu anggota menerapkannya setelah PR digabung.
+
+**Known issues**
+
+- Pemeriksaan tabrakan jadwal mentee saat bergabung ke sesi (`validateParticipantSchedule()`, galat `PARTICIPANT_SCHEDULE_CONFLICT`) belum diimplementasikan; yang sudah ada adalah pemeriksaan tabrakan jadwal mentor (KF06).
+- Pengukuran KNF05 baru dilakukan di sisi server (B.2.1), belum melalui pengukuran *browser* (Lighthouse).
+- Pengingat (KF09) dan pembersihan grup obrolan (KF12) hanya berjalan bila *endpoint* cron dipanggil oleh penjadwal; tanpa penjadwal, panggil manual (lihat di bawah).
+
+**Catatan menjalankan aplikasi**
+
+- Jalankan dari `src/`: `npm ci`, salin `.env.example` ke `.env.local` lalu isi nilainya, `npm run db:start` dan `npm run db:reset` (membutuhkan Docker), lalu `npm run dev`. Detail ada di `src/README.md`.
+- Akun uji (kata sandi `password123`): `mentor.demo@mahasiswa.itb.ac.id`, `mentee.satu@mahasiswa.itb.ac.id`, `mentee.dua@mahasiswa.itb.ac.id`.
+- Memicu pengingat dan pembersihan obrolan secara manual: `curl -X POST -H "Authorization: Bearer <CRON_SECRET>" http://localhost:3000/api/cron/reminders` (atau `/api/cron/chat-cleanup`).
 
 ## B.4 Kontribusi Anggota
 
