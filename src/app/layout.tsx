@@ -38,7 +38,7 @@ export default async function RootLayout({
         ) : (
           children
         )}
-        <PopUpNotification />
+        {user && <PopUpNotification idUser={user.idUser} />}
       </body>
     </html>
   );
