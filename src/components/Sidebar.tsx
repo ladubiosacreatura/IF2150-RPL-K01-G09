@@ -56,7 +56,7 @@ export default function Sidebar({ user }: { user: CurrentUser }) {
   if (isAuthPath(pathname)) return null;
 
   return (
-    <aside className="sticky top-0 z-20 flex items-center gap-2 border-b border-neutral-200 bg-white/90 px-4 py-3 backdrop-blur md:h-screen md:w-64 md:shrink-0 md:flex-col md:items-stretch md:gap-0 md:border-r md:border-b-0 md:px-4 md:py-6 dark:border-neutral-800 dark:bg-neutral-950/90">
+    <aside className="sticky top-0 z-20 flex items-center gap-2 border-b border-neutral-200 bg-white/90 h-16 px-4 backdrop-blur md:h-screen md:w-64 md:shrink-0 md:flex-col md:items-stretch md:gap-0 md:border-r md:border-b-0 md:px-4 md:py-6 dark:border-neutral-800 dark:bg-neutral-950/90">
       <Link href="/dashboard" className="mr-2 text-lg font-semibold tracking-tight md:mr-0 md:px-3">
         PeerUP
       </Link>

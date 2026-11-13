@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCurrentUser } from "@/controllers/userController";
+import { GroupChat } from "@/models/groupChat";
 import { Session } from "@/models/session";
 import { secondaryButton } from "@/components/ui";
 import DeleteSessionButton from "@/components/DeleteSessionButton";
@@ -11,7 +12,11 @@ export const metadata: Metadata = { title: "Detail Sesi · PeerUP" };
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   if (!/^[\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12}$/i.test(id)) notFound();
-  const [session, user] = await Promise.all([Session.findById(id), getCurrentUser()]);
+  const [session, user, chat] = await Promise.all([
+    Session.findById(id),
+    getCurrentUser(),
+    GroupChat.findBySession(id),
+  ]);
   if (!session) notFound();
 
   const date = new Intl.DateTimeFormat("id-ID", {
@@ -65,6 +70,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         <p className="mt-6 text-sm text-neutral-500 dark:text-neutral-400">
           Batas peserta: {session.capacity}
         </p>
+        {chat && (
+          <Link href={`/sessions/${id}/chat`} className={`mt-6 inline-block ${secondaryButton}`}>
+            Buka Ruang Obrolan
+          </Link>
+        )}
       </section>
     </main>
   );
