@@ -22,6 +22,7 @@ const JOIN_ERRORS: Record<JoinSessionError, string> = {
   ALREADY_JOINED: "Kamu sudah terdaftar pada sesi ini.",
   SESSION_NOT_AVAILABLE: "Sesi sudah dimulai atau tidak lagi tersedia.",
   SESSION_FULL: "Sesi penuh. Kuota peserta sudah terpenuhi, kamu tidak bisa bergabung.",
+  PARTICIPANT_SCHEDULE_CONFLICT: "Jadwal sesi ini bertabrakan dengan sesi lain yang kamu ikuti.",
   JOIN_SESSION_FAILED: "Gagal bergabung ke sesi. Coba lagi beberapa saat lagi.",
 };
 

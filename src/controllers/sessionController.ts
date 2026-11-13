@@ -1,6 +1,6 @@
 "use server";
 
-import { validateCapacity } from "@/lib/validator";
+import { validateCapacity, validateSessionTime } from "@/lib/validator";
 import { getCurrentUser } from "@/controllers/userController";
 import { Session, SessionScheduleConflictError } from "@/models/session";
 import type { SessionData, SessionFormat, SessionUpdateData } from "@/models/types";
@@ -46,7 +46,7 @@ export async function processSessionCreation(
     !isValidDate(input.startTime) ||
     !isValidDate(input.endTime) ||
     input.startTime <= new Date() ||
-    input.endTime <= input.startTime
+    !validateSessionTime(input.startTime, input.endTime)
   ) {
     return fail("INVALID_SCHEDULE");
   }
@@ -90,14 +90,10 @@ export type SessionUpdateResult =
   { ok: true; data: { idSession: string } } | { ok: false; error: SessionUpdateError };
 
 export type SessionDeletionError =
-  | "UNAUTHORIZED"
-  | "INVALID_SESSION_ID"
-  | "SESSION_NOT_FOUND"
-  | "SESSION_DELETE_FAILED";
+  "UNAUTHORIZED" | "INVALID_SESSION_ID" | "SESSION_NOT_FOUND" | "SESSION_DELETE_FAILED";
 
 export type SessionDeletionResult =
-  | { ok: true; data: { participantCount: number } }
-  | { ok: false; error: SessionDeletionError };
+  { ok: true; data: { participantCount: number } } | { ok: false; error: SessionDeletionError };
 
 function isValidMeetingLink(value: string, format: SessionFormat): boolean {
   if (!value) return format === "LURING";
@@ -155,7 +151,7 @@ export async function processSessionUpdate(
     !isValidScheduleDate(input.schedule) ||
     !isValidDate(input.startTime) ||
     !isValidDate(input.endTime) ||
-    input.endTime <= input.startTime
+    !validateSessionTime(input.startTime, input.endTime)
   ) {
     return { ok: false, error: "INVALID_SCHEDULE" };
   }

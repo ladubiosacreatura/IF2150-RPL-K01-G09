@@ -30,7 +30,8 @@ const ERRORS: Record<SessionUpdateError, string> = {
   INVALID_TOPIC: "Judul sesi wajib diisi (maksimal 120 karakter).",
   INVALID_DESCRIPTION: "Deskripsi maksimal 500 karakter.",
   INVALID_MATERIAL_TAG: "Pilih satu tag materi.",
-  INVALID_SCHEDULE: "Pilih jadwal yang valid dan pastikan jam selesai setelah jam mulai.",
+  INVALID_SCHEDULE:
+    "Pilih jadwal yang valid: sesi harus dimulai dan selesai pada hari yang sama dengan durasi 10 menit hingga 12 jam.",
   INVALID_FORMAT: "Pilih format sesi.",
   INVALID_MEETING_LINK: "Masukkan tautan HTTP(S) yang valid untuk sesi daring.",
   INVALID_CAPACITY: "Batas peserta harus antara 1 dan 20 orang.",

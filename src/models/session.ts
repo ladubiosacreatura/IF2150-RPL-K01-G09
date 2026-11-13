@@ -24,6 +24,13 @@ export class SessionAlreadyJoinedError extends Error {
   }
 }
 
+export class ParticipantScheduleConflictError extends Error {
+  constructor() {
+    super("Mentee already joined another session at an overlapping time.");
+    this.name = "ParticipantScheduleConflictError";
+  }
+}
+
 export class SessionFullError extends Error {
   constructor() {
     super("Session has reached its participant capacity.");
@@ -560,6 +567,9 @@ export class Session {
 
     if (error?.code === "23505") throw new SessionAlreadyJoinedError();
     if (error?.message.includes("SESSION_FULL")) throw new SessionFullError();
+    if (error?.message.includes("PARTICIPANT_SCHEDULE_CONFLICT")) {
+      throw new ParticipantScheduleConflictError();
+    }
     if (error) throw new Error(error.message);
   }
 

@@ -7,6 +7,7 @@ import {
   Session,
   SessionAlreadyJoinedError,
   SessionFullError,
+  ParticipantScheduleConflictError,
   matchSession,
   type SessionCandidate,
   type SessionDetail,
@@ -45,6 +46,7 @@ export type JoinSessionError =
   | "ALREADY_JOINED"
   | "SESSION_NOT_AVAILABLE"
   | "SESSION_FULL"
+  | "PARTICIPANT_SCHEDULE_CONFLICT"
   | "JOIN_SESSION_FAILED";
 
 export type CancelSessionError =
@@ -170,6 +172,9 @@ export async function joinSession(
   } catch (error) {
     if (error instanceof SessionAlreadyJoinedError) return { ok: false, error: "ALREADY_JOINED" };
     if (error instanceof SessionFullError) return { ok: false, error: "SESSION_FULL" };
+    if (error instanceof ParticipantScheduleConflictError) {
+      return { ok: false, error: "PARTICIPANT_SCHEDULE_CONFLICT" };
+    }
     return { ok: false, error: "JOIN_SESSION_FAILED" };
   }
 }

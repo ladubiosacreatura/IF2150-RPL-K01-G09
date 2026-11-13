@@ -17,7 +17,8 @@ import type { SessionFormat } from "@/models/types";
 const ERRORS: Record<SessionCreationError, string> = {
   UNAUTHORIZED: "Sesi kamu berakhir. Silakan masuk kembali.",
   INVALID_TOPIC: "Judul sesi wajib diisi (maksimal 120 karakter).",
-  INVALID_SCHEDULE: "Pilih jadwal yang valid dan pastikan jam selesai setelah jam mulai.",
+  INVALID_SCHEDULE:
+    "Pilih jadwal yang valid: sesi harus dimulai dan selesai pada hari yang sama dengan durasi 10 menit hingga 12 jam.",
   INVALID_FORMAT: "Pilih format sesi.",
   INVALID_CAPACITY: "Batas peserta harus antara 1 dan 20 orang.",
   OVERLAPPING_SESSION:
