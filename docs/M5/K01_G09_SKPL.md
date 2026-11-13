@@ -39,6 +39,7 @@ Dipersiapkan oleh:
 | *F* | *Revisi November 2026: Menetapkan pemberi penilaian pada UC07 dan kelas C06 hanya Mentee; memperbaiki pemetaan KF19 menjadi R26 saja; mengganti penomoran aktor menjadi AKXX agar tidak bentrok dengan ID Aktivitas (AXX); menyeragamkan istilah Mentor pada KF dan skenario; memperbaiki ID kelas HistoryPage (C24) pada Subbab 5.2.6, teks alternatif gambar, nama UC10, dan salah ketik.* |
 <br>
 | *G* | *Revisi November 2026: Mengubah parameter KNF04 menjadi Security, menyamakan pemetaan use case C09, C12, dan C23 pada Subbab 5.1 dengan BAB 6, serta menyeragamkan nama atribut/operasi kelas.* |
+| *H* | *Revisi November 2026: Menambahkan batasan perangkat lunak nomor 8 (sesi tidak lintas hari, durasi 10 menit hingga 12 jam) dan nomor 9 (jadwal tidak beririsan untuk Mentor maupun Mentee), menambahkan KF20 dan KF21, memetakannya ke UC03, UC04, UC12 dan kelas terkait pada BAB 6, serta menambahkan skenario alternatif baru UC03, UC04, dan UC12.* |
 
 # BAB 1: Pendahuluan
 
@@ -170,6 +171,8 @@ Perangkat lunak berinteraksi dengan komponen eksternal berikut:
 5. *Perangkat lunak beroperasi pada peramban web browser dan memerlukan koneksi internet aktif.*
 6. *Kata sandi pengguna wajib dienkripsi menggunakan fungsi hashing kriptografi yang aman (seperti bcrypt atau Argon2) sebelum disimpan dalam basis data, dan tidak disimpan dalam bentuk plain-text.*
 7. *Pengelolaan data pribadi pengguna harus sesuai dengan UU No. 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP) dan UU No. 1 Tahun 2024 (UU ITE).*
+8. *Setiap sesi belajar harus dimulai dan berakhir pada tanggal yang sama (tidak lintas hari) dengan durasi minimal 10 menit dan maksimal 12 jam. Batasan ini menjaga keamanan peserta (menghindari sesi luring larut malam atau menginap), menjaga sesi tetap singkat dan terfokus, serta menyederhanakan pemeriksaan jadwal, pengingat, dan masa retensi group chat.*
+9. *Jadwal sesi tidak boleh saling beririsan untuk pengguna yang sama: Mentor tidak dapat membuat sesi yang bertabrakan dengan sesi miliknya, dan Mentee tidak dapat bergabung ke sesi yang bertabrakan dengan sesi lain yang sudah diikutinya.*
 
 ## 2.5 Lingkungan Operasi Perangkat Lunak
 | Komponen | Spesifikasi |
@@ -213,6 +216,8 @@ Tabel 3.1. Kebutuhan Fungsional
 | *KF17* | *R24* | *Ketika Mentor menyimpan pembaruan data sesi, sistem harus merekam revisi tersebut ke dalam basis data agar rincian terbaru segera ditampilkan.* |
 | *KF18* | *R25* | *Ketika Mentor mengakses riwayat sesi yang telah selesai, sistem harus menampilkan riwayat penilaian yang diberikan oleh Mentee.* |
 | *KF19* | *R26* | *Ketika pengguna menekan nama atau foto profil, sistem harus menampilkan halaman detail profil pengguna yang memuat informasi identitas dan tag materi.* |
+| *KF20* | *R27* | *Jika Mentor memasukkan jadwal sesi yang melewati pergantian hari, berdurasi kurang dari 10 menit, atau berdurasi lebih dari 12 jam saat membuat atau mengubah sesi, sistem harus menolak masukan dan menampilkan peringatan.* |
+| *KF21* | *R28* | *Jika Mentee meminta bergabung ke sesi yang jadwalnya beririsan dengan sesi lain yang sedang diikutinya, sistem harus menolak permintaan bergabung dan menampilkan peringatan jadwal bertabrakan.* |
 
 ## 3.2 Kebutuhan Non-Fungsional (KNF)
 Tabel 3.2. Kebutuhan Non-Fungsional
@@ -242,8 +247,8 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | :--- | :--- | :--- | :--- | :--- |
 | *UC01* | *Mendaftarkan Akun dan Autentikasi* | *Pengguna mendaftarkan akun baru menggunakan email universitas dan login ke dalam perangkat lunak.* | *Mentor, Mentee* | *KF01, KF02* |
 | *UC02* | *Mengelola Preferensi Profil* | *Pengguna mengatur dan menyimpan tag materi pelajaran serta ketersediaan waktu mereka masing-masing.* | *Mentee, Mentor* | *KF03, KF04* |
-| *UC03* | *Membuat Sesi Belajar* | *Mentor mengatur detail sesi baru seperti topik, jadwal, format, dan batasan jumlah peserta.* | *Mentor* | *KF05, KF06, KF14* |
-| *UC04* | *Mencari dan Bergabung ke Sesi* | *Mentee melihat daftar rekomendasi sesi yang cocok dengan preferensinya, lalu mendaftar ke sesi yang dia inginkan.* | *Mentee* | *KF07, KF08, KF13* |
+| *UC03* | *Membuat Sesi Belajar* | *Mentor mengatur detail sesi baru seperti topik, jadwal, format, dan batasan jumlah peserta.* | *Mentor* | *KF05, KF06, KF14, KF20* |
+| *UC04* | *Mencari dan Bergabung ke Sesi* | *Mentee melihat daftar rekomendasi sesi yang cocok dengan preferensinya, lalu mendaftar ke sesi yang dia inginkan.* | *Mentee* | *KF07, KF08, KF13, KF21* |
 | *UC05* | *Mengonfirmasi Keterlaksanaan Sesi* | *Pengguna menandai dan mengonfirmasi apakah sesi yang telah dijadwalkan benar-benar terlaksana.* | *Mentor, Mentee* | *KF10* |
 | *UC06* | *Melihat Riwayat Sesi* | *Pengguna melihat daftar arsip sesi yang telah selesai atau dibatalkan pada halaman khusus riwayat.* | *Mentor, Mentee* | *KF11, KF18* |
 | *UC07* | *Memberikan Penilaian Sehabis Sesi* | *Mentee memberi penilaian dan catatan terhadap sesi yang telah dikonfirmasi selesai.* | *Mentee* | *KF10* |
@@ -251,7 +256,7 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | *UC09* | *Menerima Notifikasi Sesi* | *Pengguna mendapatkan pengingat otomatis sebelum sesi belajar dimulai.* | *Mentor, Mentee* | *KF09* |
 | *UC10* | *Membatalkan Keikutsertaan Sesi* | *Mentee dapat membatalkan pengikutsertaan sesi yang sudah didaftarkan sebelumnya.* | *Mentee* | *KF15* |
 | *UC11* | *Menghapus Sesi* | *Mentor dapat menghapus sesi yang sudah dibuat sebelumnya.* | *Mentor* | *KF16* |
-| *UC12* | *Mengedit Sesi* | *Mentor dapat mengedit sesi yang sudah dibuat sebelumnya untuk mengganti jadwal atau rincian sesi.* | *Mentor* | *KF17, KF06, KF14* |
+| *UC12* | *Mengedit Sesi* | *Mentor dapat mengedit sesi yang sudah dibuat sebelumnya untuk mengganti jadwal atau rincian sesi.* | *Mentor* | *KF17, KF06, KF14, KF20* |
 | *UC13* | *Melihat Feedback Sesi* | *Mentor dapat mengakses dan membaca feedback yang dirancang oleh Mentee pada sesi yang telah selesai.* | *Mentor* | *KF18* |
 | *UC14* | *Membuka Beranda Utama* | *Pengguna melihat jadwal sesi terdekat dan rekomendasi matchmaking saat masuk ke aplikasi.* | *Mentor, Mentee* | *KF07* |
 | *UC15* | *Melihat Profil* | *Pengguna melihat informasi detail biodata diri sendiri atau orang lain.* | *Mentor, Mentee* | *KF19* |
@@ -355,6 +360,17 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | 3 | *Mentor melihat peringatan* | *Sistem menolak masukan, tidak menyimpan data, dan menampilkan pesan kesalahan "Jadwal bertabrakan dengan sesi lain"* |
 | 4 | *Mentor mengubah jam/tanggal pada formulir dan menekan "Simpan" sehingga jadwalnya tidak bertabrakan lagi* | *Sistem kembali ke langkah 3 pada Skenario Normal* |
 
+<br>
+
+**Skenario Alternatif 4: Jadwal Lintas Hari atau Durasi Sesi Tidak Valid**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Mentor memilih menu "Buat Sesi Baru"* | *Sistem menampilkan formulir pembuatan sesi (topik, jadwal, format daring/luring, dan batas peserta)* |
+| 2 | *Mentor mengisi form namun memilih jam selesai pada tanggal berikutnya atau durasi kurang dari 10 menit atau lebih dari 12 jam, lalu menekan "Simpan"* | *Sistem memvalidasi masukan formulir dan mendeteksi jadwal yang tidak valid* |
+| 3 | *Mentor melihat peringatan* | *Sistem menolak masukan, tidak menyimpan data, dan menampilkan pesan kesalahan "Sesi harus berlangsung pada hari yang sama dengan durasi 10 menit hingga 12 jam"* |
+| 4 | *Mentor memperbaiki jam mulai/selesai dan menekan "Simpan"* | *Sistem kembali ke langkah 3 pada Skenario Normal* |
+
 
 ### 4.4.4 Skenario UC04
 
@@ -378,6 +394,18 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | 1 | *Mentee membuka halaman "Cari Sesi"* | *Sistem mencoba mencocokkan (matchmaking) data profil Mentee dengan sesi yang tersedia* |
 | 2 | *Mentee melihat halaman kosong* | *Sistem tidak menemukan irisan materi atau jadwal yang cocok, lalu menampilkan pesan "Belum ada sesi yang cocok dengan jadwalmu"* |
 | 3 | *Mentee menekan tombol "Ubah Preferensi"* | *Sistem mengarahkan Mentee ke halaman pengaturan profil untuk mengubah ketersediaan waktu* |
+
+
+<br>
+
+**Skenario Alternatif 2: Jadwal Sesi Bertabrakan dengan Sesi yang Sudah Diikuti**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Mentee memilih salah satu sesi dan menekan "Gabung Sesi"* | *Sistem memvalidasi ketersediaan slot dan memeriksa jadwal sesi lain yang sudah diikuti Mentee* |
+| 2 | *Mentee melihat peringatan* | *Sistem mendeteksi jadwal beririsan, menolak permintaan bergabung, dan menampilkan pesan "Jadwal sesi ini bertabrakan dengan sesi lain yang kamu ikuti"* |
+| 3 | *Mentee memilih sesi lain yang jadwalnya tidak bertabrakan* | *Sistem kembali ke langkah 3 pada Skenario Normal* |
+
 
 ### 4.4.5 Skenario UC05
  
@@ -555,6 +583,19 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | 2 | *Mentor menekan tombol "Edit Sesi"* | *Sistem menampilkan formulir yang sudah terisi dengan data sesi saat ini (topik, jadwal, batas peserta, dan lain-lain) serta tombol "Simpan Perubahan"* |
 | 3 | *Mentor melakukan pengeditan terhadap batas maksimum peserta menjadi lebih sedikit dari batas minimum yang diperbolehkan dan mengonfirmasi perubahan tersebut* | *Sistem mendeteksi bahwa jumlah partisipan yang dimasukkan mentor lebih sedikit dari yang diperbolehkan, lalu menampilkan pesan peringatan jumlah partisipan terlalu sedikit* |
 | 4 | *Mentor menyesuaikan kembali batas pesertanya, lalu mengonfirmasi perubahan* | *Sistem memperbarui database dengan data yang telah direvisi agar tampilan sesuai, lalu memunculkan pesan "Data sesi berhasil diperbarui"* |
+
+
+<br>
+
+**Skenario Alternatif 3: Jadwal yang Direvisi Lintas Hari atau Durasinya Tidak Valid**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Mentor membuka detail sesi yang telah dia buat* | *Sistem menampilkan detail informasi sesi tersebut beserta tombol "Edit Sesi"* |
+| 2 | *Mentor menekan tombol "Edit Sesi"* | *Sistem menampilkan formulir yang sudah terisi dengan data sesi saat ini serta tombol "Simpan Perubahan"* |
+| 3 | *Mentor mengubah jam selesai ke tanggal berikutnya atau membuat durasi kurang dari 10 menit atau lebih dari 12 jam, lalu mengonfirmasi perubahan* | *Sistem menolak perubahan tanpa mengubah database dan menampilkan pesan "Sesi harus berlangsung pada hari yang sama dengan durasi 10 menit hingga 12 jam"* |
+| 4 | *Mentor memperbaiki jadwalnya, lalu mengonfirmasi perubahan* | *Sistem memperbarui database dengan data yang telah direvisi, lalu memunculkan pesan "Data Sesi Berhasil Diperbarui"* |
+
 
 ### 4.4.13 Skenario UC13
 
@@ -1217,7 +1258,7 @@ Matriks keterlacakan berikut mencocokkan setiap Kebutuhan Fungsional (KF), Use C
 | *C01* | *UC01, UC02, UC05, UC06, UC07, UC08, UC09, UC14, UC15* | *KF01, KF02, KF03, KF04, KF10, KF11, KF18, KF12, KF09, KF07, KF19* |
 | *C02* | *UC01, UC02, UC03, UC05, UC06, UC07, UC08, UC09, UC11, UC12, UC13, UC14, UC15* | *KF01, KF02, KF03, KF04, KF05, KF06, KF14, KF10, KF11, KF18, KF12, KF09, KF16, KF17, KF07, KF19* |
 | *C03* | *UC01, UC02, UC04, UC05, UC06, UC07, UC08, UC09, UC10, UC14, UC15* | *KF01, KF02, KF03, KF04, KF07, KF08, KF13, KF10, KF11, KF18, KF12, KF09, KF15, KF19* |
-| *C04* | *UC03, UC04, UC05, UC06, UC07, UC08, UC09, UC10, UC11, UC12, UC13, UC14* | *KF05, KF06, KF14, KF07, KF08, KF13, KF10, KF11, KF18, KF12, KF09, KF15, KF16, KF17* |
+| *C04* | *UC03, UC04, UC05, UC06, UC07, UC08, UC09, UC10, UC11, UC12, UC13, UC14* | *KF05, KF06, KF14, KF07, KF08, KF13, KF10, KF11, KF18, KF12, KF09, KF15, KF16, KF17, KF20, KF21* |
 | *C05* | *UC08* | *KF12* |
 | *C06* | *UC07, UC13* | *KF10, KF18* |
 | *C07* | *UC05, UC06, UC10, UC11, UC12, UC13* | *KF10, KF11, KF18, KF15, KF16, KF17, KF06, KF14* |
@@ -1226,13 +1267,13 @@ Matriks keterlacakan berikut mencocokkan setiap Kebutuhan Fungsional (KF), Use C
 | *C10* | *UC01, UC02, UC15* | *KF01, KF02, KF03, KF04, KF19* |
 | *C11* | *UC01, UC04, UC06, UC09, UC14* | *KF01, KF02, KF07, KF08, KF13, KF11, KF18, KF09* |
 | *C12* | *UC01, UC02, UC15* | *KF01, KF02, KF03, KF04, KF19* |
-| *C13* | *UC03, UC04, UC05, UC06, UC10, UC11, UC12, UC14* | *KF05, KF06, KF14, KF07, KF08, KF13, KF10, KF11, KF18, KF15, KF16, KF17* |
+| *C13* | *UC03, UC04, UC05, UC06, UC10, UC11, UC12, UC14* | *KF05, KF06, KF14, KF07, KF08, KF13, KF10, KF11, KF18, KF15, KF16, KF17, KF20, KF21* |
 | *C14* | *UC07, UC13* | *KF10, KF18* |
 | *C15* | *UC01* | *KF01, KF02* |
 | *C16* | *UC02, UC15* | *KF03, KF04, KF19* |
-| *C17* | *UC03, UC04, UC05, UC10, UC11, UC12* | *KF05, KF06, KF14, KF07, KF08, KF13, KF10, KF15, KF16, KF17* |
-| *C18* | *UC03, UC05, UC11, UC12, UC13* | *KF05, KF06, KF14, KF10, KF16, KF17, KF18* |
-| *C19* | *UC04, UC05, UC10* | *KF07, KF08, KF13, KF10, KF15* |
+| *C17* | *UC03, UC04, UC05, UC10, UC11, UC12* | *KF05, KF06, KF14, KF07, KF08, KF13, KF10, KF15, KF16, KF17, KF20* |
+| *C18* | *UC03, UC05, UC11, UC12, UC13* | *KF05, KF06, KF14, KF10, KF16, KF17, KF18, KF20* |
+| *C19* | *UC04, UC05, UC10* | *KF07, KF08, KF13, KF10, KF15, KF21* |
 | *C20* | *UC07, UC13* | *KF10, KF18* |
 | *C21* | *UC08* | *KF12* |
 | *C22* | *UC09* | *KF09* |

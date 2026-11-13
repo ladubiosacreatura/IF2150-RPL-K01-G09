@@ -38,6 +38,7 @@ Dipersiapkan oleh:
 | *B* | *Revisi November 2026: Menambahkan atribut `endTime` dan `meetingLink` pada kelas Session (C04) beserta kolom `end_time` dan `meeting_link` pada Q-C04-01 dan Q-C04-02, mengubah Q-C04-04 menjadi pemeriksaan irisan rentang waktu, serta menyesuaikan `needsConfirmation()`, `editSchedule()`, dan Algo-C13-01.* |
 | *C* | *Revisi November 2026: Mengganti penomoran aktor menjadi AKXX, menyeragamkan istilah Mentor, memperbaiki tingkat judul Subbab 2.3 dan 2.4.2, teks alternatif logo dan diagram, serta penyebutan dokumen SKPL pada Subbab 2.2.2.* |
 | *D* | *Revisi November 2026: Menyesuaikan penyebutan KNF04 menjadi Keamanan Validasi Email dan menandai operasi yang tidak diimplementasikan (register(), pushNotification(), editTitle(), searchMessage(), editMessage(), deleteMessage(), Q-C05-03, Q-C05-04) beserta alasannya.* |
+| *E* | *Revisi November 2026: Menambahkan aturan sesi tidak lintas hari dengan durasi 10 menit hingga 12 jam (`validateSessionTime()`, galat `INVALID_SCHEDULE`) serta larangan Mentee mengikuti sesi yang bertabrakan (`validateParticipantSchedule()`, `getSessionsByParticipantInRange()`, Q-C04-14, galat `PARTICIPANT_SCHEDULE_CONFLICT`) pada BAB 3 (UC03, UC04, UC12), BAB 4, BAB 5 (Algo-C13-01, Algo-C13-04), dan BAB 6 (I05-05, I06-03, I11-03).* |
 
 ---
 
@@ -431,6 +432,10 @@ Mentor memasukkan batas peserta 0 orang sehingga `validateCapacity()` bernilai `
 
 Kapasitas lolos validasi, tetapi `hasScheduleConflict()` pada *Validator* bernilai `true` karena jadwal beririsan dengan sesi lain milik Mentor yang sama. *SessionController* mengembalikan galat `SCHEDULE_CONFLICT` tanpa menyimpan data, dan *SessionView* menampilkan pesan "Jadwal bertabrakan dengan sesi lain". Setelah Mentor mengubah jam atau tanggal dan menekan "Simpan", alur berlanjut seperti skenario normal.
 
+- **Skenario Alternatif 4: Jadwal Lintas Hari atau Durasi Sesi Tidak Valid**
+
+Mentor memilih jam selesai pada tanggal berikutnya atau durasi di luar rentang 10 menit hingga 12 jam sehingga `validateSessionTime()` bernilai `false`. *SessionController* mengembalikan galat `INVALID_SCHEDULE` sebelum pemeriksaan tabrakan jadwal dan tidak menyimpan data. *SessionView* menampilkan pesan "Sesi harus berlangsung pada hari yang sama dengan durasi 10 menit hingga 12 jam". Setelah Mentor memperbaiki jadwal dan menekan "Simpan", alur berlanjut seperti skenario normal.
+
 ### 3.3.3 Diagram Kelas
 
 <p align="center">
@@ -484,6 +489,10 @@ Mentee membuka halaman "Cari Sesi", lalu *DashboardView* meminta rekomendasi ke 
 </p>
 
 `matchSession()` tidak menemukan irisan materi atau jadwal yang cocok sehingga *SessionController* mengembalikan daftar rekomendasi kosong. *DashboardView* menampilkan pesan "Belum ada sesi yang cocok dengan jadwalmu" beserta tombol "Ubah Preferensi". Saat tombol ditekan, Mentee diarahkan ke halaman pengaturan profil untuk mengubah ketersediaan waktu (UC02).
+
+- **Skenario Alternatif 2: Jadwal Sesi Bertabrakan dengan Sesi yang Sudah Diikuti**
+
+Saat Mentee menekan "Gabung Sesi", *SessionController* memeriksa sesi lain yang diikuti Mentee melalui `validateParticipantSchedule()`. Jika ada sesi berstatus Terjadwal yang rentang waktunya beririsan, *SessionController* mengembalikan galat `PARTICIPANT_SCHEDULE_CONFLICT` tanpa menambahkan Mentee ke daftar partisipan, dan *SessionView* menampilkan pesan "Jadwal sesi ini bertabrakan dengan sesi lain yang kamu ikuti".
 
 ### 3.4.3 Diagram Kelas
 
@@ -916,6 +925,10 @@ Mentor membuka detail sesi melalui *SessionView*, yang meminta data sesi ke *Ses
 
 *Validator* menyatakan kapasitas tidak valid sehingga *SessionController* mengembalikan galat `INVALID_CAPACITY` sebelum pemeriksaan jadwal dilakukan. *SessionView* menampilkan peringatan jumlah partisipan terlalu sedikit. Setelah Mentor memperbaiki batas peserta, alur berlanjut seperti skenario normal.
 
+- **Skenario Alternatif 3: Jadwal yang Direvisi Lintas Hari atau Durasinya Tidak Valid**
+
+`validateSessionTime()` bernilai `false` karena jam selesai berada pada tanggal berikutnya atau durasi di luar rentang 10 menit hingga 12 jam. *SessionController* mengembalikan galat `INVALID_SCHEDULE` tanpa mengubah basis data, dan *SessionView* menampilkan peringatan serta mempertahankan isi formulir. Setelah Mentor memperbaiki jadwal, alur berlanjut seperti skenario normal.
+
 ### 3.12.3 Diagram Kelas
 
 <p align="center">
@@ -1104,7 +1117,7 @@ Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 | *C01* | *User* | *idUser, username, email, activeSession* | *create(), findById(), register(), login(), logout(), saveAccount(), getProfile(), openDashboard(), openSessionDashboard(), checkSchedule(), getUserID(), getUsername(), getEmail(), isActive(), createMessage(), sendMessage()* |
 | *C02* | *Mentor* | *listSessionsMade, feedbackList* | *createFrom(), getById(), getSessionsMade(), receiveFeedback(), viewFeedback()* |
 | *C03* | *Mentee* | *attendedSessions, listSessionsJoined* | *createFrom(), getById(), getSessionsJoined(), giveFeedback(), checkCompletedSession()* |
-| *C04* | *Session* | *idSession, idMentor, topic, description, schedule, scheduledTime, endTime, meetingLink, format, capacity, userList, status, reasonNotConducted, reminderSent, groupChat* | *saveSession(), getSessionById(), getSessionsByMentorInRange(), getAvailableSessions(), getUpcomingByUser(), getArchivedByUser(), findStartingBetween(), addParticipant(), removeParticipant(), checkCapacity(), isParticipant(), isOwnedBy(), involves(), hasStarted(), needsConfirmation(), getSessionDetails(), getSessionStatus(), setStatus(), getStatus(), isCompleted(), markAsDeleted(), markReminderSent(), openGroupChat(), pushNotification(), getSessionID(), getTopic(), getFormat(), getScheduledTime(), getEndTime(), editTitle(), editDescription(), editPreference(), editSchedule()* |
+| *C04* | *Session* | *idSession, idMentor, topic, description, schedule, scheduledTime, endTime, meetingLink, format, capacity, userList, status, reasonNotConducted, reminderSent, groupChat* | *saveSession(), getSessionById(), getSessionsByMentorInRange(), getSessionsByParticipantInRange(), getAvailableSessions(), getUpcomingByUser(), getArchivedByUser(), findStartingBetween(), addParticipant(), removeParticipant(), checkCapacity(), isParticipant(), isOwnedBy(), involves(), hasStarted(), needsConfirmation(), getSessionDetails(), getSessionStatus(), setStatus(), getStatus(), isCompleted(), markAsDeleted(), markReminderSent(), openGroupChat(), pushNotification(), getSessionID(), getTopic(), getFormat(), getScheduledTime(), getEndTime(), editTitle(), editDescription(), editPreference(), editSchedule()* |
 | *C05* | *GroupChat* | *idGroupChat, idSession, listChatMessage, listMentee, mentor, active, expiresAt* | *findBySession(), findById(), getId(), isActive(), isMember(), getMessages(), searchMessage(), displayMessage(), editMessage(), deleteMessage()* |
 | *C06* | *Feedback* | *idFeedback, idSession, idMentee, rating, comment, date* | *save(), getFeedbackBySession(), existsBySessionAndAuthor(), setRating(), setComment(), getRating(), getComment(), getDate()* |
 | *C07* | *SessionHistory* | *idUser, historyList, completedSessions, cancelledSessions, oncomingSession* | *getArchivedSessions(), getCompletedSessions(), getGroupedByStatus(), isEmpty(), addSessionToHistory(), updateOncomingSession()* |
@@ -1113,7 +1126,7 @@ Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 | *C10* | *Profile* | *idUser, name, university, studyProgram, bio* | *create(), findByUser(), getProfileData(), updateProfile(), getName(), getUniversity(), getStudyProgram(), getBio()* |
 | *C11* | *Dashboard* | *upcomingSessions, sessionRecommendation, listSessions, userControl, sessionControl* | *loadDashboard(), showGreeting(), showSession(), openSearchSession(), matchMakeSession(), searchSession(), showRecommendation(), showPreferenceWarning(), showEmptyState(), selectSession(), navigateToProfile(), checkSchedule()* |
 | *C12* | *UserControl* | *authAdapter, validator* | *authLogin(), getCurrentUser(), validateEmail(), processRegistration(), saveProfile(), savePreference(), fetchUserProfile(), fetchUserPreference()* |
-| *C13* | *SessionControl* | *sessionList, sessionHistory, session* | *processSessionCreation(), validateScheduleConflict(), validateCapacity(), processRegistration(), processSessionConfirmation(), updateSessionStatus(), fetchUserHistory(), getUpcomingSessions(), findRecommendation(), matchSession(), getSessionDetail(), editSession(), cancelSession(), deleteSession()* |
+| *C13* | *SessionControl* | *sessionList, sessionHistory, session* | *processSessionCreation(), validateSessionTime(), validateScheduleConflict(), validateCapacity(), validateParticipantSchedule(), processRegistration(), processSessionConfirmation(), updateSessionStatus(), fetchUserHistory(), getUpcomingSessions(), findRecommendation(), matchSession(), getSessionDetail(), editSession(), cancelSession(), deleteSession()* |
 | *C14* | *FeedbackControl* | *feedbackList* | *checkFeedbackEligibility(), validateFeedback(), submitFeedback(), saveFeedback(), retrieveFeedbackBySession()* |
 | *C15* | *LoginPage* | *formMode, emailInput, passwordInput, profileInput, warningMessage, userControl* | *showForm(), clickRegister(), submitForm(), showWarning(), redirectToLogin(), loadDashboard()* |
 | *C16* | *ProfilePage* | *targetUserId, currentProfile, currentPreference, isEditingPreference, feedbackBanner, userControl* | *openProfile(), displayProfileData(), displayPreferenceData(), clickEditPreference(), showPreferenceForm(), submitUpdate(), showWarning(), showSuccessMessage(), showNotFound()* |
@@ -1365,6 +1378,7 @@ Tabel 5.4.1. Operasi Kelas Session
 | `saveSession(): Promise<Session>` | `public` | Operasi CRUD (Create/Update) untuk menyimpan objek sesi baru atau memperbarui perubahan data sesi ke dalam tabel `sessions`. |
 | `getSessionById(idSession: string): Promise<Session \| null>` | `public` | Operasi getter statis (Read) untuk mengambil satu objek `Session` beserta daftar pesertanya dari basis data berdasarkan `idSession`. |
 | `getSessionsByMentorInRange(idMentor: string, startTime: Date, endTime: Date): Promise<Session[]>` | `public` | Operasi getter statis (Read) untuk mengambil daftar sesi aktif milik seorang Mentor pada rentang waktu tertentu guna pemeriksaan konflik jadwal. |
+| `getSessionsByParticipantInRange(idMentee: string, startTime: Date, endTime: Date): Promise<Session[]>` | `public` | Operasi getter statis (Read) untuk mengambil sesi berstatus `TERJADWAL` yang diikuti seorang Mentee dan rentang waktunya beririsan dengan rentang tertentu, guna mencegah Mentee mengikuti dua sesi yang bertabrakan. |
 | `getAvailableSessions(now: Date): Promise<Session[]>` | `public` | Operasi getter statis (Read) untuk mengambil seluruh kandidat sesi berstatus `TERJADWAL` yang belum dimulai dan masih memiliki slot kuota. |
 | `getUpcomingByUser(idUser: string): Promise<Session[]>` | `public` | Operasi getter statis (Read) untuk mengambil daftar sesi aktif terdekat yang dimiliki (sebagai Mentor) atau diikuti (sebagai Mentee) oleh pengguna. |
 | `getArchivedByUser(idUser: string): Promise<Session[]>` | `public` | Operasi getter statis (Read) untuk mengambil seluruh sesi milik atau yang diikuti pengguna dengan status akhir (`SELESAI`, `TIDAK_TERLAKSANA`, atau `DIBATALKAN`). |
@@ -1496,6 +1510,7 @@ Tabel 5.4.3. Query Operasi Kelas Session
 | *Q-C04-11* | `UPDATE sessions SET status = 'DIBATALKAN' WHERE id_session = $1;` | Menandai sesi sebagai `DIBATALKAN` (*soft delete*) saat dihapus oleh Mentor (operasi Update pada `markAsDeleted`). |
 | *Q-C04-12* | `SELECT * FROM sessions WHERE status = 'TERJADWAL' AND reminder_sent = FALSE AND scheduled_time BETWEEN $1 AND $2;` | Mengambil sesi yang akan dimulai dalam 15 menit dan belum diingatkan (operasi Read pada `findStartingBetween`). |
 | *Q-C04-13* | `UPDATE sessions SET reminder_sent = TRUE WHERE id_session = $1;` | Menandai bahwa pengingat notifikasi sesi telah dikirimkan (operasi Update pada `markReminderSent`). |
+| *Q-C04-14* | `SELECT s.* FROM sessions s JOIN session_participants p ON p.id_session = s.id_session WHERE p.id_mentee = $1 AND s.status = 'TERJADWAL' AND s.scheduled_time < $3 AND s.end_time > $2;` | Mengambil sesi terjadwal yang diikuti Mentee dan beririsan dengan rentang `$2`–`$3` (operasi Read pada `getSessionsByParticipantInRange`). |
 
 ## 5.5 Kelas GroupChat
 
@@ -2052,6 +2067,8 @@ Tabel 5.13.1. Operasi Kelas SessionControl
 | `processSessionCreation(idMentor: string, data: SessionData): Promise<Session>` | `public` | Mengoordinasikan alur pembuatan sesi baru dengan memvalidasi kapasitas dan konflik jadwal terlebih dahulu, lalu mendelegasikan pembuatan objek sesi baru ke kelas entitas `Session` (`Session.saveSession()` / `Session.create()`). |
 | `validateScheduleConflict(idMentor: string, startTime: Date, endTime: Date, excludeSessionId?: string): Promise<boolean>` | `public` | Memeriksa apakah jadwal sesi yang diajukan bertabrakan dengan sesi aktif lain milik Mentor yang sama, dengan mengambil daftar sesi dari entitas `Session` (`Session.getSessionsByMentorInRange()`). |
 | `validateCapacity(capacity: number): boolean` | `public` | Memeriksa apakah kapasitas maksimum peserta sesi berada dalam rentang aturan bisnis yang diizinkan (1 hingga 20 peserta). |
+| `validateSessionTime(startTime: Date, endTime: Date): boolean` | `public` | Memeriksa bahwa sesi dimulai dan berakhir pada tanggal yang sama (tidak lintas hari) dengan durasi minimal 10 menit dan maksimal 12 jam. |
+| `validateParticipantSchedule(idMentee: string, session: Session): Promise<boolean>` | `public` | Memeriksa bahwa Mentee tidak sedang mengikuti sesi lain yang rentang waktunya beririsan dengan sesi yang akan diikuti (`Session.getSessionsByParticipantInRange()`). |
 | `processRegistration(idSession: string, idMentee: string): Promise<boolean>` | `public` | Mengoordinasikan pendaftaran Mentee ke dalam sebuah sesi dengan mengambil objek `Session`, memeriksa ketersediaan kuota (`session.checkCapacity()`), dan memanggil metode entitas `session.addParticipant(idMentee)`. |
 | `processSessionConfirmation(idSession: string, idUser: string, isConducted: boolean, reason?: string): Promise<Session>` | `public` | Mengoordinasikan konfirmasi keterlaksanaan sesi yang waktunya telah berakhir setelah memverifikasi keterlibatan pengguna pada objek `Session`. |
 | `updateSessionStatus(session: Session, status: SessionStatus, reason?: string): Promise<Session>` | `private` | Menginstruksikan objek entitas `Session` untuk memperbarui status keterlaksanaannya beserta alasan opsional melalui metode setter entitas `session.setStatus(status, reason)`. |
@@ -2082,6 +2099,10 @@ Tabel 5.13.2. Atribut Kelas SessionControl
 FUNCTION processSessionCreation(idMentor: string, data: SessionData): Promise<Session>
     IF NOT THIS.validateCapacity(data.capacity) THEN
         THROW Error("INVALID_CAPACITY")
+    END IF
+
+    IF NOT THIS.validateSessionTime(data.startTime, data.endTime) THEN
+        THROW Error("INVALID_SCHEDULE")
     END IF
 
     hasConflict <- AWAIT THIS.validateScheduleConflict(idMentor, data.startTime, data.endTime)
@@ -2162,6 +2183,42 @@ FUNCTION processSessionConfirmation(idSession: string, idUser: string, isConduct
     END IF
 
     RETURN AWAIT THIS.updateSessionStatus(targetSession, targetStatus, targetReason)
+END FUNCTION
+```
+
+**Nama Kelas:** *SessionControl*  
+**Nama Operasi:** `validateSessionTime(startTime: Date, endTime: Date): boolean`, `validateParticipantSchedule(idMentee: string, session: Session): Promise<boolean>`, dan `processRegistration(idSession: string, idMentee: string): Promise<boolean>`  
+**ID Algoritma:** *Algo-C13-04*
+
+```text
+CONSTANT MIN_DURATION_MINUTES <- 10
+CONSTANT MAX_DURATION_MINUTES <- 720
+
+FUNCTION validateSessionTime(startTime: Date, endTime: Date): boolean
+    IF DATE(startTime) != DATE(endTime) THEN
+        RETURN FALSE
+    END IF
+    durationMinutes <- MINUTES_BETWEEN(startTime, endTime)
+    RETURN durationMinutes >= MIN_DURATION_MINUTES AND durationMinutes <= MAX_DURATION_MINUTES
+END FUNCTION
+
+FUNCTION validateParticipantSchedule(idMentee: string, session: Session): Promise<boolean>
+    overlapping <- AWAIT Session.getSessionsByParticipantInRange(idMentee, session.getScheduledTime(), session.getEndTime())
+    RETURN LENGTH(overlapping) == 0
+END FUNCTION
+
+FUNCTION processRegistration(idSession: string, idMentee: string): Promise<boolean>
+    targetSession <- AWAIT Session.getSessionById(idSession)
+    IF targetSession IS NULL THEN
+        THROW Error("SESSION_NOT_FOUND")
+    END IF
+    IF NOT targetSession.checkCapacity() THEN
+        THROW Error("SESSION_FULL")
+    END IF
+    IF NOT AWAIT THIS.validateParticipantSchedule(idMentee, targetSession) THEN
+        THROW Error("PARTICIPANT_SCHEDULE_CONFLICT")
+    END IF
+    RETURN AWAIT targetSession.addParticipant(idMentee)
 END FUNCTION
 ```
 
@@ -2960,7 +3017,7 @@ Tabel 6.7. Spesifikasi Objek Antarmuka I-05
 | *I05-02* | *Panel* | *Tanggal, Waktu, Format, Kapasitas* | *Tautan pertemuan disembunyikan sampai pengguna bergabung.* |
 | *I05-03* | *List* | *Peserta* | *Daftar Mentee yang sudah bergabung dan sisa slot.* |
 | *I05-04* | *Link* | *Lihat profil* | *Membuka I-07 milik Mentor.* |
-| *I05-05* | *Button* | *Gabung Sesi* | *Memanggil `SessionControl.processRegistration(idSession, idMentee)`; slot diperiksa dengan `Session.checkCapacity()`. Jika berhasil, pengguna menjadi peserta dan tautan pertemuan ditampilkan.* |
+| *I05-05* | *Button* | *Gabung Sesi* | *Memanggil `SessionControl.processRegistration(idSession, idMentee)`; slot diperiksa dengan `Session.checkCapacity()`. Jika berhasil, pengguna menjadi peserta dan tautan pertemuan ditampilkan. Permintaan ditolak jika jadwal sesi bertabrakan dengan sesi lain yang sudah diikuti Mentee (`validateParticipantSchedule()`).* |
 
 ## 6.8 Rancangan Antarmuka I-05a
 
@@ -3002,7 +3059,7 @@ Tabel 6.9. Spesifikasi Objek Antarmuka I-06
 | :--- | :--- | :--- | :--- |
 | *I06-01* | *Text Field* | *Judul Sesi, Deskripsi* | *Terisi data sesi saat ini.* |
 | *I06-02* | *Chip Group* | *Tag Materi* | *Memilih satu tag materi.* |
-| *I06-03* | *Text Field* | *Tanggal, Jam Mulai, Jam Selesai* | *Validator menolak jadwal yang bertabrakan dengan sesi lain milik Mentor.* |
+| *I06-03* | *Text Field* | *Tanggal, Jam Mulai, Jam Selesai* | *Validator menolak jadwal yang bertabrakan dengan sesi lain milik Mentor. Jam Selesai harus pada tanggal yang sama dengan Jam Mulai (sesi tidak lintas hari) dengan durasi 10 menit hingga 12 jam (`validateSessionTime()`).* |
 | *I06-04* | *Radio Group* | *Daring, Luring* | *Menentukan format sesi.* |
 | *I06-05* | *Text Field* | *Tautan Pertemuan, Batas Peserta* | *Batas peserta harus 1–20 dan tidak kurang dari jumlah peserta saat ini.* |
 | *I06-06* | *Card* | *Preview* | *Pratinjau kartu sesi yang diperbarui sesuai isian.* |
@@ -3117,7 +3174,7 @@ Tabel 6.14. Spesifikasi Objek Antarmuka I-11
 | :--- | :--- | :--- | :--- |
 | *I11-01* | *Text Field* | *Judul Sesi, Deskripsi* | *Deskripsi bersifat opsional.* |
 | *I11-02* | *Chip Group* | *Tag Materi* | *Memilih satu tag materi.* |
-| *I11-03* | *Text Field* | *Tanggal, Jam Mulai, Jam Selesai* | *Validator menolak jadwal yang bertabrakan dengan sesi lain milik Mentor.* |
+| *I11-03* | *Text Field* | *Tanggal, Jam Mulai, Jam Selesai* | *Validator menolak jadwal yang bertabrakan dengan sesi lain milik Mentor. Jam Selesai harus pada tanggal yang sama dengan Jam Mulai (sesi tidak lintas hari) dengan durasi 10 menit hingga 12 jam (`validateSessionTime()`).* |
 | *I11-04* | *Radio Group* | *Daring, Luring* | *Menentukan format sesi.* |
 | *I11-05* | *Text Field* | *Tautan Pertemuan, Batas Peserta* | *Batas peserta harus 1–20.* |
 | *I11-06* | *Card* | *Preview* | *Pratinjau kartu sesi yang diperbarui sesuai isian.* |
