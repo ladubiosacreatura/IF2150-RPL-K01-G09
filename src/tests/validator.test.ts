@@ -5,6 +5,7 @@ import {
   validateEmail,
   validatePreference,
   validateRating,
+  validateSessionTime,
 } from "@/lib/validator";
 
 describe("validateEmail", () => {
@@ -65,5 +66,26 @@ describe("hasScheduleConflict", () => {
 
   it("allows back-to-back sessions", () => {
     expect(hasScheduleConflict({ start: at(11), end: at(12) }, existing)).toBe(false);
+  });
+});
+
+describe("validateSessionTime", () => {
+  const wib = (time: string) => new Date(`2099-01-15T${time}:00+07:00`);
+
+  it("accepts sessions on one WIB day lasting 10 minutes to 12 hours", () => {
+    expect(validateSessionTime(wib("10:00"), wib("10:10"))).toBe(true);
+    expect(validateSessionTime(wib("08:00"), wib("20:00"))).toBe(true);
+  });
+
+  it("rejects sessions shorter than 10 minutes or longer than 12 hours", () => {
+    expect(validateSessionTime(wib("10:00"), wib("10:09"))).toBe(false);
+    expect(validateSessionTime(wib("08:00"), wib("20:01"))).toBe(false);
+    expect(validateSessionTime(wib("10:00"), wib("09:00"))).toBe(false);
+  });
+
+  it("rejects sessions that cross midnight in WIB even when the UTC date is the same", () => {
+    const start = new Date("2099-01-15T16:30:00Z");
+    const end = new Date("2099-01-15T17:30:00Z");
+    expect(validateSessionTime(start, end)).toBe(false);
   });
 });

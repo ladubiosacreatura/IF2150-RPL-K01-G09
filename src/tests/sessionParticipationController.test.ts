@@ -31,8 +31,14 @@ vi.mock("@/models/session", async (importOriginal) => {
   };
 });
 
-const { Session, SessionAlreadyJoinedError, SessionFullError, matchSession, searchSession } =
-  await import("@/models/session");
+const {
+  Session,
+  SessionAlreadyJoinedError,
+  SessionFullError,
+  ParticipantScheduleConflictError,
+  matchSession,
+  searchSession,
+} = await import("@/models/session");
 const {
   cancelSession,
   findRecommendation,
@@ -438,6 +444,14 @@ describe("joinSession / processRegistration", () => {
     await expect(joinSession(VALID_SESSION_ID)).resolves.toEqual({
       ok: false,
       error: "SESSION_FULL",
+    });
+  });
+
+  it("reports PARTICIPANT_SCHEDULE_CONFLICT when the mentee already joined an overlapping session (KF21)", async () => {
+    sessionMocks.addParticipant.mockRejectedValueOnce(new ParticipantScheduleConflictError());
+    await expect(joinSession(VALID_SESSION_ID)).resolves.toEqual({
+      ok: false,
+      error: "PARTICIPANT_SCHEDULE_CONFLICT",
     });
   });
 });

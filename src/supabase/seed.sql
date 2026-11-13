@@ -5,6 +5,7 @@ declare
   v_mentee2 uuid := '33333333-3333-3333-3333-333333333333';
   v_upcoming uuid := 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
   v_done     uuid := 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb';
+  v_today    date := (now() at time zone 'Asia/Jakarta')::date;
   u record;
 begin
   for u in
@@ -49,13 +50,13 @@ begin
 
   insert into public.sessions (id_session, id_mentor, topic, description, schedule, scheduled_time, end_time, format, capacity)
   values (v_upcoming, v_mentor, 'Struktur Data', 'Latihan soal pohon biner dan graf.',
-          (now() + interval '2 days')::date, now() + interval '2 days', now() + interval '2 days 2 hours',
+          v_today + 2, (v_today + 2 + time '10:00') at time zone 'Asia/Jakarta', (v_today + 2 + time '12:00') at time zone 'Asia/Jakarta',
           'DARING', 5);
   insert into public.session_participants (id_session, id_mentee) values (v_upcoming, v_mentee1);
 
   insert into public.sessions (id_session, id_mentor, topic, description, schedule, scheduled_time, end_time, format, capacity, status)
   values (v_done, v_mentor, 'Kalkulus', 'Review integral parsial.',
-          (now() - interval '3 days')::date, now() - interval '3 days', now() - interval '3 days' + interval '2 hours',
+          v_today - 3, (v_today - 3 + time '10:00') at time zone 'Asia/Jakarta', (v_today - 3 + time '12:00') at time zone 'Asia/Jakarta',
           'LURING', 10, 'SELESAI');
   insert into public.session_participants (id_session, id_mentee) values (v_done, v_mentee1), (v_done, v_mentee2);
   insert into public.feedbacks (id_session, id_mentee, id_mentor, rating, comment)
