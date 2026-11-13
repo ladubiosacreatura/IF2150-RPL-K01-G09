@@ -1,0 +1,37 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import PreferenceForm from "@/components/PreferenceForm";
+import { Alert } from "@/components/ui";
+import { fetchUserPreference, getCurrentUser } from "@/controllers/userController";
+
+export const metadata: Metadata = { title: "Edit Preferensi · PeerUP" };
+
+export default async function Page() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
+  const preference = await fetchUserPreference(user.idUser);
+
+  return (
+    <main className="mx-auto max-w-2xl px-4 py-10">
+      <Link
+        href="/profile"
+        className="inline-block text-sm font-medium text-teal-600 hover:underline dark:text-teal-400"
+      >
+        ← Kembali ke Profil
+      </Link>
+      <h1 className="mt-3 text-2xl font-bold tracking-tight">Edit Preferensi</h1>
+      <p className="mt-1.5 text-sm text-neutral-500 dark:text-neutral-400">
+        Atur materi, format sesi, dan waktu luang kamu.
+      </p>
+      {preference.ok ? (
+        <PreferenceForm idUser={user.idUser} initial={preference.data} />
+      ) : (
+        <div className="mt-8">
+          <Alert>Gagal memuat preferensi. Coba muat ulang halaman.</Alert>
+        </div>
+      )}
+    </main>
+  );
+}
