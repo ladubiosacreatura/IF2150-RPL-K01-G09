@@ -14,11 +14,11 @@ IMPLEMENTASI PERANGKAT LUNAK
 ### Untuk: Mikhael Andrian Yonatan
 
 Dipersiapkan oleh:
-| Informasi | Keterangan |
-| --- | --- |
-| Kelas | *K01* |
-| Kelompok | *G09* |
-| Nama Kelompok | *PindahCSUI*|
+| Informasi 	| Keterangan 		|
+| --- 			| --- 			|
+| Kelas 		| *K01* 		|
+| Kelompok 		| *G09* 		|
+| Nama Kelompok	| *PindahCSUI*	|
 
 | NIM        | Nama                                 |
 |---         |---                                   |
