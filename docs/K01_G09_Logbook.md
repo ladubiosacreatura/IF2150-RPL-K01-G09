@@ -31,6 +31,7 @@
 * [Milestone 7](#milestone-7)
 * [Milestone 8](#milestone-8)
 * [Milestone 9](#milestone-9)
+* [Milestone 10](#milestone-10)
 
 
 ---
@@ -173,6 +174,15 @@
 | *13-11-2026* | *Hugo Daniel J N* | *Implementasi KF07 beranda dan matchmaking sesi* | *3* | *Done* | *-* |
 | *13-11-2026* | *Hugo Daniel J N* | *Implementasi KF08 bergabung ke sesi* | *2* | *Done* | *-* |
 | *13-11-2026* | *Markus Christiano Simanjuntak* | *Menambahkan spesifikasi sesi tidak lintas hari, durasi 10 menit–12 jam, dan larangan Mentee mengikuti sesi bertabrakan (R27, R28, KF20, KF21) pada M2–M8 serta mengimplementasikannya beserta unit test (PR #133)* | *1* | *Done* | *-* |
+
+### Milestone 10
+**Periode:** [14-11-2026] - [20-11-2026]
+
+| Tanggal | Nama Anggota | Deskripsi Pekerjaan | Durasi (Jam) | Status | Kendala / *Blocker* |
+|---|---|---|---|---|---|
+| *19-11-2026* | *David Christian* | *Menambah unit test kelas Preference, Profile, GroupChat, ChatMessage, Notification, dan AuthAdapter serta mengukur coverage (HIUPL 4.2)* | *2* | *Done* | *-* |
+| *19-11-2026* | *David Christian* | *Menguji use case UC01, UC02, UC08, UC09 dan integrasi aplikasi dengan Supabase Auth, PostgreSQL, Realtime, dan route cron (HIUPL 4.3, 4.4)* | *2* | *Done* | *Docker tidak tersedia sehingga pengujian memakai Supabase hosted; ditemukan Fail pada Realtime dan penjadwal pengingat* |
+| *19-11-2026* | *David Christian* | *Menguji KNF01, KNF03, KNF04 dan mengisi HIUPL 3.1, 3.4, 4.2–4.5, serta bukti 4.6 bagian David* | *2* | *Done* | *KNF01-TC01 membutuhkan akses SQL Editor Supabase Dashboard sehingga kueri dijalankan manual* |
 | *13-11-2026* | *Markus Christiano Simanjuntak* | *Menyinkronkan `main` ke `development` (PR #132), merge `development` ke `main` (PR #130), dan menerapkan migrasi yang tertinggal ke basis data Supabase bersama* | *0.5* | *Done* | *Supabase CLI tidak dapat login, migrasi diterapkan lewat SQL Editor* |
 | *13-11-2026* | *Fabian Amzar Susanto* | *Implementasi KF13 penolakan bergabung saat sesi penuh beserta unit test dan merge PR #128* | *2* | *Done* | *PR awal dibuat dari `main` sehingga perlu dipindahkan ke branch dari `development`* |
 | *13-11-2026* | *Fabian Amzar Susanto* | *Implementasi KF15 pembatalan keikutsertaan sesi beserta unit test dan merge PR #129* | *2* | *Done* | *-* |

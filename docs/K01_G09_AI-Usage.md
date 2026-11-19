@@ -31,6 +31,7 @@
 * [Milestone 7](#milestone-7)
 * [Milestone 8](#milestone-8)
 * [Milestone 9](#milestone-9)
+* [Milestone 10](#milestone-10)
 
 ---
 
@@ -111,6 +112,12 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 | *Gemini Argon* | *Merealisasikan styling UI di HTML sesuai dengan yang di DPPL* | *"Buatlah style HTML untuk komponen ini"* | *Mengecek ulang hasil UInya dan memastikan output sesuai* |
 | Claude Code (Claude Opus 5.5) | Menyusun spesifikasi dan implementasi aturan baru sesi: tidak lintas hari, durasi 10 menit–12 jam, serta Mentee tidak dapat mengikuti sesi yang bertabrakan (R27, R28, KF20, KF21), mulai dari SKPL, DPPL2, laporan M9, hingga kode, migrasi, dan unit test. | "Buatkan spesifikasinya di dokumen-dokumen dan update semuanya, lalu implementasikan fitur-fitur baru itu." | Batasan durasi dan aturan tabrakan jadwal ditentukan kelompok. Perubahan dokumen ditinjau sebelum di-commit, kode diajukan lewat PR #133 dan di-review anggota lain, serta lint, typecheck, test, build, dan CI lulus sebelum merge. |
 | Claude Code (Claude Opus 5.5) | Memeriksa kesiapan merge `development` ke `main`, menyelesaikan konflik dokumen (PR #132), serta menyusun skrip SQL untuk menerapkan migrasi yang tertinggal ke Supabase bersama. | "Pastikan merge-nya nanti berjalan lancar dan semuanya dapat dipakai dan dirun sesuai spec." | Skrip SQL diuji terlebih dahulu pada basis data *in-memory* sebelum dijalankan anggota melalui SQL Editor Supabase. Hasilnya dicek ulang lewat API secara *read-only*. Merge PR tetap dilakukan anggota setelah review. |
+
+
+### Milestone 10
+| Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |
+| :--- | :--- | :--- | :--- |
+| Claude Code (Claude Opus 5.5) | Mengerjakan HIUPL: menambah unit test model dan AuthAdapter, menjalankan pengujian use case UC01, UC02, UC08, UC09, pengujian integrasi dengan Supabase | "make unit test for UC01, UC02, UC08, UC09 and SQL query to check database" | Pengujian dijalankan pada aplikasi dan Supabase yang sebenarnya, seluruh hasil (termasuk Fail) diambil dari keluaran test, respons HTTP, isi basis data, dan tangkapan layar, bukan perkiraan. |
 
 ---
 ### Pernyataan Integritas dan Persetujuan
