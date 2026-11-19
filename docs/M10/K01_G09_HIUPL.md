@@ -675,7 +675,7 @@ Tabel 4.5. Hasil Pengujian KNF
 
 | ID Pengujian | ID KNF | Parameter | Target Terukur | Metode dan Alat | Hasil Aktual | Kesimpulan |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| KNF01-TC01 | KNF01 | *Security* | Kolom `auth.users.encrypted_password` berisi hash bcrypt (awalan `$2a$`/`$2b$`, panjang 60), bukan *plain-text* | Supabase Studio, SQL Editor: `select email, left(encrypted_password, 4) as awalan, length(encrypted_password) as panjang, encrypted_password = 'password123' as plain from auth.users;` | *[Diisi setelah kueri dijalankan oleh anggota yang memiliki akses Supabase Dashboard; lihat catatan di bawah tabel]* | *[Pass/Fail]* |
+| KNF01-TC01 | KNF01 | *Security* | Kolom `auth.users.encrypted_password` berisi hash bcrypt (awalan `$2a$`/`$2b$`, panjang 60), bukan *plain-text* | Supabase Studio, SQL Editor: `select email, left(encrypted_password, 4) as awalan, length(encrypted_password) as panjang, encrypted_password = 'password123' as plain from auth.users;` | Seluruh 6 akun di `auth.users` memiliki `encrypted_password` berawalan `$2a$` (bcrypt) dengan panjang 60 karakter. Kolom `plain` bernilai `false` untuk keenam akun, termasuk 4 akun yang kata sandinya diketahui `password123` (`mentor.demo`, `mentee.satu`, `mentee.dua`, `hiupl.uji`), sehingga kata sandi tidak tersimpan sebagai *plain-text* | Pass |
 | KNF01-TC02 | KNF01 | *Security* | Tidak ada kolom kata sandi pada skema `public`; aplikasi tidak menyimpan kata sandi | Membaca satu baris `public.users` dengan *service role* untuk melihat seluruh kolom; `grep -rin password src/supabase/migrations/`; menelusuri kode: kata sandi hanya diteruskan ke `supabase.auth.signUp()`/`signInWithPassword()` di `authAdapter.ts` | Kolom `public.users`: `id_user, username, email, data_consent_at, created_at`. `grep` tidak menemukan kolom kata sandi pada 8 migrasi. Kata sandi tidak pernah ditulis ke tabel aplikasi | Pass |
 | KNF03-TC01 | KNF03 | *Reliability* | ≥ 99% partisipan sesi yang jatuh tempo menerima tepat satu notifikasi | Uji integrasi PGlite (migrasi asli): 100 sesi dengan waktu mulai tersebar 1–15 menit lagi, masing-masing 1 Mentor + 2 peserta (300 penerima), lalu `send_session_reminders(now, 15)` dua kali (`tests/sessionReminders.test.ts`, "KNF03 delivery rate") | 300 dari 300 notifikasi terbentuk (**100%**), 300 pasangan (sesi, pengguna) unik, panggilan kedua 0 notifikasi (tanpa duplikat). Pada Supabase *hosted* (INT-TC09) 2 dari 2 partisipan menerima notifikasi | Pass |
 | KNF03-TC02 | KNF03 | *Reliability* (ketepatan waktu) | Pengingat terkirim tepat saat sesi masuk jendela 15 menit, tanpa tindakan manual | Sesi uji dibuat pukul 20.49 WIB (mulai 21.03 WIB, sudah di dalam jendela 15 menit). *Endpoint* tidak dipanggil selama 3 menit, lalu dipanggil manual dan hasilnya diperiksa; konfigurasi repositori juga diperiksa | Panggilan `curl` manual pukul 20.52 WIB masih menghasilkan `sent: 2` dengan judul "Sesi dimulai 11 menit lagi". Artinya selama 20.49–20.52 WIB belum ada pemanggilan apa pun, karena fungsi hanya mengirim untuk sesi dengan `reminder_sent = false`. Repositori juga tidak memuat penjadwal (`pg_cron`, `vercel.json`, atau Supabase Cron) | Fail. **Penyebab:** *route* cron sudah ada tetapi tidak ada penjadwal yang memanggilnya. **Usulan:** jadwalkan `POST /api/cron/reminders` dan `/api/cron/chat-cleanup` setiap 1 menit dengan Supabase Cron (`pg_cron` + `pg_net`) atau Vercel Cron setelah *deploy*, lalu ulangi KNF03-TC02 |
@@ -684,7 +684,7 @@ Tabel 4.5. Hasil Pengujian KNF
 | KNF02-TC01 | KNF02 | *Response time* | *[Diisi Hugo]* | *[...]* | *[...]* | *[...]* |
 | KNF05-TC01 | KNF05 | *Response time* | *[Diisi Markus]* | *[...]* | *[...]* | *[...]* |
 
-Catatan KNF01-TC01: kolom `encrypted_password` berada pada skema `auth` yang tidak diekspos PostgREST maupun Admin API, sehingga hanya dapat dibaca melalui SQL Editor Supabase Dashboard (atau `psql` pada Supabase lokal). Supabase Auth (GoTrue) menyimpan kata sandi dengan bcrypt secara bawaan.
+Catatan KNF01-TC01: kolom `encrypted_password` berada pada skema `auth` yang tidak diekspos PostgREST maupun Admin API, sehingga hanya dapat dibaca melalui SQL Editor Supabase Dashboard (atau `psql` pada Supabase lokal). Kueri dijalankan oleh David pada proyek Supabase *hosted* tim pada 20 November 2026.
 
 <br>
 
@@ -722,7 +722,7 @@ Tabel 4.6. Bukti Hasil Pengujian
 | UC08-TC03 | <img src="./assets/UC08-TC03.png" width="45%"> |
 | UC09-TC01 | <img src="./assets/UC09-TC01.png" width="45%"><br>*Pop-up* baru tampil setelah pindah ke Beranda; keluaran cron pada INT-cron.png |
 | UC09-TC02 | <img src="./assets/UC09-TC02.png" width="45%"> |
-| KNF01-TC01 | *[Tangkapan SQL Editor, simpan sebagai `KNF01-TC01.png`]* |
+| KNF01-TC01 | <img src="./assets/KNF01-TC01.png" width="70%"><br>Hasil kueri pada SQL Editor Supabase Dashboard |
 | KNF01-TC02 | <img src="./assets/KNF01-TC02.png" width="90%"> |
 | KNF03-TC01, KNF03-TC02 | <img src="./assets/KNF03.png" width="90%"> |
 | KNF04-TC01, KNF04-TC02 | <img src="./assets/KNF04.png" width="90%"><br>Tampilan penolakan: UC01-TC03 |
