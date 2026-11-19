@@ -19,6 +19,16 @@ describe("validateEmail", () => {
     expect(validateEmail("fake@ac.id.evil.com")).toBe(false);
     expect(validateEmail("no-at-sign.ac.id")).toBe(false);
   });
+
+  it("ignores surrounding spaces and letter case", () => {
+    expect(validateEmail("  Mentee.Satu@Mahasiswa.ITB.AC.ID  ")).toBe(true);
+  });
+
+  it("requires an institution name before ac.id", () => {
+    expect(validateEmail("a@ac.id")).toBe(false);
+    expect(validateEmail("a@itb.ac.id.")).toBe(false);
+    expect(validateEmail("")).toBe(false);
+  });
 });
 
 describe("validateCapacity", () => {
@@ -46,6 +56,17 @@ describe("validatePreference", () => {
     expect(validatePreference({ ...full, materialTag: [] })).toBe(false);
     expect(validatePreference({ ...full, availability: [] })).toBe(false);
     expect(validatePreference({ ...full, sessionFormatPreference: null })).toBe(false);
+  });
+
+  it("accepts the minimum of one tag and one slot, and the BOTH format", () => {
+    expect(validatePreference({ ...full, sessionFormatPreference: "BOTH" })).toBe(true);
+    expect(validatePreference({ ...full, sessionFormatPreference: "LURING" })).toBe(true);
+  });
+
+  it("rejects a completely empty preference", () => {
+    expect(
+      validatePreference({ materialTag: [], availability: [], sessionFormatPreference: null }),
+    ).toBe(false);
   });
 });
 
