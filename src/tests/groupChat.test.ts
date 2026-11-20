@@ -7,12 +7,31 @@ const USERS = {
   mentee: "00000000-0000-0000-0000-00000000000a",
   outsider: "00000000-0000-0000-0000-00000000000f",
 };
-const NOW = new Date();
+const HOUR = 3_600_000;
+const MINUTE = 60_000;
+const WIB_OFFSET = 7 * HOUR;
+const MIN_SESSION_MINUTES = 10;
+
+const atLeastMinutesPastTheHour = (date: Date, minutes: number) => {
+  const shifted = new Date(date);
+  if (shifted.getUTCMinutes() < minutes) shifted.setUTCMinutes(minutes, 0, 0);
+  return shifted;
+};
+
+const NOW = atLeastMinutesPastTheHour(new Date(), MIN_SESSION_MINUTES);
 
 let db: PGlite;
 let nextSession = 0;
 
-const hoursFromNow = (hours: number) => new Date(NOW.getTime() + hours * 3_600_000).toISOString();
+const hoursFromNow = (hours: number) => new Date(NOW.getTime() + hours * HOUR).toISOString();
+
+const minutesIntoWibDay = (iso: string) =>
+  ((new Date(iso).getTime() + WIB_OFFSET) % (24 * HOUR)) / MINUTE;
+
+const sameWibDayStart = (endIso: string) => {
+  const minutes = Math.min(60, minutesIntoWibDay(endIso));
+  return new Date(new Date(endIso).getTime() - minutes * MINUTE).toISOString();
+};
 
 async function addSession(endsInHours: number, participants: string[] = [USERS.mentee]) {
   const idSession = `20000000-0000-0000-0000-${String(++nextSession).padStart(12, "0")}`;
@@ -20,7 +39,12 @@ async function addSession(endsInHours: number, participants: string[] = [USERS.m
     `insert into public.sessions
        (id_session, id_mentor, topic, schedule, scheduled_time, end_time, format, capacity)
      values ($1, $2, 'Struktur Data', '2026-11-12', $3, $4, 'DARING', 5)`,
-    [idSession, USERS.mentor, hoursFromNow(endsInHours - 1), hoursFromNow(endsInHours)],
+    [
+      idSession,
+      USERS.mentor,
+      sameWibDayStart(hoursFromNow(endsInHours)),
+      hoursFromNow(endsInHours),
+    ],
   );
   for (const idMentee of participants) {
     await db.query(
