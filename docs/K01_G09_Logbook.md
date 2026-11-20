@@ -190,6 +190,7 @@
 | *20-11-2026* | *Hugo Daniel Johansen Napitupulu* | *Menjalankan pengujian manual use case UC04 (Normal, Alt 1), UC14 (Normal, Alt 1), UC15 (Normal, Alt 1), dan KNF02 (response time 5x ukur di Chrome DevTools) serta melampirkan bukti di Subbab 4.6* | *1.5* | *Done* | *-* |
 | *20-11-2026* | *Matthew Allen Reynaldo* | *Bab 3.2 dokumen HIUPL* | *2* | *Done* | *-* |
 | *20-11-2026* | *Matthew Allen Reynaldo* | *Unit testing C04 dan C13* | *3* | *Done* | *-* |
+| *20-11-2026* | *Matthew Allen Reynaldo* | *UC testing UC03, UC05, UC11, UC12* | *2* | *Done* | *-* |
 | *18-11-2026* | *Markus Christiano Simanjuntak* | *Menyusun pembagian tugas M10 sesuai modul dan riwayat commit tiap anggota, serta menambahkan `@vitest/coverage-v8` untuk laporan coverage (PR #135)* | *1* | *Done* | *-* |
 | *20-11-2026* | *Markus Christiano Simanjuntak* | *Mengisi HIUPL BAB 1, BAB 2, Subbab 4.1 (tingkat pengujian 24 kelas), mengurutkan Subbab 4.2 per ID kelas, dan mengisi Form Asistensi M10* | *2* | *Done* | *Isi BAB 1 masih tersalin dari DPPL sehingga ditulis ulang* |
 | *20-11-2026* | *Markus Christiano Simanjuntak* | *Menambah unit test C06 Feedback, C07 SessionHistory, C14 FeedbackControl, Validator (KF20, KF21), dan operasi basis data C04 Session, lalu mengisi Subbab 4.2.1, 4.2.3, 4.2.4, 4.2.10, dan 4.2.12 beserta coverage* | *3* | *Done* | *Coverage `models/session.ts` awalnya 44,5% sehingga perlu test tambahan* |
