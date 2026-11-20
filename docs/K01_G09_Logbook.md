@@ -188,5 +188,6 @@
 | *13-11-2026* | *Fabian Amzar Susanto* | *Implementasi KF15 pembatalan keikutsertaan sesi beserta unit test dan merge PR #129* | *2* | *Done* | *-* |
 | *20-11-2026* | *Matthew Allen Reynaldo* | *Bab 3.2 dokumen HIUPL* | *2* | *Done* | *-* |
 | *20-11-2026* | *Matthew Allen Reynaldo* | *Unit testing C04 dan C13* | *3* | *Done* | *-* |
+| *20-11-2026* | *Matthew Allen Reynaldo* | *UC testing UC03, UC05, UC11, UC12* | *2* | *Done* | *-* |
 
 ``Gunakan format penulisan Logbook yang sama untuk setiap Milestone dan pastikan pembuatan Daftar Isi juga sudah sesuai sebelum Logbook dikumpulkan. ``

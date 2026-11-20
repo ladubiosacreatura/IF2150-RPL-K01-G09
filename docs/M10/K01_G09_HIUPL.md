@@ -688,10 +688,10 @@ Tabel 4.2.9b. Ringkasan Cakupan Kelas C13
 
 | Informasi | Keterangan |
 | :--- | :--- |
-| Daftar operasi public pada DPPL | `processSessionCreation()`, `editSession()` (diimplementasikan sebagai `processSessionUpdate()`), dan `deleteSession()` (diimplementasikan sebagai `processSessionDeletion()`) untuk lingkup `sessionController.ts` |
-| Operasi yang diuji | `processSessionCreation()`, `processSessionUpdate()`, dan `processSessionDeletion()`. Pengujian mem-*mock* `Session` dan `getCurrentUser()`, sehingga memverifikasi validasi, otorisasi pada controller, delegasi, dan pemetaan hasil/galat; operasi basis data diuji terpisah. Konfirmasi keterlaksanaan berada pada alur riwayat sesi, bukan `sessionController.ts`. |
+| Daftar operasi public pada DPPL | `processSessionCreation()`, `editSession()` (diimplementasikan sebagai `processSessionUpdate()`), dan `deleteSession()` (diimplementasikan sebagai `processSessionDeletion()`) pada lingkup `sessionController.ts` |
+| Operasi yang diuji | `processSessionCreation()`, `processSessionUpdate()`, dan `processSessionDeletion()`. Pengujian mem-*mock* `Session` dan `getCurrentUser()`, sehingga memverifikasi validasi, otorisasi pada controller, delegasi, dan pemetaan hasil/galat; operasi basis data diuji terpisah. |
 | ID Algoritma yang tercakup | Validasi pembuatan dan pengubahan sesi serta alur penghapusan sesi |
-| Kesimpulan | Seluruh 18 test case untuk pembuatan, pengubahan, dan penghapusan sesi dinyatakan `Pass`. Pengujian memverifikasi validasi masukan, otorisasi, delegasi ke model, serta pemetaan hasil dan galat. Konfirmasi keterlaksanaan tidak termasuk dalam lingkup `sessionController.ts` ini. |
+| Kesimpulan | Seluruh 18 test case pembuatan, pengubahan, dan penghapusan sesi dinyatakan `Pass`. Pengujian memverifikasi validasi masukan, otorisasi, delegasi ke model, serta pemetaan hasil dan galat. |
 | Coverage (wajib ≥ 70%) | Belum diisi; lengkapi setelah laporan `@vitest/coverage-v8` tersedia. |
 
 <br>
@@ -874,7 +874,7 @@ Tabel 4.4.11. Hasil Pengujian Use Case UC11
 | ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | UC11-TC01 | KF16 | Normal | 1. Login sebagai `mentor.demo` dan buka detail sesi "Data mining" yang dibuatnya.<br>2. Klik "Hapus Sesi".<br>3. Pada dialog, klik "Hapus Sesi" untuk mengonfirmasi. | Sesi "Data mining" dengan 0 peserta | Sistem menampilkan konfirmasi penghapusan; setelah dikonfirmasi, sesi dihapus dan Mentor kembali ke Beranda | Dialog "Hapus sesi ini?" menyatakan sesi dan grup obrolannya dihapus serta 0 peserta diberi tahu, dengan pilihan "Batal" dan "Hapus Sesi" (bukti `UC11-TC01-a.png`). Setelah konfirmasi, aplikasi kembali ke Beranda; sesi "Data mining" tidak lagi terlihat pada daftar sesi Mentor (bukti `UC11-TC01-b.png`). | Pass |
-| UC11-TC02 | KF16 | Alternatif 1: Mentor Tidak Jadi Menghapus Sesi | 1. Buka detail sesi milik `mentor.demo`.<br>2. Klik "Hapus Sesi".<br>3. Pada dialog, klik "Batal". | Sesi uji milik Mentor | Dialog tertutup dan sesi tetap ada tanpa perubahan | Belum ada bukti hasil pengujian untuk skenario ini. | Belum diuji |
+| UC11-TC02 | KF16 | Alternatif 1: Mentor Tidak Jadi Menghapus Sesi | 1. Login sebagai `mentor.demo` dan buka detail sesi "Latihan RPL A".<br>2. Klik "Hapus Sesi".<br>3. Pada dialog konfirmasi, klik "Batal". | Sesi "Latihan RPL A" (deskripsi: "Sesi uji UC04-TC03 (HIUPL)") | Dialog tertutup dan sesi tetap ada tanpa perubahan | Dialog "Hapus sesi ini?" menampilkan keterangan bahwa sesi dan grup obrolan akan dihapus serta tombol "Batal" dan "Hapus Sesi" (bukti `UC11-TC02-a.png`). Setelah memilih "Batal", dialog tertutup dan halaman detail "Latihan RPL A" tetap tampil dengan tombol "Hapus Sesi" (bukti `UC11-TC02-b.png`). | Pass |
 
 ### 4.4.12 Use Case Mengedit Sesi
 
@@ -930,6 +930,7 @@ Tabel 4.6. Bukti Hasil Pengujian
 | C05-UT01 – C05-UT16 | <img src="./assets/C05-unit.png" width="90%"> |
 | C08-UT01 – C08-UT10 | <img src="./assets/C08-unit.png" width="90%"> |
 | C22-UT01 – C22-UT19 | <img src="./assets/C22-unit.png" width="90%"> |
+| C13-UT01 – C13-UT18 | <img src="./assets/C13-unit.png" width="90%"> |
 | C12, C09, C05, C22, Validator (coverage) | <img src="./assets/coverage-david.png" width="90%"> |
 | INT-TC01, INT-TC02 | Lihat UC01-TC01 dan UC01-TC02 |
 | INT-TC03 – INT-TC06 | <img src="./assets/INT-auth-db.png" width="90%"> |
