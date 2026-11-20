@@ -62,10 +62,7 @@ Dipersiapkan oleh:
 
 | Revisi | Deskripsi |
 | :--- | :--- |
-| *A* | *Deskripsikan perubahan yang dilakukan dari dokumen sebelumnya pada dokumen ini. Jika tidak terdapat perubahan, harap kosongkan tabel.* |
-| *B* |  |
-| *C* |  |
-| ... |  |
+| *A* | *Versi awal dokumen HIUPL (Tugas 10): BAB 1–2 disesuaikan dari SKPL dan DPPL dengan istilah dan aturan penomoran ID pengujian (CXX-UTYY, VAL-UTYY, INT-TCYY, UCXX-TCYY, KNFXX-TCYY), BAB 3 implementasi, BAB 4 hasil pengujian unit, integrasi, use case, dan KNF beserta bukti, serta BAB 5 traceability.* |
 
 ---
 
@@ -277,15 +274,36 @@ Tabel 3.2. Implementasi Modul
 
 ## 3.3 Implementasi Antarmuka
 
-Daftar antarmuka yang telah diimplementasikan. Gunakan ID dan nama layar yang sama dengan ID dan nama layar pada tugas DPPL.
+Kolom *Nama File Executable* diisi `-` karena aplikasi web Next.js tidak menghasilkan berkas executable per layar (hasil *build* berada di `.next/`).
 
 Tabel 3.3. Implementasi Antarmuka
 
 | No | ID Antarmuka | Nama Antarmuka | Nama File Fisik | Nama File Executable |
 | :--- | :--- | :--- | :--- | :--- |
-| 1 | *[I-01]* | *[Nama layar]* | *[path/ke/file]* | *[Nama file executable, atau - jika tidak ada]* |
-| 2 | *[I-02]* | *[Nama layar]* | *[path/ke/file]* | *[...]* |
-| ... | *...* | *...* | *...* | *...* |
+| 1 | I-01 | Masuk | `src/app/login/page.tsx`; `src/components/LoginForm.tsx` | - |
+| 2 | I-02 | Daftar Akun | `src/app/register/page.tsx`; `src/components/RegisterForm.tsx` | - |
+| 3 | I-02a | Daftar Akun Gagal | `src/app/register/page.tsx`; `src/components/RegisterForm.tsx` (status galat validasi pada formulir) | - |
+| 4 | I-03 | Beranda | `src/app/dashboard/page.tsx`; `src/components/Sidebar.tsx` | - |
+| 5 | I-03a | Beranda (Preferensi Belum Diatur) | `src/app/dashboard/page.tsx` (peringatan preferensi saat `PREFERENCE_NOT_SET`) | - |
+| 6 | I-04 | Discover | `src/app/discover/page.tsx`; `src/components/ParticipantSessionPanel.tsx` (`DiscoverCatalog`) | - |
+| 7 | I-05 | Detail Sesi (Mentee) | `src/app/sessions/[id]/page.tsx`; `src/components/ParticipantSessionPanel.tsx` | - |
+| 8 | I-05a | Detail Sesi (Mentor) | `src/app/sessions/[id]/page.tsx`; `src/components/ParticipantSessionPanel.tsx`; `src/components/DeleteSessionButton.tsx` | - |
+| 9 | I-06 | Edit Sesi | `src/app/sessions/[id]/edit/page.tsx`; `src/components/EditSessionPanel.tsx` | - |
+| 10 | I-07 | Profil | `src/app/profile/page.tsx`; `src/app/profile/[id]/page.tsx`; `src/app/profile/not-found.tsx`; `src/components/ProfileView.tsx` | - |
+| 11 | I-08 | Edit Preferensi | `src/app/profile/preferences/page.tsx`; `src/components/PreferenceForm.tsx`; `src/components/AvailabilityEditor.tsx` | - |
+| 12 | I-09 | History | `src/app/history/page.tsx`; `src/components/SessionHistoryView.tsx` | - |
+| 13 | I-10 | Grup Obrolan | `src/app/sessions/[id]/chat/page.tsx`; `src/components/ChatRoom.tsx` | - |
+| 14 | I-11 | Buat Sesi | `src/app/sessions/new/page.tsx`; `src/components/HostSessionPanel.tsx` | - |
+| 15 | I-12 | Konfirmasi Hapus Sesi | `src/components/DeleteSessionButton.tsx` (dialog konfirmasi pada `src/app/sessions/[id]/page.tsx`) | - |
+| 16 | I-13 | Konfirmasi Keluar Sesi | `src/components/ParticipantSessionPanel.tsx` (dialog konfirmasi pembatalan pada `src/app/sessions/[id]/page.tsx`) | - |
+| 17 | I-14 | Konfirmasi Keterlaksanaan & Penilaian | `src/app/sessions/[id]/feedback/page.tsx`; `src/components/FeedbackForm.tsx`; `src/components/SessionHistoryView.tsx` | - |
+| 18 | I-15 | Feedback Sesi | `src/app/sessions/[id]/feedback/page.tsx`; `src/components/SessionFeedbackView.tsx` | - |
+| 19 | I-16 | Notifikasi Pengingat Sesi | `src/components/PopUpNotification.tsx` (dipasang global pada `src/app/layout.tsx`) | - |
+
+Catatan perbedaan terhadap BAB 6 DPPL:
+1. Seluruh layar `I-01` sampai `I-16` telah diimplementasikan (tidak ada layar yang dilewatkan). Rute akar `/` (`src/app/page.tsx`) mengalihkan pengguna ke `/dashboard` (`I-03`).
+2. Pada `I-07` (Profil), kartu statistik sesi dan rating (`I07-03`) tidak diimplementasikan; sebagai tambahan, tersedia tombol dan formulir `Edit Profil` pada profil milik sendiri untuk memperbarui nama, universitas, program studi, dan bio.
+3. Pada `I-14`, konfirmasi keterlaksanaan sesi tersedia melalui halaman Riwayat (`SessionHistoryView`) maupun `/sessions/[id]/feedback` (`FeedbackForm`), sementara pemberian rating dan komentar dilakukan melalui `FeedbackForm` pada `/sessions/[id]/feedback`.
 
 ## 3.4 File Lain
 
@@ -347,11 +365,31 @@ Tabel 4.1.1. Identifikasi Tingkat Pengujian Kelas
 
 | ID Kelas | Nama Kelas | Tingkat | Alasan | Test Case Terkait |
 | :--- | :--- | :--- | :--- | :--- |
-| *C02* | *Pesanan* | *Mendalam* | *Memuat `hitungTotal()` dan transisi status pembayaran* | *C02-UT01 s.d. C02-UT08* |
-| *C03* | *Keranjang* | *Sedang* | *Delegasi sederhana ke Produk dan Pesanan* | *C03-UT01 s.d. C03-UT03, INT-TC02* |
-| *C01* | *Pelanggan* | *Tidak perlu* | *Hanya menyimpan data akun, tanpa logika* | *-* |
-| *[CXX]* | *[Nama kelas]* | *[Mendalam/Sedang/Tidak perlu]* | *[Alasan penentuan tingkat pengujian]* | *[ID test case atau -]* |
-| *...* | *...* | *...* | *...* | *...* |
+| *C01* | *User* | *Tidak perlu* | *Entity yang hanya menyimpan dan memetakan data akun (`idUser`, `username`, `email`). Registrasi, login, dan validasi email ditangani `UserControl` (C12) dan `AuthAdapter`* | *Tidak langsung: UC01-TC01 s.d. UC01-TC03, INT-TC05* |
+| *C02* | *Mentor* | *Tidak perlu* | *Tidak menjadi kelas tersendiri pada implementasi (peran pada kolom `sessions.id_mentor`, B.1 M9). Logikanya ada pada `Session` (C04) dan `SessionControl` (C13)* | *Tidak langsung: TC UC03, UC11, UC12, UC13* |
+| *C03* | *Mentee* | *Tidak perlu* | *Tidak menjadi kelas tersendiri pada implementasi (peran pada tabel `session_participants`, B.1 M9). Logikanya ada pada `Session` (C04), `SessionControl` (C13), dan `FeedbackControl` (C14)* | *Tidak langsung: TC UC04, UC07, UC10* |
+| *C04* | *Session* | *Mendalam* | *Memuat aturan bisnis kapasitas (`checkCapacity()`, 1–20 peserta), irisan jadwal (`getSessionsByMentorInRange()`, `getSessionsByParticipantInRange()`), transisi status, `hasStarted()`, dan `needsConfirmation()` (aturan 48 jam)* | *C04-UT01 s.d. C04-UT15, C04-UT21 s.d. C04-UT60, INT-TC27 s.d. INT-TC29* |
+| *C05* | *GroupChat* | *Mendalam* | *Memuat aturan keanggotaan (`isMember()`), status aktif, dan retensi 48 jam (`expiresAt`, pembersihan melalui Cron)* | *C05-UT01 s.d. C05-UT16, INT-TC16 s.d. INT-TC26* |
+| *C06* | *Feedback* | *Sedang* | *Operasi simpan dan baca *feedback* (CRUD) dengan sedikit logika; validasi rating dan kelayakan berada di `FeedbackControl` (C14)* | *C06-UT01 s.d. C06-UT07, C14-UT08, C14-UT15* |
+| *C07* | *SessionHistory* | *Sedang* | *Mengambil sesi arsip pengguna dan mengelompokkannya per status (`getGroupedByStatus()`) tanpa aturan bisnis tambahan* | *C07-UT01 s.d. C07-UT12, KNF05-TC01* |
+| *C08* | *ChatMessage* | *Sedang* | *Membuat dan membaca pesan (CRUD) serta memetakan baris basis data; validasi isi pesan dan keanggotaan berada di `ChatController` dan RLS* | *C08-UT01 s.d. C08-UT10, INT-TC20 s.d. INT-TC26* |
+| *C09* | *Preference* | *Mendalam* | *Memuat pembaruan preferensi yang divalidasi (`validatePreference()`) dan pemetaan data preferensi yang menjadi masukan *matchmaking** | *C09-UT01 s.d. C09-UT07, INT-TC06* |
+| *C10* | *Profile* | *Sedang* | *Operasi buat, baca, dan ubah profil (CRUD) dengan sedikit logika* | *C10-UT01 s.d. C10-UT10, INT-TC05* |
+| *C11* | *Dashboard* | *Tidak perlu* | *Halaman *view* yang hanya memuat dan menampilkan data. *Matchmaking* yang dipanggilnya diimplementasikan dan diuji pada `SessionControl` (C13)* | *Tidak langsung: TC UC04, UC14* |
+| *C12* | *UserControl* | *Mendalam* | *Memuat validasi email domain universitas, persetujuan data, dan alur registrasi/login melalui `AuthAdapter` (keamanan dan integrasi eksternal)* | *C12-UT01 s.d. C12-UT46, VAL-UT01 s.d. VAL-UT07, INT-TC01 s.d. INT-TC06, KNF01-TC01, KNF04-TC01* |
+| *C13* | *SessionControl* | *Mendalam* | *Memuat Algo-C13-01 s.d. Algo-C13-04: validasi waktu sesi (`validateSessionTime()`, tidak lintas hari, 10 menit–12 jam), konflik jadwal Mentor dan Mentee, kapasitas, *matchmaking* (`matchSession()`), dan konfirmasi sesi* | *C13-UT21 s.d. C13-UT41 (pendaftaran dan pembatalan), INT-TC27 s.d. INT-TC29, KNF02-TC01; operasi pembuatan, pengubahan, penghapusan, dan konfirmasi sesi (C13-UT01 s.d. C13-UT20) diisi Matthew* |
+| *C14* | *FeedbackControl* | *Mendalam* | *Memuat aturan kelayakan *feedback* (`checkFeedbackEligibility()`: hanya Mentee peserta, sesi selesai, belum pernah memberi) dan validasi rating 1–5 (`validateRating()`) sebelum `submitFeedback()`* | *C14-UT01 s.d. C14-UT23, VAL-UT08, VAL-UT09* |
+| *C15* | *LoginPage* | *Tidak perlu* | *Kelas *view* yang menampilkan formulir dan meneruskan masukan ke `UserControl`* | *Tidak langsung: UC01-TC01 s.d. UC01-TC03* |
+| *C16* | *ProfilePage* | *Tidak perlu* | *Kelas *view* yang menampilkan profil dan formulir preferensi* | *Tidak langsung: UC02-TC01, UC02-TC02, TC UC15* |
+| *C17* | *SessionPage* | *Tidak perlu* | *Kelas *view* untuk detail sesi dan konfirmasi keterlaksanaan; logikanya di `SessionControl`* | *Tidak langsung: TC UC05* |
+| *C18* | *HostSessionPage* | *Tidak perlu* | *Kelas *view* untuk formulir buat, edit, hapus sesi dan daftar *feedback*; validasi di `SessionControl`* | *Tidak langsung: TC UC03, UC11, UC12, UC13* |
+| *C19* | *ParticipantSessionPage* | *Tidak perlu* | *Kelas *view* untuk bergabung dan membatalkan keikutsertaan* | *Tidak langsung: TC UC04, UC10* |
+| *C20* | *FeedbackForm* | *Tidak perlu* | *Kelas *view* yang menampilkan formulir rating dan komentar; validasi di `FeedbackControl`* | *Tidak langsung: TC UC07* |
+| *C21* | *GroupChatPage* | *Tidak perlu* | *Kelas *view* yang menampilkan pesan dan menerima pembaruan Realtime* | *Tidak langsung: UC08-TC01 s.d. UC08-TC03, INT-TC30 s.d. INT-TC33* |
+| *C22* | *Notification* | *Mendalam* | *Memuat pembentukan pengingat 15 menit sebelum sesi tanpa duplikat (Cron) dan status baca (`markAsRead()`)* | *C22-UT01 s.d. C22-UT19, INT-TC07 s.d. INT-TC15, KNF03-TC01, KNF03-TC02* |
+| *C23* | *PopUpNotification* | *Tidak perlu* | *Kelas *view* yang menampilkan *pop-up* notifikasi* | *Tidak langsung: UC09-TC01, UC09-TC02, INT-TC34* |
+| *C24* | *HistoryPage* | *Tidak perlu* | *Kelas *view* yang menampilkan daftar riwayat; pengelompokan di `SessionHistory`* | *Tidak langsung: TC UC06, KNF05-TC01* |
+| *-* | *Validator (`lib/validator.ts`)* | *Mendalam* | *Modul pendukung tanpa ID kelas DPPL berisi fungsi validasi murni (`validateEmail()`, `validatePreference()`, `validateCapacity()`, `validateSessionTime()`, `validateRating()`, `hasScheduleConflict()`) yang dipakai banyak kelas* | *VAL-UT01 s.d. VAL-UT17, INT-TC28, INT-TC29* |
 
 ## 4.2 Pengujian Unit Kelas
 
@@ -363,14 +401,262 @@ Lokasi file test: `src/tests/`. Unit test kelas Model memakai *fake* klien Supab
 
 Kolom *Hasil Pengujian* diambil dari keluaran `npm test` pada branch `test/user-chat-notification` (tag `v9.2` ditambah test M10, tanpa perubahan kode aplikasi): **20 berkas, 226 test, seluruhnya lulus**. Nama test Vitest dicantumkan dalam tanda kutip agar setiap ID dapat ditelusuri ke berkas test.
 
-### 4.2.1 Kelas UserControl
+### 4.2.1 Kelas Session
+
+**ID Kelas:** C04  
+**Nama Kelas:** Session (`src/models/session.ts`)  
+**Tingkat:** Mendalam  
+**Berkas test:** bagian operasi basis data sesi (C04-UT38 s.d. C04-UT60): `src/tests/sessionModel.test.ts` (baru pada M10); bagian *matchmaking* dan pencarian (C04-UT01 s.d. C04-UT15, Hugo): `src/tests/sessionParticipationController.test.ts`, `src/tests/sessionMatchSearch.test.ts` (baru pada M10); bagian kapasitas dan partisipan (C04-UT21 s.d. C04-UT37, Fabian): `src/tests/session.test.ts`, `src/tests/sessionParticipantModel.test.ts` (baru pada M10), `src/tests/sessionCapacityGuard.test.ts`, `src/tests/sessionCapacityBoundary.test.ts` (baru pada M10)
+
+Bagian `C04-UT01` s.d. `C04-UT15` di bawah menguji operasi `matchSession()` dan `searchSession()` (bagian Hugo). Operasi pembuatan, pengubahan, penghapusan, konfirmasi, kapasitas, dan partisipasi sesi dilanjutkan pada nomor ID berikutnya oleh Matthew dan Fabian.
+
+Tabel 4.2.1. Hasil Pengujian Unit Kelas C04
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C04-UT01 | `matchSession()` | Normal | Preferensi tag `["Struktur Data", "Kalkulus"]`, slot Senin 08:00–12:00 WIB, format `DARING`; 4 kandidat (cocok tag, cocok topik fallback, tag salah, format salah) | Mengembalikan 2 sesi yang cocok terurut naik berdasarkan `scheduledTime` | "matches sessions by material tag intersection, WIB availability slot, and format" lulus | Pass |
+| C04-UT02 | `matchSession()` | Normal | Preferensi format `BOTH` dengan kandidat `DARING` dan `LURING` | Kedua kandidat dikembalikan | "matches both DARING and LURING sessions when format preference is BOTH" lulus | Pass |
+| C04-UT03 | `matchSession()` | Batas | Sesi Minggu 00:30–02:00 WIB (`2026-11-14T17:30:00Z`, batas hari UTC vs WIB) dan sesi di luar jam luang; preferensi `day: 0` (Minggu) 00:00–03:00 | Hanya sesi Minggu dini hari WIB yang cocok | "evaluates day (0 = Sunday) and time range in WIB (Asia/Jakarta, UTC+7)" lulus | Pass |
+| C04-UT04 | `matchSession()` | Negatif | Kandidat sesi milik sendiri, sudah diikuti, penuh (`3/3`), sudah dimulai, dan 1 sesi valid | Hanya sesi valid yang dikembalikan | "excludes own sessions, already joined sessions, full sessions, and started sessions" lulus | Pass |
+| C04-UT05 | `matchSession()` | Negatif | Preferensi tidak lengkap: `sessionFormatPreference: null`, `availability: []`, `materialTag: []`, atau tag hanya spasi | Mengembalikan `[]` | "returns empty array when preference is incomplete or tags are blank" lulus | Pass |
+| C04-UT06 | `matchSession()` | Normal | Tag berspasi ganda dan beda huruf besar/kecil (`"  struktur   data "`, `"KALKULUS"`), urutan masukan terbalik | Tetap cocok dan diurutkan naik berdasarkan `scheduledTime` | "matches by tag or topic (case- and whitespace-insensitive) and sorts ascending by scheduledTime" lulus | Pass |
+| C04-UT07 | `matchSession()` | Batas | Sesi tepat di batas slot 08:00–12:00 WIB vs mulai 07:59 WIB vs selesai 12:01 WIB | Hanya sesi tepat di batas 08:00–12:00 WIB yang cocok | "matches exact availability slot boundaries and rejects sessions 1 minute outside" lulus | Pass |
+| C04-UT08 | `matchSession()` | Batas | Sesi 22:00–00:00 WIB (lintas hari) dibandingkan slot berakhir `23:59` vs `23:00` | Cocok hanya pada slot `23:59`, ditolak pada `23:00` | "handles cross-day boundary only when availability slot ends at 23:59" lulus | Pass |
+| C04-UT09 | `matchSession()` | Negatif | Status `SELESAI`, `capacity = 0`, tanggal tidak valid, `endTime < scheduledTime`, `scheduledTime === now`, serta slot waktu tidak valid (`25:00`, `12:00–08:00`) | Semuanya ditolak (`[]`) | "rejects non-TERJADWAL status, invalid capacity, invalid timestamps, and malformed availability slots" lulus | Pass |
+| C04-UT10 | `matchSession()` | Batas | Kapasitas 1 dengan `participantCount = 0` vs `participantCount = 1` | Sesi `0/1` diterima, `1/1` ditolak | "handles capacity boundary (capacity - 1 accepted, capacity rejected)" lulus | Pass |
+| C04-UT11 | `searchSession()` | Normal | Filter terpisah menurut kata kunci topik (`"pohon"`), tag (`"rekayasa"`), format (`LURING`), tanggal (`2026-11-16`), dan hari WIB (`2`) | Setiap filter mengembalikan sesi yang sesuai | "filters by topic or material tag keyword, format, date, and WIB day" lulus | Pass |
+| C04-UT12 | `searchSession()` | Batas | Kriteria kosong `{}` dan `{ format: "ALL", query: "   ", day: null }` | Mengembalikan seluruh sesi tanpa penyaringan | "returns all sessions when criteria are empty or format is ALL" lulus | Pass |
+| C04-UT13 | `searchSession()` | Normal/Negatif | Kata kunci berspasi dan huruf besar (`"  POHON   biner "`) vs kata kunci tanpa kecocokan (`"fisika kuantum"`) | Cocok untuk `"pohon biner"`, mengembalikan `[]` jika tidak ada kecocokan | "normalizes query whitespace and letter case and returns empty array when nothing matches" lulus | Pass |
+| C04-UT14 | `searchSession()` | Normal/Batas | `schedule` cocok melalui *fallback* `dateKey` WIB saat `session.schedule` kosong; kombinasi query + format + hari + tanggal; kombinasi yang tidak cocok | Mengembalikan sesi yang memenuhi seluruh kriteria atau `[]` | "matches schedule via WIB dateKey fallback and combines multiple filters" lulus | Pass |
+| C04-UT15 | `searchSession()` | Batas | Filter `day: 1.5` (bukan bilangan bulat) | Filter hari diabaikan, seluruh sesi dikembalikan | "ignores non-integer day filters" lulus | Pass |
+| C04-UT21 | `checkCapacity()` | Normal | Peserta 0 dari 5 dan 4 dari 5 | `true` | "is true while participants are below capacity" lulus | Pass |
+| C04-UT22 | `checkCapacity()` | Batas | Peserta 5 dari 5 dan 6 dari 5; kapasitas 1 dan 20 tepat di batas (0/1, 1/1, 19/20, 20/20) | `false` saat penuh atau melebihi; `true` hanya bila masih ada slot | "is false once the capacity is reached or exceeded", "handles the smallest and largest allowed capacity exactly at the boundary" lulus | Pass |
+| C04-UT23 | `checkCapacity()` | Negatif | Kapasitas 0 dan 21; kapasitas 2,5; jumlah peserta -1 | `false` | "is false when the stored capacity is outside 1-20", "is false for a fractional capacity or a negative participant count" lulus | Pass |
+| C04-UT24 | `addParticipant()` | Normal | `addParticipant("s1", "m1")` | Baris `{ id_session: "s1", id_mentee: "m1" }` dimasukkan ke `session_participants` | "inserts the mentee into session_participants" lulus | Pass |
+| C04-UT25 | `addParticipant()` | Negatif | Basis data menolak dengan pesan `SESSION_FULL` | Melempar `SessionFullError` | "maps the database capacity guard to SessionFullError" lulus | Pass |
+| C04-UT26 | `addParticipant()` | Negatif | Kode galat `23505` (duplikat); galat lain `boom` | `SessionAlreadyJoinedError`; galat lain diteruskan | "maps a duplicate row to SessionAlreadyJoinedError and keeps other errors" lulus | Pass |
+| C04-UT27 | `addParticipant()` | Negatif | Basis data menolak dengan pesan `PARTICIPANT_SCHEDULE_CONFLICT` | Melempar `ParticipantScheduleConflictError` | "maps the database schedule guard to ParticipantScheduleConflictError" lulus | Pass |
+| C04-UT28 | `removeParticipant()` | Normal/Batas | Ada satu baris terhapus; tidak ada baris terhapus | `true`; `false`; filter `id_session` dan `id_mentee` dipakai | "deletes only the mentee's own registration and reports whether a row was removed" lulus | Pass |
+| C04-UT29 | `removeParticipant()` | Normal | `removeParticipant("s2", "m9")` | Filter memakai `s2` dan `m9` | "filters the delete by both the session and the mentee that were passed in" lulus | Pass |
+| C04-UT30 | `removeParticipant()` | Negatif | Basis data mengembalikan galat | Melempar galat | "throws database errors" lulus | Pass |
+| C04-UT31 | *Trigger* `enforce_session_capacity` (PGlite) | Normal/Batas | Sesi kapasitas 1; Mentee pertama bergabung, Mentee kedua mencoba | Pertama diterima; kedua `SESSION_FULL`; hanya satu baris tersimpan | "accepts mentees while a slot is free and rejects the next one with SESSION_FULL" lulus | Pass |
+| C04-UT32 | *Trigger* (PGlite) | Batas | Sesi kapasitas 3; empat Mentee bergabung berurutan | Tiga diterima, yang keempat `SESSION_FULL` | "accepts exactly `capacity` mentees and rejects the next one with SESSION_FULL" lulus | Pass |
+| C04-UT33 | *Trigger* (PGlite) | Normal | Kapasitas 1 penuh, peserta membatalkan, Mentee lain bergabung | Slot kosong kembali dan Mentee lain diterima | "frees a slot when a mentee cancels, so the next mentee can join (KF13 + KF15)" lulus | Pass |
+| C04-UT34 | *Trigger* (PGlite) | Batas | Satu sesi penuh, sesi lain masih kosong | Sesi penuh menolak; sesi lain menerima | "counts participants per session, so a full session does not block another one" lulus | Pass |
+| C04-UT35 | Kebijakan RLS `participants_delete` (PGlite) | Negatif | Mentee B menghapus pendaftaran Mentee A | Pendaftaran Mentee A tetap ada | "does not let a mentee cancel another mentee's registration (RLS)" lulus | Pass |
+| C04-UT36 | *Trigger* dan *primary key* (PGlite) | Negatif | Mentee yang sama bergabung dua kali ke sesi berkapasitas 3 | Ditolak *duplicate key*; satu baris tersimpan | "rejects a duplicate registration of the same mentee" lulus | Pass |
+| C04-UT37 | *Trigger* (PGlite) | Negatif | Mendaftar ke sesi yang tidak ada | `SESSION_NOT_FOUND` | "rejects a registration for a session that does not exist with SESSION_NOT_FOUND" lulus | Pass |
+| C04-UT38 | `createSession()` | Normal | `createSession("mentor-1", data, "2026-11-25")` | *Insert* ke `sessions` dengan `id_mentor`, `schedule`, `scheduled_time`, `end_time` ISO; mengembalikan `Session` | "inserts the session for the mentor and maps the saved row" lulus | Pass |
+| C04-UT39 | `createSession()` | Negatif | Basis data menolak dengan `23P01` (jadwal Mentor beririsan) | Melempar `SessionScheduleConflictError` | "throws SessionScheduleConflictError when the mentor already has an overlapping session" lulus | Pass |
+| C04-UT40 | `createSession()` | Negatif | *Check constraint* kapasitas (`23514`) | Melempar galat basis data | "throws other database errors" lulus | Pass |
+| C04-UT41 | `findById()` | Normal/Batas | Sesi ada; sesi tidak ada | `Session`; `null` | "returns the session or null when it does not exist" lulus | Pass |
+| C04-UT42 | `findById()` | Negatif | *Query* gagal | Melempar galat | "throws database errors" lulus | Pass |
+| C04-UT43 | `findForMentor()` | Normal | Sesi milik Mentor dengan 3 peserta | Sesi dan `participantCount: 3`; filter `id_session` dan `id_mentor` | "returns the hosted session with its participant count" lulus | Pass |
+| C04-UT44 | `findForMentor()` | Batas | Sesi milik Mentor lain | `null` tanpa menghitung peserta | "returns null for a session hosted by someone else" lulus | Pass |
+| C04-UT45 | `findForMentor()` | Negatif | *Query* sesi gagal; *query* peserta gagal; `count` kosong | Melempar galat yang sesuai | "throws when the session or participant lookup fails or the count is missing" lulus | Pass |
+| C04-UT46 | `updateSession()` | Normal | Mengubah tag, tautan, dan jadwal sesi milik Mentor | *Update* hanya baris `id_session` dan `id_mentor` yang cocok; mengembalikan `Session` | "updates only the mentor's own session and returns it" lulus | Pass |
+| C04-UT47 | `updateSession()` | Batas | Tidak ada sesi milik Mentor yang cocok | `null` | "returns null when no session of the mentor matches" lulus | Pass |
+| C04-UT48 | `updateSession()` | Negatif | `23P01`; galat lain | `SessionScheduleConflictError`; galat diteruskan | "maps overlap to SessionScheduleConflictError and throws other errors" lulus | Pass |
+| C04-UT49 | `deleteSession()` | Normal | RPC `delete_session` mengembalikan 2 | Jumlah peserta yang diberi notifikasi (2) | "returns the number of notified participants" lulus | Pass |
+| C04-UT50 | `deleteSession()` | Batas | RPC mengembalikan 0; `null` | `0`; `null` | "returns 0 for a session without participants and null when nothing is returned" lulus | Pass |
+| C04-UT51 | `deleteSession()` | Negatif | RPC menolak (bukan pemilik); data bukan angka | Melempar galat | "throws when the database refuses or returns an unexpected value" lulus | Pass |
+| C04-UT52 | `getUpcomingByUser()` | Normal | Satu sesi milik pengguna, satu sesi yang diikuti, satu sesi `SELESAI`, satu baris tanpa sesi | Hanya sesi `TERJADWAL`, dengan peran, nama Mentor (atau "Mentor"), dan jumlah peserta, terurut dari jadwal terdekat | "merges hosted and joined scheduled sessions with role, mentor name, and participant count" lulus | Pass |
+| C04-UT53 | `getUpcomingByUser()` | Batas | Pengguna tanpa sesi terjadwal | Daftar kosong tanpa *query* profil | "returns an empty list without further lookups when the user has no scheduled session" lulus | Pass |
+| C04-UT54 | `getUpcomingByUser()` | Negatif | *Query* `sessions` atau `session_participants` gagal | Melempar galat | "throws when a lookup fails" lulus | Pass |
+| C04-UT55 | `getAvailableSessions()` | Normal | Satu sesi terjadwal setelah `now` dengan satu peserta | Kandidat dengan nama Mentor, `participantCount`, dan `participantIds`; filter `scheduled_time > now` | "returns scheduled future sessions with mentor names and participant ids" lulus | Pass |
+| C04-UT56 | `getAvailableSessions()` | Batas | Tidak ada sesi terbuka | Daftar kosong | "returns an empty list when no session is open" lulus | Pass |
+| C04-UT57 | `getAvailableSessions()` | Negatif | *Query* sesi, profil, atau peserta gagal | Melempar galat | "throws when the session, profile, or participant lookup fails" lulus | Pass |
+| C04-UT58 | `getSessionDetail()` | Normal | Peserta membuka detail sesi | Tautan pertemuan tampil, daftar peserta beserta profil, `isParticipant: true` | "shows the meeting link and participants to a participant" lulus | Pass |
+| C04-UT59 | `getSessionDetail()` | Batas | Pengguna yang belum bergabung; profil tidak ditemukan | Tautan pertemuan disembunyikan; nama "Mentor"/"Mentee" | "hides the meeting link from a user who has not joined and uses fallback names" lulus | Pass |
+| C04-UT60 | `getSessionDetail()` | Negatif | Sesi tidak ada; *query* sesi, peserta, atau profil gagal | `null`; melempar galat | "returns null for a missing session and throws lookup errors" lulus | Pass |
+
+
+Tabel 4.2.1b. Ringkasan Cakupan Kelas C04 (bagian `matchSession()` dan `searchSession()`)
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL (bagian *matchmaking* & pencarian) | `matchSession()`, `searchSession()` |
+| Operasi yang diuji | `matchSession()` (beserta fungsi bantu `matchesAvailability()`, `parseMinutes()`, `toWib()`, `normalizeTag()`) dan `searchSession()` |
+| ID Algoritma yang tercakup | Algo-C04-01 (`matchSession()`), Algo-C04-02 (`searchSession()`) |
+| Coverage (wajib ≥ 70%) | `models/session.ts` blok `matchSession()` & `searchSession()` (baris 122–249): **92,86% *statement*** (78/84) dan **93,55% cabang** (87/93) menggunakan `@vitest/coverage-v8`. Bukti `C04-C11-C16-unit.png` dan `coverage-hugo.png` pada 4.6 |
+
+Tabel 4.2.1c. Ringkasan Cakupan Kelas C04 (bagian kapasitas, partisipan, dan operasi basis data)
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `addParticipant()`, `removeParticipant()`, `checkCapacity()`, `saveSession()` (diwujudkan `createSession()`), `getSessionById()` (`findById()`), `getSessionsMade()`/`isOwnedBy()` (`findForMentor()`), `editSchedule()`/`editDescription()`/`editPreference()` (`updateSession()`), `markAsDeleted()` (`deleteSession()`), `getUpcomingByUser()`, `getAvailableSessions()`, `getSessionDetails()` (`getSessionDetail()`) |
+| Operasi yang diuji | `checkCapacity()`, `addParticipant()`, `removeParticipant()`, dan *trigger* `enforce_session_capacity()`. Pada implementasi `checkCapacity()` berupa fungsi dengan parameter `(participantCount, capacity)` (rancangan: metode tanpa parameter), dan `addParticipant()` mengembalikan `void` serta melempar `SessionFullError`, `SessionAlreadyJoinedError`, atau `ParticipantScheduleConflictError` (rancangan: `Promise<boolean>`) |
+| ID Algoritma yang tercakup | Algo-C04-01 (`addParticipant`, `removeParticipant`), Q-C04-08, Q-C04-09 |
+| Coverage (wajib ≥ 70%) | Seluruh berkas `models/session.ts` (gabungan seluruh test C04): 100% baris, 95,93% cabang, 98,34% *statement*, 100% fungsi (`@vitest/coverage-v8`). Bukti `C04-unit.png`, `C04-unit-markus.png`, dan `coverage-markus-c04-c13.png` |
+
+### 4.2.2 Kelas GroupChat
+
+**ID Kelas:** C05  
+**Nama Kelas:** GroupChat (`src/models/groupChat.ts`, dengan ChatController `src/controllers/chatController.ts` dan `src/controllers/chatCleanupController.ts`)  
+**Tingkat:** Mendalam  
+**Berkas test:** `src/tests/groupChatModel.test.ts` (baru pada M10), `src/tests/chat.test.ts`
+
+Tabel 4.2.2. Hasil Pengujian Unit Kelas C05
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C05-UT01 | `findBySession()` | Normal | Baris `group_chats` sesi `s1` | Objek `GroupChat` aktif untuk `s1` | "maps the chat of the session" lulus | Pass |
+| C05-UT02 | `findBySession()` | Batas | Grup tidak terlihat (RLS); ID bukan UUID | `null` | "returns null when the chat is hidden or the ID is not a UUID" lulus | Pass |
+| C05-UT03 | `findBySession()` | Negatif | Galat basis data | Melempar galat | "throws other database errors" lulus | Pass |
+| C05-UT04 | `findMenteeIds()` | Normal | Dua peserta | `["a", "b"]` terurut `joined_at` | "lists the participants in join order" lulus | Pass |
+| C05-UT05 | `findMenteeIds()` | Negatif | Kueri gagal | Melempar galat | "throws when the query fails" lulus | Pass |
+| C05-UT06 | `closeExpired()` | Normal | `now` tertentu | RPC `close_expired_group_chats` dengan `p_retention_hours = 48`, mengembalikan jumlah grup | "calls close_expired_group_chats with the 48-hour retention" lulus | Pass |
+| C05-UT07 | `closeExpired()` | Negatif | RPC ditolak | Melempar galat | "throws when the function fails" lulus | Pass |
+| C05-UT08 | `isActive()` | Normal | 1 jam sebelum sesi berakhir; 48 jam kurang 1 ms setelah berakhir | `true` | "is active during the session and until just before 48 hours after it ends" lulus | Pass |
+| C05-UT09 | `isActive()` | Batas | Tepat 48 jam setelah sesi berakhir | `false` | "is inactive from exactly 48 hours after the session ends" lulus | Pass |
+| C05-UT10 | `isActive()` | Negatif | Grup sudah ditutup (`is_active = false`) | `false` | "is inactive once the chat has been closed" lulus | Pass |
+| C05-UT11 | `getGroupChat()` (ChatController) | Normal | Anggota membuka grup sesi | Data sesi, anggota (Mentor ditandai), nama pengirim termasuk mantan peserta, dan pesan | "returns the session, members, sender names, and messages for a member" lulus | Pass |
+| C05-UT12 | `getGroupChat()` | Negatif | Pengguna bukan anggota (grup tidak terlihat) | `null` | "returns null when the user cannot see the chat" lulus | Pass |
+| C05-UT13 | `getGroupChat()` | Negatif | Tanpa sesi login | `null` | "returns null without a session" lulus | Pass |
+| C05-UT14 | `getGroupChat()` | Batas | Grup melewati masa aktif | `active = false` | "reports an expired chat as inactive" lulus | Pass |
+| C05-UT15 | `GET /api/cron/chat-cleanup` | Negatif | Tanpa `CRON_SECRET` yang benar | HTTP 401, `closeExpired()` tidak dipanggil | "rejects calls without the cron secret" lulus | Pass |
+| C05-UT16 | `GET /api/cron/chat-cleanup` | Normal | Dengan `CRON_SECRET` | HTTP 200 dan jumlah grup yang ditutup | "closes expired chats" lulus | Pass |
+
+Tabel 4.2.2b. Ringkasan Cakupan Kelas C05
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `findBySession()`, `findById()`, `getId()`, `isActive()`, `isMember()`, `getMessages()`, `searchMessage()`, `displayMessage()`, `editMessage()`, `deleteMessage()` |
+| Operasi yang diuji | `findBySession()`, `isActive()`, `findMenteeIds()`, `closeExpired()`; `getMessages()` sebagai `ChatMessage.findByGroupChat()` (C08-UT04 s.d. C08-UT06); `isMember()` diwujudkan sebagai fungsi SQL `is_session_member()` pada RLS dan diuji pada INT-TC13 s.d. INT-TC15. `findById()`/`getId()` digantikan properti `idGroupChat`; `displayMessage()` berada di `ChatRoom`. `searchMessage()`, `editMessage()`, `deleteMessage()` tidak diimplementasikan (DPPL revisi D) |
+| ID Algoritma yang tercakup | Algo-C05-01, Q-C05-01, Q-C05-05 (melalui `close_expired_group_chats()`) |
+| Coverage (wajib ≥ 70%) | `models/groupChat.ts`: 100%; `controllers/chatController.ts`: 100% baris, 85% cabang; `controllers/chatCleanupController.ts` dan `app/api/cron/chat-cleanup/route.ts`: 100%. Bukti `C05-unit.png` dan `coverage-david.png` |
+
+### 4.2.3 Kelas Feedback
+
+**ID Kelas:** C06  
+**Nama Kelas:** Feedback (`src/models/feedback.ts`)  
+**Tingkat:** Sedang  
+**Berkas test:** `src/tests/feedbackModel.test.ts` (baru pada M10), dengan *fake* klien Supabase per tabel `src/tests/support/tableSupabase.ts`
+
+Operasi utama yang diuji adalah `save()` (diwujudkan sebagai `create()`) dan `getFeedbackBySession()`. `existsBySessionAndAuthor()` diwujudkan sebagai *unique constraint* `(id_session, id_mentee)` yang menghasilkan `FeedbackAlreadyExistsError` (C06-UT02) dan sebagai kolom `feedback` pada riwayat sesi (C14-UT08). *Getter* dan *setter* (`setRating()`, `getRating()`, dan sebagainya) tidak diuji tersendiri karena hanya berupa properti objek tanpa logika; validasi rating berada di `validateRating()` (VAL-UT08, VAL-UT09).
+
+Tabel 4.2.3. Hasil Pengujian Unit Kelas C06
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C06-UT01 | `create()` | Normal | `("s1", "mentee-1", "mentor-1", 5, "Mantap")` | *Insert* `{ id_session, id_mentee, id_mentor, rating, comment }` ke `feedbacks` | "inserts the rating and comment for the session mentor" lulus | Pass |
+| C06-UT02 | `create()` | Negatif | Basis data menolak dengan `23505` (Mentee sudah memberi *feedback*) | Melempar `FeedbackAlreadyExistsError` | "throws FeedbackAlreadyExistsError when the mentee already rated the session" lulus | Pass |
+| C06-UT03 | `create()` | Negatif | Basis data menolak dengan *check constraint* rating (`23514`) | Melempar galat basis data | "throws other database errors" lulus | Pass |
+| C06-UT04 | `getFeedbackBySession()` | Normal | Dua baris *feedback* dan dua profil Mentee | Daftar *feedback* dengan nama Mentee, terurut dari yang terbaru (`order date desc`) | "returns the session feedback with the mentee names, newest first" lulus | Pass |
+| C06-UT05 | `getFeedbackBySession()` | Batas | Sesi tanpa *feedback* | Daftar kosong tanpa *query* ke `profiles` | "returns an empty list without looking up profiles when there is no feedback" lulus | Pass |
+| C06-UT06 | `getFeedbackBySession()` | Batas | Profil Mentee tidak ditemukan | Nama diganti "Mentee" | "falls back to a generic name when the mentee profile is missing" lulus | Pass |
+| C06-UT07 | `getFeedbackBySession()` | Negatif | *Query* `feedbacks` atau `profiles` gagal | Melempar galat basis data | "throws when the feedback or profile lookup fails" lulus | Pass |
+
+<br>
+
+### 4.2.4 Kelas SessionHistory
+
+**ID Kelas:** C07  
+**Nama Kelas:** SessionHistory (`src/models/sessionHistory.ts`, `src/models/sessionHistoryTypes.ts`, dengan `fetchUserHistory()` pada `src/controllers/sessionHistoryController.ts`)  
+**Tingkat:** Sedang  
+**Berkas test:** `src/tests/sessionHistoryModel.test.ts` (baru pada M10), `src/tests/sessionHistory.test.ts`, `src/tests/sessionHistoryController.test.ts`
+
+Operasi utama yang diuji adalah `getArchivedSessions()` (diwujudkan sebagai `listForUser()` dan `fetchUserHistory()`), `getGroupedByStatus()`, serta `findForUser()` dan `confirmSession()` yang dipakai alur konfirmasi dan *feedback*. `isEmpty()` diwujudkan sebagai pemeriksaan daftar kosong pada `HistoryPage` (C07-UT02, C07-UT07). `getCompletedSessions()`, `addSessionToHistory()`, dan `updateOncomingSession()` tidak menjadi operasi tersendiri karena riwayat dibentuk ulang dari basis data setiap kali dimuat (B.1 M9). Alur `processSessionCompletion()` pada berkas *controller* yang sama merupakan `processSessionConfirmation()` milik C13 dan dilaporkan pada Subbab 4.2.9.
+
+Tabel 4.2.4. Hasil Pengujian Unit Kelas C07
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C07-UT01 | `listForUser()` | Normal | Pengguna menjadi Mentor pada satu sesi `SELESAI` dan Mentee pada satu sesi `DIBATALKAN` yang sudah diberi *feedback* | Kedua sesi tergabung dengan `role`, nama Mentor, dan *feedback*, terurut dari jadwal terbaru | "merges hosted and joined sessions with role, mentor name, and feedback, newest first" lulus | Pass |
+| C07-UT02 | `listForUser()` | Batas | Pengguna belum memiliki sesi | Daftar kosong | "returns an empty history for a user without sessions" lulus | Pass |
+| C07-UT03 | `listForUser()` | Negatif | *Query* `sessions`, `session_participants`, atau `feedbacks` gagal (3 kasus) | Melempar galat basis data | "throws when the sessions lookup fails", "... session_participants ...", "... feedbacks ..." lulus | Pass |
+| C07-UT04 | `findForUser()` | Normal | Sesi yang diikuti pengguna | Entri riwayat sesi tersebut dengan `role: MENTEE` | "returns the history entry of the requested session" lulus | Pass |
+| C07-UT05 | `findForUser()` | Negatif | Sesi yang tidak melibatkan pengguna | `null` | "returns null for a session the user is not part of" lulus | Pass |
+| C07-UT06 | `getGroupedByStatus()` | Normal | Lima sesi dengan empat status berbeda | Setiap sesi masuk ke kelompok statusnya dengan urutan tetap | "groups sessions by status and keeps their order" lulus | Pass |
+| C07-UT07 | `getGroupedByStatus()` | Batas | Daftar kosong | Keempat kelompok status ada dan kosong (dasar pesan "Belum ada sesi") | "returns an empty list for every status when there is no history" lulus | Pass |
+| C07-UT08 | `fetchUserHistory()` | Normal | Pengguna login dengan riwayat | Riwayat dikembalikan; sesi yang sudah berakhir ditandai `canConfirm` | "returns the user's history and marks ended sessions as confirmable" lulus | Pass |
+| C07-UT09 | `fetchUserHistory()` | Negatif | Pengguna belum login | `UNAUTHORIZED`, riwayat tidak dimuat | "rejects guests without loading history" lulus | Pass |
+| C07-UT10 | `fetchUserHistory()` | Negatif | *Query* riwayat gagal | `HISTORY_LOOKUP_FAILED` | "reports lookup failures" lulus | Pass |
+| C07-UT11 | `confirmSession()` | Normal | `("s-host", "TIDAK_TERLAKSANA", "Mentor sakit")` | Memanggil RPC `confirm_session` dengan status dan alasan | "calls confirm_session with the status and reason" lulus | Pass |
+| C07-UT12 | `confirmSession()` | Negatif | RPC menolak (sesi sudah dikonfirmasi) | Melempar galat basis data | "throws when the database rejects the confirmation" lulus | Pass |
+
+<br>
+
+### 4.2.5 Kelas ChatMessage
+
+**ID Kelas:** C08  
+**Nama Kelas:** ChatMessage (`src/models/chatMessage.ts`, dengan `sendMessage()` pada `src/controllers/chatController.ts`)  
+**Tingkat:** Sedang  
+**Berkas test:** `src/tests/chatMessage.test.ts` (baru pada M10), `src/tests/chat.test.ts`
+
+Tabel 4.2.5. Hasil Pengujian Unit Kelas C08
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C08-UT01 | `create()` | Normal | `("g1", "u1", "Halo semua")` | *Insert* `{ id_group_chat, id_sender, text }`, mengembalikan `ChatMessage` | "inserts the message and maps the saved row" lulus | Pass |
+| C08-UT02 | `create()` | Negatif | RLS menolak (`42501`) | Melempar `CHAT_CLOSED` | "reports CHAT_CLOSED when row level security refuses the insert" lulus | Pass |
+| C08-UT03 | `create()` | Negatif | *Check constraint* teks | Melempar galat basis data | "throws other database errors" lulus | Pass |
+| C08-UT04 | `findByGroupChat()` | Normal | Dua pesan | Dua pesan terurut `time_stamp` | "returns the messages of the chat ordered by time" lulus | Pass |
+| C08-UT05 | `findByGroupChat()` | Batas | Grup tanpa pesan | `[]` | "returns an empty list for a chat without messages" lulus | Pass |
+| C08-UT06 | `findByGroupChat()` | Negatif | Kueri gagal | Melempar galat | "throws when the query fails" lulus | Pass |
+| C08-UT07 | `sendMessage()` | Normal | Pesan berspasi dari anggota login | Pesan di-*trim* lalu disimpan | "saves the trimmed message for the logged-in member" lulus | Pass |
+| C08-UT08 | `sendMessage()` | Batas/Negatif | Pesan kosong; pesan 2.001 karakter (batas 2.000) | `EMPTY_MESSAGE`; `MESSAGE_TOO_LONG` tanpa akses basis data | "rejects empty and overlong messages before touching the database" lulus | Pass |
+| C08-UT09 | `sendMessage()` | Negatif | `create()` melempar `CHAT_CLOSED` | `CHAT_EXPIRED` | "reports a chat the database refuses as ended" lulus | Pass |
+| C08-UT10 | `sendMessage()` | Negatif | Tanpa login; galat lain | `NOT_AUTHENTICATED`; `SEND_FAILED` | "requires a logged-in user and reports database failures" lulus | Pass |
+
+### 4.2.6 Kelas Preference
+
+**ID Kelas:** C09  
+**Nama Kelas:** Preference (`src/models/preference.ts`)  
+**Tingkat:** Mendalam  
+**Berkas test:** `src/tests/preference.test.ts` (baru pada M10)
+
+Tabel 4.2.6. Hasil Pengujian Unit Kelas C09
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C09-UT01 | `getPreferenceByUser()` | Normal | Baris `preferences` milik `u1` | Objek `Preference` dengan tag, slot, dan format yang sama; kueri `eq("id_user", "u1")` | "maps the stored row of the user" lulus | Pass |
+| C09-UT02 | `getPreferenceByUser()` | Batas | Pengguna belum punya preferensi | `null` | "returns null when the user has no preference yet" lulus | Pass |
+| C09-UT03 | `getPreferenceByUser()` | Negatif | ID bukan UUID (galat `22P02`) | `null`, tidak melempar | "returns null for an ID that is not a UUID" lulus | Pass |
+| C09-UT04 | `getPreferenceByUser()` | Negatif | Galat koneksi | Melempar galat dengan pesan basis data | "throws other database errors" lulus | Pass |
+| C09-UT05 | `updatePreference()` | Normal | Tag, slot, format `DARING` | *Upsert* `{ id_user, material_tag, availability, session_format_preference }`, mengembalikan `Preference` | "upserts tags, availability, and format, then returns the saved preference" lulus | Pass |
+| C09-UT06 | `updatePreference()` | Negatif | Basis data menolak (`23514`) | Melempar galat | "throws when the database rejects the row" lulus | Pass |
+| C09-UT07 | `getPreferenceDetails()` | Batas | Tag dan slot kosong, format `null` | Nilai kosong dikembalikan apa adanya | "returns empty lists and a null format unchanged" lulus | Pass |
+
+Tabel 4.2.6b. Ringkasan Cakupan Kelas C09
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `getPreferenceByUser()`, `getPreference()`, `getPreferenceDetails()`, `updatePreference()`, `isComplete()`, `getMaterialTag()`, `getAvailability()`, `getSessionFormatPreference()`, `getUserId()` |
+| Operasi yang diuji | `getPreferenceByUser()`, `updatePreference()`, `getPreferenceDetails()`; `isComplete()` sebagai `validatePreference()` (VAL-UT05 s.d. VAL-UT07). `getPreference()` digabung ke `getPreferenceByUser()`, sedangkan *getter* menjadi properti `readonly` (Tabel B.5 M9) |
+| ID Algoritma yang tercakup | Algo-C09-01, Q-C09-01, Q-C09-02 (diwujudkan sebagai *upsert*) |
+| Coverage (wajib ≥ 70%) | `models/preference.ts`: 100% baris, cabang, dan fungsi. Bukti `C09-unit.png` dan `coverage-david.png` |
+
+### 4.2.7 Kelas Profile
+
+**ID Kelas:** C10  
+**Nama Kelas:** Profile (`src/models/profile.ts`)  
+**Tingkat:** Sedang  
+**Berkas test:** `src/tests/profile.test.ts` (baru pada M10)
+
+Tabel 4.2.7. Hasil Pengujian Unit Kelas C10
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C10-UT01 | `create()` | Normal | `idUser = u1` dan data profil | *Insert* kolom `id_user, name, university, study_program, bio`; `getProfileData()` sama dengan masukan | "inserts the profile and maps the saved row" lulus | Pass |
+| C10-UT02 | `create()` | Negatif | *Duplicate key* | Melempar galat | "throws when the insert fails" lulus | Pass |
+| C10-UT03 | `findByUser()` | Normal | Baris profil ada | Objek `Profile` dengan nama yang sama | "returns the profile of the user" lulus | Pass |
+| C10-UT04 | `findByUser()` | Batas | Baris tidak ada; ID bukan UUID | `null` | "returns null when missing or when the ID is not a UUID" lulus | Pass |
+| C10-UT05 | `findByUser()` | Negatif | *Timeout* | Melempar galat | "throws other database errors" lulus | Pass |
+| C10-UT06 | `findByUsers()` | Batas | Daftar ID kosong | `[]` tanpa kueri | "skips the query for an empty list" lulus | Pass |
+| C10-UT07 | `findByUsers()` | Normal | `["u1", "u2"]` | Dua profil; kueri `in("id_user", ...)` | "loads several profiles at once" lulus | Pass |
+| C10-UT08 | `findByUsers()` | Negatif | Kueri gagal | Melempar galat | "throws when the query fails" lulus | Pass |
+| C10-UT09 | `updateProfile()` | Normal | Bio kosong | *Upsert* data profil dan mengembalikan profil baru | "upserts the new identity data" lulus | Pass |
+| C10-UT10 | `updateProfile()` | Negatif | RLS menolak | Melempar galat | "throws when the update fails" lulus | Pass |
+
+### 4.2.8 Kelas UserControl
 
 **ID Kelas:** C12  
 **Nama Kelas:** UserControl (`src/controllers/userController.ts`, dengan `src/lib/adapters/authAdapter.ts`)  
 **Tingkat:** Mendalam  
 **Berkas test:** `src/tests/userController.test.ts`, `src/tests/authAdapter.test.ts`
 
-Tabel 4.2.1. Hasil Pengujian Unit Kelas C12
+Tabel 4.2.8. Hasil Pengujian Unit Kelas C12
 
 | ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -421,162 +707,113 @@ Tabel 4.2.1. Hasil Pengujian Unit Kelas C12
 | C12-UT45 | `authAdapter.getSessionUser()` | Batas | Pengguna tanpa email | `email = ""` | "uses an empty email when Supabase has none" lulus | Pass |
 | C12-UT46 | `authAdapter.getSessionUser()` | Negatif | Tanpa sesi | `null` | "returns null without a session" lulus | Pass |
 
-Tabel 4.2.1b. Ringkasan Cakupan Kelas C12
+Tabel 4.2.8b. Ringkasan Cakupan Kelas C12
 
 | Informasi | Keterangan |
 | :--- | :--- |
 | Daftar operasi public pada DPPL | `authLogin()`, `getCurrentUser()`, `validateEmail()`, `processRegistration()`, `saveProfile()`, `savePreference()`, `fetchUserProfile()`, `fetchUserPreference()` |
-| Operasi yang diuji | Seluruh operasi DPPL. `validateEmail()` diwujudkan di `lib/validator.ts` dan diuji pada 4.2.2. Ditambah `logout()` dan seluruh fungsi `authAdapter` (atribut `authAdapter` pada DPPL) |
+| Operasi yang diuji | Seluruh operasi DPPL. `validateEmail()` diwujudkan di `lib/validator.ts` dan diuji pada 4.2.12. Ditambah `logout()` dan seluruh fungsi `authAdapter` (atribut `authAdapter` pada DPPL) |
 | ID Algoritma yang tercakup | Algo-C12-01 (`processRegistration()`, `savePreference()`, `fetchUserProfile()`) |
 | Coverage (wajib ≥ 70%) | `userController.ts`: 99,03% baris, 94,23% cabang, 97,58% *statement*; `authAdapter.ts`: 100% baris dan cabang (`@vitest/coverage-v8`, bukti `C12-unit.png` dan `coverage-david.png` pada 4.6) |
 
-### 4.2.2 Validator (validasi email dan preferensi)
+### 4.2.9 Kelas SessionControl
 
-**ID Kelas:** Validator (komponen tambahan M6, tanpa ID kelas; operasi `validateEmail()` milik C12 dan `isComplete()` milik C09 pada DPPL)  
-**Nama Kelas:** Validator (`src/lib/validator.ts`)  
+**ID Kelas:** C13  
+**Nama Kelas:** SessionControl (`src/controllers/sessionParticipationController.ts`: `joinSession()`, `processRegistration()`, `cancelSession()`)  
 **Tingkat:** Mendalam  
-**Berkas test:** `src/tests/validator.test.ts`
+**Berkas test:** `src/tests/sessionParticipationController.test.ts`, `src/tests/sessionJoinCancelEdgeCases.test.ts` (baru pada M10)
 
-Subbab ini hanya memuat `validateEmail()` dan `validatePreference()`. `validateSessionTime()` diuji oleh Markus, sedangkan `validateCapacity()`, `validateRating()`, dan `hasScheduleConflict()` diuji bersama kelas pemakainya. ID memakai awalan `VAL` karena Validator tidak memiliki ID kelas; nomor setelah `VAL-UT07` dipakai anggota lain.
-
-Tabel 4.2.2. Hasil Pengujian Unit Validator
+Tabel 4.2.9. Hasil Pengujian Unit Kelas C13
 
 | ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| VAL-UT01 | `validateEmail()` | Normal | `mentee.satu@mahasiswa.itb.ac.id`, `a@ui.ac.id` | `true` | "accepts university addresses" lulus | Pass |
-| VAL-UT02 | `validateEmail()` | Batas | `"  Mentee.Satu@Mahasiswa.ITB.AC.ID  "` | `true` (spasi diabaikan, tidak peka huruf besar) | "ignores surrounding spaces and letter case" lulus | Pass |
-| VAL-UT03 | `validateEmail()` | Negatif | `someone@gmail.com`, `fake@ac.id.evil.com`, `no-at-sign.ac.id` | `false` | "rejects non-university addresses" lulus | Pass |
-| VAL-UT04 | `validateEmail()` | Batas | `a@ac.id` (tanpa nama institusi), `a@itb.ac.id.`, string kosong | `false` | "requires an institution name before ac.id" lulus | Pass |
-| VAL-UT05 | `validatePreference()` | Normal | 1 tag, 1 slot, format `DARING` | `true` | "requires tags, availability, and format" lulus | Pass |
-| VAL-UT06 | `validatePreference()` | Batas | Tepat 1 tag dan 1 slot dengan format `BOTH` dan `LURING` | `true` | "accepts the minimum of one tag and one slot, and the BOTH format" lulus | Pass |
-| VAL-UT07 | `validatePreference()` | Negatif | Tag kosong; slot kosong; format `null`; semuanya kosong | `false` | "requires tags, availability, and format", "rejects a completely empty preference" lulus | Pass |
+| C13-UT21 | `joinSession()` / `processRegistration()` | Normal | Mentee layak, slot masih ada | `ok: true`; `addParticipant` dipanggil dengan sesi dan Mentee | "registers an eligible mentee into the session" lulus | Pass |
+| C13-UT22 | `joinSession()` | Batas | ID Mentee diberi spasi di tepi (`" mentee-1 "`) | ID di-*trim*; `ok: true` | "accepts the mentee id with surrounding spaces because it is trimmed" lulus | Pass |
+| C13-UT23 | `joinSession()` | Batas | Sisa tepat satu slot (4 dari 5); kapasitas 1 sudah terisi 1 | Diterima; `SESSION_FULL` | "joins when exactly one slot is left and is full when the last slot is taken" lulus | Pass |
+| C13-UT24 | `joinSession()` | Negatif | Pengguna adalah Mentor sesi | `CANNOT_JOIN_OWN_SESSION` | "prevents a mentor from joining their own session" lulus | Pass |
+| C13-UT25 | `joinSession()` | Negatif | Mentee sudah terdaftar | `ALREADY_JOINED` | "prevents a mentee from joining the same session twice" lulus | Pass |
+| C13-UT26 | `joinSession()` | Negatif | Sesi penuh; sesi sudah dimulai | `SESSION_FULL`; `SESSION_NOT_AVAILABLE`; tanpa `addParticipant` | "rejects joining when the session is full or has already started" lulus | Pass |
+| C13-UT27 | `joinSession()` | Negatif | Status sesi `SELESAI` | `SESSION_NOT_AVAILABLE` | "rejects a session that is no longer scheduled" lulus | Pass |
+| C13-UT28 | `joinSession()` | Negatif | Basis data menolak karena penuh saat bersamaan (KF13) | `SESSION_FULL` | "reports SESSION_FULL when the database guard rejects a concurrent join (KF13)" lulus | Pass |
+| C13-UT29 | `joinSession()` | Negatif | Jadwal Mentee bertabrakan (KF21) | `PARTICIPANT_SCHEDULE_CONFLICT` | "reports PARTICIPANT_SCHEDULE_CONFLICT when the mentee already joined an overlapping session (KF21)" lulus | Pass |
+| C13-UT30 | `joinSession()` | Negatif | Belum login; ID Mentee berbeda | `UNAUTHORIZED` | "requires login and a matching mentee id" lulus | Pass |
+| C13-UT31 | `joinSession()` | Negatif | ID sesi `bad-id` dan `undefined` | `INVALID_SESSION_ID`; basis data tidak dipanggil | "rejects a malformed session id without touching the database" lulus | Pass |
+| C13-UT32 | `joinSession()` | Negatif | Sesi tidak ditemukan | `SESSION_NOT_FOUND` | "reports SESSION_NOT_FOUND when the session does not exist" lulus | Pass |
+| C13-UT33 | `joinSession()` | Negatif | Pencarian sesi gagal; `addParticipant` melempar galat umum | `JOIN_SESSION_FAILED` | "maps unexpected failures to JOIN_SESSION_FAILED" lulus | Pass |
+| C13-UT34 | `processRegistration()` | Negatif | ID Mentee bukan pengguna yang login | `UNAUTHORIZED` | "processRegistration refuses a mentee id that is not the logged-in user" lulus | Pass |
+| C13-UT35 | `cancelSession()` | Normal | Peserta membatalkan sesi yang belum mulai | `ok: true`; `removeParticipant` dipanggil | "removes the logged-in mentee from an upcoming session" lulus | Pass |
+| C13-UT36 | `cancelSession()` | Negatif | Mentee tidak terdaftar | `NOT_PARTICIPANT`; basis data tidak disentuh | "rejects mentees who are not registered without touching the database" lulus | Pass |
+| C13-UT37 | `cancelSession()` | Negatif | Sesi sudah dimulai atau tidak lagi terjadwal | `SESSION_ALREADY_STARTED` | "rejects cancelling a session that has started or is no longer scheduled" lulus | Pass |
+| C13-UT38 | `cancelSession()` | Negatif | Belum login; ID Mentee berbeda; ID sesi salah; sesi tidak ada | `UNAUTHORIZED`; `INVALID_SESSION_ID`; `SESSION_NOT_FOUND` | "requires login, a matching mentee id, and an existing session" lulus | Pass |
+| C13-UT39 | `cancelSession()` | Negatif | Penghapusan bersamaan (0 baris); galat jaringan | `NOT_PARTICIPANT`; `CANCEL_SESSION_FAILED` | "maps a concurrent removal to NOT_PARTICIPANT and other failures to CANCEL_SESSION_FAILED" lulus | Pass |
+| C13-UT40 | `cancelSession()` | Negatif | Pencarian sesi gagal | `CANCEL_SESSION_FAILED`; `removeParticipant` tidak dipanggil | "returns CANCEL_SESSION_FAILED when the session lookup fails" lulus | Pass |
+| C13-UT41 | `cancelSession()` | Batas | ID Mentee diberi spasi di tepi | ID di-*trim*; `ok: true` | "accepts the mentee id with surrounding spaces because it is trimmed" lulus | Pass |
 
-Tabel 4.2.2b. Ringkasan Cakupan Validator (bagian email dan preferensi)
+Tabel 4.2.9b. Ringkasan Cakupan Kelas C13 (bagian pendaftaran dan pembatalan)
 
 | Informasi | Keterangan |
 | :--- | :--- |
-| Daftar operasi public pada DPPL | `validateEmail()` (C12), `isComplete()` (C09, diwujudkan sebagai `validatePreference()`) |
-| Operasi yang diuji | `validateEmail()`, `validatePreference()` |
-| ID Algoritma yang tercakup | Bagian validasi email pada Algo-C12-01 dan `isComplete()` pada Algo-C09-01 |
-| Coverage (wajib ≥ 70%) | `lib/validator.ts`: 100% baris, cabang, dan fungsi (seluruh berkas, termasuk fungsi milik anggota lain). Bukti `Validator-unit.png` dan `coverage-david.png` |
+| Daftar operasi public pada DPPL | `processRegistration()`, `cancelSession()` (bagian pendaftaran dan pembatalan) |
+| Operasi yang diuji | `joinSession()` (realisasi `processRegistration()` pada rancangan), `processRegistration()` (pembungkus yang meneruskan ke `joinSession()`), dan `cancelSession()`. `joinSession()` memakai `Session.checkCapacity()` dan `Session.addParticipant()` sedangkan galat dari *trigger* basis data (`SESSION_FULL`, `PARTICIPANT_SCHEDULE_CONFLICT`) dipetakan menjadi kode galat *controller* |
+| ID Algoritma yang tercakup | Algo-C13-04 (`processRegistration`) |
+| Coverage (wajib ≥ 70%) | `controllers/sessionParticipationController.ts`: 92,68% baris, 92,5% cabang, 89,69% *statement*, 100% fungsi (`@vitest/coverage-v8`). Bukti `C13-unit-a.png`, `C13-unit-b.png`, dan `coverage-markus-c04-c13.png` |
 
-### 4.2.3 Kelas Preference
+### 4.2.10 Kelas FeedbackControl
 
-**ID Kelas:** C09  
-**Nama Kelas:** Preference (`src/models/preference.ts`)  
+**ID Kelas:** C14  
+**Nama Kelas:** FeedbackControl (`src/controllers/feedbackController.ts`)  
 **Tingkat:** Mendalam  
-**Berkas test:** `src/tests/preference.test.ts` (baru pada M10)
+**Berkas test:** `src/tests/feedbackController.test.ts`
 
-Tabel 4.2.3. Hasil Pengujian Unit Kelas C09
+`Feedback`, `SessionHistory`, `Session`, dan `getCurrentUser()` di-*mock* agar aturan kelayakan dan validasi teruji tanpa basis data. Penyimpanan nyata ke tabel `feedbacks` diuji pada kelas C06.
+
+Tabel 4.2.10. Hasil Pengujian Unit Kelas C14
 
 | ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| C09-UT01 | `getPreferenceByUser()` | Normal | Baris `preferences` milik `u1` | Objek `Preference` dengan tag, slot, dan format yang sama; kueri `eq("id_user", "u1")` | "maps the stored row of the user" lulus | Pass |
-| C09-UT02 | `getPreferenceByUser()` | Batas | Pengguna belum punya preferensi | `null` | "returns null when the user has no preference yet" lulus | Pass |
-| C09-UT03 | `getPreferenceByUser()` | Negatif | ID bukan UUID (galat `22P02`) | `null`, tidak melempar | "returns null for an ID that is not a UUID" lulus | Pass |
-| C09-UT04 | `getPreferenceByUser()` | Negatif | Galat koneksi | Melempar galat dengan pesan basis data | "throws other database errors" lulus | Pass |
-| C09-UT05 | `updatePreference()` | Normal | Tag, slot, format `DARING` | *Upsert* `{ id_user, material_tag, availability, session_format_preference }`, mengembalikan `Preference` | "upserts tags, availability, and format, then returns the saved preference" lulus | Pass |
-| C09-UT06 | `updatePreference()` | Negatif | Basis data menolak (`23514`) | Melempar galat | "throws when the database rejects the row" lulus | Pass |
-| C09-UT07 | `getPreferenceDetails()` | Batas | Tag dan slot kosong, format `null` | Nilai kosong dikembalikan apa adanya | "returns empty lists and a null format unchanged" lulus | Pass |
+| C14-UT01 | `checkFeedbackEligibility()` | Normal | Mentee peserta sesi `SELESAI` yang belum memberi *feedback* | `ok: true` dengan data sesi | "returns the session when the mentee attended a completed session without feedback" lulus | Pass |
+| C14-UT02 | `checkFeedbackEligibility()` | Negatif | Belum login; ID sesi bukan UUID | `UNAUTHORIZED`; `INVALID_SESSION_ID` | "rejects guests and malformed session ids" lulus | Pass |
+| C14-UT03 | `checkFeedbackEligibility()` | Batas | ID sesi UUID valid dalam huruf kapital | Diterima (`ok: true`) | "accepts a session id written in upper case" lulus | Pass |
+| C14-UT04 | `checkFeedbackEligibility()` | Negatif | *Query* sesi gagal | `SESSION_LOOKUP_FAILED` | "reports lookup failures" lulus | Pass |
+| C14-UT05 | `checkFeedbackEligibility()` | Negatif | Pengguna bukan peserta sesi | `NOT_PARTICIPANT` | "rejects when the user is not in the session" lulus | Pass |
+| C14-UT06 | `checkFeedbackEligibility()` | Negatif | Pengguna adalah Mentor sesi | `NOT_PARTICIPANT` (*feedback* hanya dari Mentee) | "rejects when the user is the mentor" lulus | Pass |
+| C14-UT07 | `checkFeedbackEligibility()` | Negatif | Sesi masih `TERJADWAL` | `SESSION_NOT_COMPLETED` | "rejects when the session is not completed" lulus | Pass |
+| C14-UT08 | `checkFeedbackEligibility()` | Negatif | Mentee sudah memberi *feedback* | `FEEDBACK_ALREADY_EXISTS` | "rejects when feedback was already given" lulus | Pass |
+| C14-UT09 | `submitFeedback()` | Normal | Rating 5, komentar `"  Sangat membantu  "` | `saveFeedback()` (`Feedback.create()`) dipanggil dengan Mentor sesi dan komentar yang di-*trim* | "saves the rating for the session mentor with a trimmed comment" lulus | Pass |
+| C14-UT10 | `validateFeedback()` | Batas | Rating 1 (batas bawah) tanpa komentar | Diterima, komentar disimpan sebagai string kosong | "accepts a rating without a comment" lulus | Pass |
+| C14-UT11 | `validateFeedback()` | Negatif | Rating 0, 6, 2,5, dan `NaN` (4 kasus) | `INVALID_RATING`, tidak ada data tersimpan | "rejects rating 0", "rejects rating 6", "rejects rating 2.5", "rejects rating NaN" lulus | Pass |
+| C14-UT12 | `submitFeedback()` | Batas | Komentar tepat 500 karakter (diapit spasi) | Diterima dan disimpan setelah di-*trim* | "accepts a comment of exactly 500 characters after trimming" lulus | Pass |
+| C14-UT13 | `submitFeedback()` | Negatif | Komentar 501 karakter | `INVALID_COMMENT`, tidak ada data tersimpan | "rejects comments longer than 500 characters" lulus | Pass |
+| C14-UT14 | `submitFeedback()` | Negatif | Sesi belum selesai | `SESSION_NOT_COMPLETED`, tidak ada data tersimpan | "does not save feedback when the mentee is not eligible" lulus | Pass |
+| C14-UT15 | `saveFeedback()` | Negatif | Basis data menolak duplikat (`FeedbackAlreadyExistsError`) | `FEEDBACK_ALREADY_EXISTS` | "rejects a duplicate submission caught by the database" lulus | Pass |
+| C14-UT16 | `saveFeedback()` | Negatif | Basis data gagal karena galat lain | `FEEDBACK_SUBMISSION_FAILED` | "reports other persistence failures" lulus | Pass |
+| C14-UT17 | `retrieveFeedbackBySession()` | Normal | Mentor pemilik sesi `SELESAI` dengan rating 5, 5, 4 | Daftar *feedback*, rata-rata 4,7, dan distribusi rating 5 sampai 1 | "returns the session feedback with the average and rating distribution" lulus | Pass |
+| C14-UT18 | `retrieveFeedbackBySession()` | Batas | Belum ada *feedback* | `feedbacks: []`, rata-rata 0 | "returns an empty summary when no mentee has given feedback" lulus | Pass |
+| C14-UT19 | `retrieveFeedbackBySession()` | Batas | Satu *feedback* dengan rating terendah (1) | Rata-rata tepat 1, jumlah rating 1 sama dengan 1 | "averages a single lowest rating to exactly 1" lulus | Pass |
+| C14-UT20 | `retrieveFeedbackBySession()` | Negatif | Belum login; ID sesi bukan UUID | `UNAUTHORIZED`; `INVALID_SESSION_ID` | "rejects guests and malformed session ids" lulus | Pass |
+| C14-UT21 | `retrieveFeedbackBySession()` | Negatif | Pengguna bukan Mentor sesi | `NOT_SESSION_HOST`, *feedback* tidak dibaca | "only lets the session host read the feedback" lulus | Pass |
+| C14-UT22 | `retrieveFeedbackBySession()` | Negatif | Sesi belum selesai | `SESSION_NOT_COMPLETED` | "rejects sessions that are not completed" lulus | Pass |
+| C14-UT23 | `retrieveFeedbackBySession()` | Negatif | *Query* *feedback* gagal | `FEEDBACK_LOOKUP_FAILED` | "reports lookup failures" lulus | Pass |
 
-Tabel 4.2.3b. Ringkasan Cakupan Kelas C09
+Tabel 4.2.10b. Ringkasan Cakupan Kelas C14
 
 | Informasi | Keterangan |
 | :--- | :--- |
-| Daftar operasi public pada DPPL | `getPreferenceByUser()`, `getPreference()`, `getPreferenceDetails()`, `updatePreference()`, `isComplete()`, `getMaterialTag()`, `getAvailability()`, `getSessionFormatPreference()`, `getUserId()` |
-| Operasi yang diuji | `getPreferenceByUser()`, `updatePreference()`, `getPreferenceDetails()`; `isComplete()` sebagai `validatePreference()` (VAL-UT05 s.d. VAL-UT07). `getPreference()` digabung ke `getPreferenceByUser()`, sedangkan *getter* menjadi properti `readonly` (Tabel B.5 M9) |
-| ID Algoritma yang tercakup | Algo-C09-01, Q-C09-01, Q-C09-02 (diwujudkan sebagai *upsert*) |
-| Coverage (wajib ≥ 70%) | `models/preference.ts`: 100% baris, cabang, dan fungsi. Bukti `C09-unit.png` dan `coverage-david.png` |
+| Daftar operasi public pada DPPL | `checkFeedbackEligibility()`, `validateFeedback()`, `submitFeedback()`, `saveFeedback()`, `retrieveFeedbackBySession()` |
+| Operasi yang diuji | Seluruh operasi (5 dari 5). `validateFeedback()` diwujudkan sebagai `validateRating()` pada `lib/validator.ts` (C14-UT10, C14-UT11, VAL-UT08, VAL-UT09) ditambah batas panjang komentar 500 karakter (C14-UT12, C14-UT13). `saveFeedback()` diwujudkan sebagai `Feedback.create()` (C14-UT15, C14-UT16, C06-UT01 s.d. C06-UT03) |
+| ID Algoritma yang tercakup | Algo-C14-01 (pengajuan *feedback*: kelayakan, validasi rating, penyimpanan) dan Algo-C14-02 (pengambilan *feedback* sesi oleh Mentor beserta rata-rata dan distribusi rating) |
+| Coverage (wajib ≥ 70%) | `controllers/feedbackController.ts`: 100% baris, 97,43% cabang, 98,3% *statement*, 100% fungsi (`@vitest/coverage-v8`). Bukti `C14-unit.png` dan `coverage-markus.png` |
 
-### 4.2.4 Kelas Profile
+<br>
 
-**ID Kelas:** C10  
-**Nama Kelas:** Profile (`src/models/profile.ts`)  
-**Tingkat:** Sedang  
-**Berkas test:** `src/tests/profile.test.ts` (baru pada M10)
-
-Tabel 4.2.4. Hasil Pengujian Unit Kelas C10
-
-| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| C10-UT01 | `create()` | Normal | `idUser = u1` dan data profil | *Insert* kolom `id_user, name, university, study_program, bio`; `getProfileData()` sama dengan masukan | "inserts the profile and maps the saved row" lulus | Pass |
-| C10-UT02 | `create()` | Negatif | *Duplicate key* | Melempar galat | "throws when the insert fails" lulus | Pass |
-| C10-UT03 | `findByUser()` | Normal | Baris profil ada | Objek `Profile` dengan nama yang sama | "returns the profile of the user" lulus | Pass |
-| C10-UT04 | `findByUser()` | Batas | Baris tidak ada; ID bukan UUID | `null` | "returns null when missing or when the ID is not a UUID" lulus | Pass |
-| C10-UT05 | `findByUser()` | Negatif | *Timeout* | Melempar galat | "throws other database errors" lulus | Pass |
-| C10-UT06 | `findByUsers()` | Batas | Daftar ID kosong | `[]` tanpa kueri | "skips the query for an empty list" lulus | Pass |
-| C10-UT07 | `findByUsers()` | Normal | `["u1", "u2"]` | Dua profil; kueri `in("id_user", ...)` | "loads several profiles at once" lulus | Pass |
-| C10-UT08 | `findByUsers()` | Negatif | Kueri gagal | Melempar galat | "throws when the query fails" lulus | Pass |
-| C10-UT09 | `updateProfile()` | Normal | Bio kosong | *Upsert* data profil dan mengembalikan profil baru | "upserts the new identity data" lulus | Pass |
-| C10-UT10 | `updateProfile()` | Negatif | RLS menolak | Melempar galat | "throws when the update fails" lulus | Pass |
-
-### 4.2.5 Kelas GroupChat
-
-**ID Kelas:** C05  
-**Nama Kelas:** GroupChat (`src/models/groupChat.ts`, dengan ChatController `src/controllers/chatController.ts` dan `src/controllers/chatCleanupController.ts`)  
-**Tingkat:** Mendalam  
-**Berkas test:** `src/tests/groupChatModel.test.ts` (baru pada M10), `src/tests/chat.test.ts`
-
-Tabel 4.2.5. Hasil Pengujian Unit Kelas C05
-
-| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| C05-UT01 | `findBySession()` | Normal | Baris `group_chats` sesi `s1` | Objek `GroupChat` aktif untuk `s1` | "maps the chat of the session" lulus | Pass |
-| C05-UT02 | `findBySession()` | Batas | Grup tidak terlihat (RLS); ID bukan UUID | `null` | "returns null when the chat is hidden or the ID is not a UUID" lulus | Pass |
-| C05-UT03 | `findBySession()` | Negatif | Galat basis data | Melempar galat | "throws other database errors" lulus | Pass |
-| C05-UT04 | `findMenteeIds()` | Normal | Dua peserta | `["a", "b"]` terurut `joined_at` | "lists the participants in join order" lulus | Pass |
-| C05-UT05 | `findMenteeIds()` | Negatif | Kueri gagal | Melempar galat | "throws when the query fails" lulus | Pass |
-| C05-UT06 | `closeExpired()` | Normal | `now` tertentu | RPC `close_expired_group_chats` dengan `p_retention_hours = 48`, mengembalikan jumlah grup | "calls close_expired_group_chats with the 48-hour retention" lulus | Pass |
-| C05-UT07 | `closeExpired()` | Negatif | RPC ditolak | Melempar galat | "throws when the function fails" lulus | Pass |
-| C05-UT08 | `isActive()` | Normal | 1 jam sebelum sesi berakhir; 48 jam kurang 1 ms setelah berakhir | `true` | "is active during the session and until just before 48 hours after it ends" lulus | Pass |
-| C05-UT09 | `isActive()` | Batas | Tepat 48 jam setelah sesi berakhir | `false` | "is inactive from exactly 48 hours after the session ends" lulus | Pass |
-| C05-UT10 | `isActive()` | Negatif | Grup sudah ditutup (`is_active = false`) | `false` | "is inactive once the chat has been closed" lulus | Pass |
-| C05-UT11 | `getGroupChat()` (ChatController) | Normal | Anggota membuka grup sesi | Data sesi, anggota (Mentor ditandai), nama pengirim termasuk mantan peserta, dan pesan | "returns the session, members, sender names, and messages for a member" lulus | Pass |
-| C05-UT12 | `getGroupChat()` | Negatif | Pengguna bukan anggota (grup tidak terlihat) | `null` | "returns null when the user cannot see the chat" lulus | Pass |
-| C05-UT13 | `getGroupChat()` | Negatif | Tanpa sesi login | `null` | "returns null without a session" lulus | Pass |
-| C05-UT14 | `getGroupChat()` | Batas | Grup melewati masa aktif | `active = false` | "reports an expired chat as inactive" lulus | Pass |
-| C05-UT15 | `GET /api/cron/chat-cleanup` | Negatif | Tanpa `CRON_SECRET` yang benar | HTTP 401, `closeExpired()` tidak dipanggil | "rejects calls without the cron secret" lulus | Pass |
-| C05-UT16 | `GET /api/cron/chat-cleanup` | Normal | Dengan `CRON_SECRET` | HTTP 200 dan jumlah grup yang ditutup | "closes expired chats" lulus | Pass |
-
-Tabel 4.2.5b. Ringkasan Cakupan Kelas C05
-
-| Informasi | Keterangan |
-| :--- | :--- |
-| Daftar operasi public pada DPPL | `findBySession()`, `findById()`, `getId()`, `isActive()`, `isMember()`, `getMessages()`, `searchMessage()`, `displayMessage()`, `editMessage()`, `deleteMessage()` |
-| Operasi yang diuji | `findBySession()`, `isActive()`, `findMenteeIds()`, `closeExpired()`; `getMessages()` sebagai `ChatMessage.findByGroupChat()` (C08-UT04 s.d. C08-UT06); `isMember()` diwujudkan sebagai fungsi SQL `is_session_member()` pada RLS dan diuji pada INT-TC13 s.d. INT-TC15. `findById()`/`getId()` digantikan properti `idGroupChat`; `displayMessage()` berada di `ChatRoom`. `searchMessage()`, `editMessage()`, `deleteMessage()` tidak diimplementasikan (DPPL revisi D) |
-| ID Algoritma yang tercakup | Algo-C05-01, Q-C05-01, Q-C05-05 (melalui `close_expired_group_chats()`) |
-| Coverage (wajib ≥ 70%) | `models/groupChat.ts`: 100%; `controllers/chatController.ts`: 100% baris, 85% cabang; `controllers/chatCleanupController.ts` dan `app/api/cron/chat-cleanup/route.ts`: 100%. Bukti `C05-unit.png` dan `coverage-david.png` |
-
-### 4.2.6 Kelas ChatMessage
-
-**ID Kelas:** C08  
-**Nama Kelas:** ChatMessage (`src/models/chatMessage.ts`, dengan `sendMessage()` pada `src/controllers/chatController.ts`)  
-**Tingkat:** Sedang  
-**Berkas test:** `src/tests/chatMessage.test.ts` (baru pada M10), `src/tests/chat.test.ts`
-
-Tabel 4.2.6. Hasil Pengujian Unit Kelas C08
-
-| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| C08-UT01 | `create()` | Normal | `("g1", "u1", "Halo semua")` | *Insert* `{ id_group_chat, id_sender, text }`, mengembalikan `ChatMessage` | "inserts the message and maps the saved row" lulus | Pass |
-| C08-UT02 | `create()` | Negatif | RLS menolak (`42501`) | Melempar `CHAT_CLOSED` | "reports CHAT_CLOSED when row level security refuses the insert" lulus | Pass |
-| C08-UT03 | `create()` | Negatif | *Check constraint* teks | Melempar galat basis data | "throws other database errors" lulus | Pass |
-| C08-UT04 | `findByGroupChat()` | Normal | Dua pesan | Dua pesan terurut `time_stamp` | "returns the messages of the chat ordered by time" lulus | Pass |
-| C08-UT05 | `findByGroupChat()` | Batas | Grup tanpa pesan | `[]` | "returns an empty list for a chat without messages" lulus | Pass |
-| C08-UT06 | `findByGroupChat()` | Negatif | Kueri gagal | Melempar galat | "throws when the query fails" lulus | Pass |
-| C08-UT07 | `sendMessage()` | Normal | Pesan berspasi dari anggota login | Pesan di-*trim* lalu disimpan | "saves the trimmed message for the logged-in member" lulus | Pass |
-| C08-UT08 | `sendMessage()` | Batas/Negatif | Pesan kosong; pesan 2.001 karakter (batas 2.000) | `EMPTY_MESSAGE`; `MESSAGE_TOO_LONG` tanpa akses basis data | "rejects empty and overlong messages before touching the database" lulus | Pass |
-| C08-UT09 | `sendMessage()` | Negatif | `create()` melempar `CHAT_CLOSED` | `CHAT_EXPIRED` | "reports a chat the database refuses as ended" lulus | Pass |
-| C08-UT10 | `sendMessage()` | Negatif | Tanpa login; galat lain | `NOT_AUTHENTICATED`; `SEND_FAILED` | "requires a logged-in user and reports database failures" lulus | Pass |
-
-### 4.2.7 Kelas Notification
+### 4.2.11 Kelas Notification
 
 **ID Kelas:** C22  
 **Nama Kelas:** Notification (`src/models/notification.ts`, dengan `src/controllers/notificationController.ts`, `src/controllers/reminderController.ts`, `src/lib/adapters/cronAdapter.ts`, `src/app/api/cron/reminders/route.ts`)  
 **Tingkat:** Mendalam  
 **Berkas test:** `src/tests/notificationModel.test.ts` (baru pada M10), `src/tests/notification.test.ts`
 
-Tabel 4.2.7. Hasil Pengujian Unit Kelas C22
+Tabel 4.2.11. Hasil Pengujian Unit Kelas C22
 
 | ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -600,7 +837,7 @@ Tabel 4.2.7. Hasil Pengujian Unit Kelas C22
 | C22-UT18 | `GET/POST /api/cron/reminders` | Negatif | *Secret* salah | HTTP 401, pengingat tidak dikirim | "rejects calls without the cron secret" lulus | Pass |
 | C22-UT19 | `GET/POST /api/cron/reminders` | Normal | *Secret* benar | HTTP 200 `{ ok: true, sent: 3 }`, `leadMinutes = 15` | "sends reminders for sessions starting within 15 minutes" lulus | Pass |
 
-Tabel 4.2.7b. Ringkasan Cakupan Kelas C22
+Tabel 4.2.11b. Ringkasan Cakupan Kelas C22
 
 | Informasi | Keterangan |
 | :--- | :--- |
@@ -609,7 +846,86 @@ Tabel 4.2.7b. Ringkasan Cakupan Kelas C22
 | ID Algoritma yang tercakup | Algo-C22-01, Q-C22-01 (di dalam `send_session_reminders()`), Q-C22-03 (`markAsRead()` dengan filter pemilik), Q-C22-04 (dengan filter belum dibaca dan waktu) |
 | Coverage (wajib ≥ 70%) | `models/notification.ts`, `controllers/notificationController.ts`, `controllers/reminderController.ts`, `lib/adapters/cronAdapter.ts`, `app/api/cron/reminders/route.ts`: masing-masing 100% baris, cabang, dan fungsi. Bukti `C22-unit.png` dan `coverage-david.png` |
 
-*[Anggota lain melanjutkan subbab 4.2.8 dan seterusnya untuk kelas Mendalam/Sedang miliknya dengan pola yang sama.]*
+### 4.2.12 Validator
+
+**ID Kelas:** Validator (komponen tambahan M6, tanpa ID kelas; operasi `validateEmail()` milik C12 dan `isComplete()` milik C09 pada DPPL)  
+**Nama Kelas:** Validator (`src/lib/validator.ts`)  
+**Tingkat:** Mendalam  
+**Berkas test:** `src/tests/validator.test.ts`
+
+Subbab ini memuat `validateEmail()` dan `validatePreference()` (VAL-UT01 s.d. VAL-UT07), serta `validateRating()`, `hasScheduleConflict()` (KF21), dan `validateSessionTime()` (KF20) (VAL-UT08 s.d. VAL-UT17). `validateCapacity()` diuji bersama kelas pemakainya. ID memakai awalan `VAL` karena Validator tidak memiliki ID kelas.
+
+Tabel 4.2.12. Hasil Pengujian Unit Validator
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| VAL-UT01 | `validateEmail()` | Normal | `mentee.satu@mahasiswa.itb.ac.id`, `a@ui.ac.id` | `true` | "accepts university addresses" lulus | Pass |
+| VAL-UT02 | `validateEmail()` | Batas | `"  Mentee.Satu@Mahasiswa.ITB.AC.ID  "` | `true` (spasi diabaikan, tidak peka huruf besar) | "ignores surrounding spaces and letter case" lulus | Pass |
+| VAL-UT03 | `validateEmail()` | Negatif | `someone@gmail.com`, `fake@ac.id.evil.com`, `no-at-sign.ac.id` | `false` | "rejects non-university addresses" lulus | Pass |
+| VAL-UT04 | `validateEmail()` | Batas | `a@ac.id` (tanpa nama institusi), `a@itb.ac.id.`, string kosong | `false` | "requires an institution name before ac.id" lulus | Pass |
+| VAL-UT05 | `validatePreference()` | Normal | 1 tag, 1 slot, format `DARING` | `true` | "requires tags, availability, and format" lulus | Pass |
+| VAL-UT06 | `validatePreference()` | Batas | Tepat 1 tag dan 1 slot dengan format `BOTH` dan `LURING` | `true` | "accepts the minimum of one tag and one slot, and the BOTH format" lulus | Pass |
+| VAL-UT07 | `validatePreference()` | Negatif | Tag kosong; slot kosong; format `null`; semuanya kosong | `false` | "requires tags, availability, and format", "rejects a completely empty preference" lulus | Pass |
+| VAL-UT08 | `validateRating()` | Normal/Batas | Rating 1, 3, dan 5 | `true` | "allows integers 1 to 5" lulus | Pass |
+| VAL-UT09 | `validateRating()` | Negatif | Rating 0, 6, 4,5, -1, `NaN`, dan `Infinity` | `false` | "allows integers 1 to 5", "rejects negative and non-numeric ratings" lulus | Pass |
+| VAL-UT10 | `hasScheduleConflict()` | Normal | Sesi baru 10.00–12.00, sesi lain 09.00–11.00 | `true` (beririsan) | "detects overlap" lulus | Pass |
+| VAL-UT11 | `hasScheduleConflict()` | Normal | Sesi baru 09.00–10.00 di dalam sesi lain 09.00–11.00 | `true` | "detects a session inside an existing one" lulus | Pass |
+| VAL-UT12 | `hasScheduleConflict()` | Batas | Sesi baru 11.00–12.00 tepat setelah sesi lain berakhir | `false` (bersambung, tidak beririsan) | "allows back-to-back sessions" lulus | Pass |
+| VAL-UT13 | `hasScheduleConflict()` | Batas | Sesi baru 08.00–09.00 berakhir tepat saat sesi lain dimulai | `false` | "allows a session that ends exactly when an existing one starts" lulus | Pass |
+| VAL-UT14 | `hasScheduleConflict()` | Batas | Pengguna belum memiliki sesi lain | `false` | "allows any session when the user has no other sessions" lulus | Pass |
+| VAL-UT15 | `validateSessionTime()` | Normal/Batas | 10.00–10.10 WIB (tepat 10 menit) dan 08.00–20.00 WIB (tepat 12 jam) | `true` | "accepts sessions on one WIB day lasting 10 minutes to 12 hours" lulus | Pass |
+| VAL-UT16 | `validateSessionTime()` | Negatif | 10.00–10.09 (9 menit), 08.00–20.01 (12 jam 1 menit), selesai sebelum mulai | `false` (`INVALID_SCHEDULE`) | "rejects sessions shorter than 10 minutes or longer than 12 hours" lulus | Pass |
+| VAL-UT17 | `validateSessionTime()` | Negatif | 23.30–00.30 WIB (tanggal UTC sama, tanggal WIB berbeda) | `false` (lintas hari) | "rejects sessions that cross midnight in WIB even when the UTC date is the same" lulus | Pass |
+
+Tabel 4.2.12b. Ringkasan Cakupan Validator
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `validateEmail()` (C12), `isComplete()` (C09, diwujudkan sebagai `validatePreference()`), `validateFeedback()` (C14, diwujudkan sebagai `validateRating()`), `validateSessionTime()` dan `validateParticipantSchedule()` (C13, memakai `hasScheduleConflict()`) |
+| Operasi yang diuji | `validateEmail()`, `validatePreference()`, `validateRating()`, `hasScheduleConflict()`, `validateSessionTime()` |
+| ID Algoritma yang tercakup | Bagian validasi email pada Algo-C12-01, `isComplete()` pada Algo-C09-01, validasi rating pada Algo-C14-01, serta validasi waktu sesi dan irisan jadwal pada Algo-C13-01 dan Algo-C13-04 |
+| Coverage (wajib ≥ 70%) | `lib/validator.ts`: 100% baris, cabang, dan fungsi. Bukti `Validator-unit.png`, `Validator-unit-markus.png`, `coverage-david.png`, dan `coverage-markus.png` |
+
+<br>
+
+### 4.2.13 Kelas Dashboard (pengujian unit tambahan)
+
+**ID Kelas:** C11  
+**Nama Kelas:** Dashboard (`src/app/dashboard/page.tsx`, `src/app/discover/page.tsx`)  
+**Tingkat:** Tidak perlu pada 4.1 (diuji tambahan untuk verifikasi perilaku tampilan Beranda dan Discover)  
+**Berkas test:** `src/tests/dashboard.test.ts` (baru pada M10)
+
+Tabel 4.2.13. Hasil Pengujian Unit Kelas C11
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C11-UT01 | `DashboardPage()` | Normal | Pengguna login dengan 1 sesi aktif terdekat dan 1 rekomendasi sesi | Merender sapaan `"Halo, Mentee Satu!"`, daftar sesi aktif terdekat, tombol `"Buka Ruang Obrolan"`, rekomendasi sesi, dan tombol `"Gabung Sesi"` | "renders greeting, upcoming sessions, and recommendations for a logged-in user" lulus | Pass |
+| C11-UT02 | `DashboardPage()` | Batas | `getUpcomingSessions()` kosong dan `findRecommendation()` mengembalikan `PREFERENCE_NOT_SET` | Merender status kosong sesi aktif, peringatan `"Preferensi belajar kamu belum diatur"`, dan tombol `"Atur Preferensi"` | "shows preference prompt when PREFERENCE_NOT_SET (UC14 Alt 1)" lulus | Pass |
+| C11-UT03 | `DashboardPage()` | Batas | `findRecommendation()` mengembalikan `[]` | Merender pesan `"Belum ada sesi yang cocok dengan jadwalmu"` dan tautan `"Ubah Preferensi"` | "shows empty recommendation message when no sessions match (UC04 Alt 1)" lulus | Pass |
+| C11-UT04 | `DashboardPage()` | Negatif | `getUpcomingSessions()` mengembalikan `UPCOMING_LOOKUP_FAILED` dan `findRecommendation()` mengembalikan `RECOMMENDATION_FAILED` | Merender *alert* `"Gagal memuat sesi aktif terdekat"` dan `"Gagal memuat rekomendasi sesi"` | "shows error alerts when upcoming or recommendation lookup fails" lulus | Pass |
+| C11-UT05 | `DashboardPage()` | Negatif | `getCurrentUser()` mengembalikan `null` | Mengalihkan pengguna ke `/login` (`redirect("/login")`) | "redirects to /login when user is unauthenticated" lulus | Pass |
+| C11-UT06 | `DiscoverPage()` | Normal | Pengguna login dengan 1 sesi terbuka dan 1 rekomendasi | Merender judul `"Discover"`, kartu sesi, dan jumlah `"1 sesi tersedia"` | "renders open sessions and recommendations catalog" lulus | Pass |
+| C11-UT07 | `DiscoverPage()` | Negatif | `getOpenSessions()` gagal (`OPEN_SESSIONS_FAILED`); pengguna tanpa sesi (`null`) | Merender *alert* `"Gagal memuat daftar sesi"`; mengalihkan ke `/login` saat belum login | "shows error alert when open sessions fail to load and redirects when unauthenticated" lulus | Pass |
+
+*Catatan cakupan C11 (`@vitest/coverage-v8`): `app/dashboard/page.tsx` mencapai 100% baris (88,23% statement, 75% cabang, 100% fungsi) dan `app/discover/page.tsx` mencapai 100% baris (80% statement, 75% cabang, 100% fungsi).*
+
+### 4.2.14 Tampilan Profil (`ProfileView` / Kelas ProfilePage, pengujian unit tambahan)
+
+**ID Kelas:** C16  
+**Nama Kelas:** ProfilePage (`src/components/ProfileView.tsx`, `src/app/profile/page.tsx`, `src/app/profile/[id]/page.tsx`, `src/app/profile/not-found.tsx`)  
+**Tingkat:** Tidak perlu pada 4.1 (diuji tambahan untuk tampilan `ProfileView` dan penanganan galat UC15)  
+**Berkas test:** `src/tests/profileView.test.ts` (baru pada M10)
+
+Tabel 4.2.14. Hasil Pengujian Unit `ProfileView` dan Halaman Profil
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C16-UT01 | `ProfileView` | Normal | Profil lengkap, preferensi format `BOTH`, 2 tag, slot hari Minggu & Senin, `isOwnProfile = true` | Merender nama, `@username`, universitas, prodi, bio, tag materi, format Daring & Luring, slot ketersediaan per hari, serta tombol `"Edit Profil"` dan `"Edit Preferensi"` | "renders user identity, bio, tags, formats, grouped availability, and edit buttons for own profile" lulus | Pass |
+| C16-UT02 | `ProfileView` | Normal | Profil pengguna lain (`isOwnProfile = false`) | Menampilkan data profil tanpa tombol `"Edit Profil"` maupun `"Edit Preferensi"` | "hides edit buttons when viewing another user's profile" lulus | Pass |
+| C16-UT03 | `ProfileView` | Batas | `name = ""`, `bio = ""`, `preference = null` | Merender teks fallback `"Belum ada bio."`, `"Belum ada tag materi."`, `"Belum diatur."`, dan `"Belum ada jadwal ketersediaan."` | "renders empty-state fallbacks when bio and preference are missing" lulus | Pass |
+| C16-UT04 | `OwnProfilePage()` | Normal/Negatif | Pengguna login vs `getCurrentUser() = null` | Merender profil sendiri dengan `"Edit Profil"`; mengalihkan ke `/login` saat belum login | "renders own profile page and redirects to /login when unauthenticated" lulus | Pass |
+| C16-UT05 | `UserProfilePage()` & `ProfileNotFound` | Negatif | `fetchUserProfile("missing-id")` mengembalikan `USER_NOT_FOUND` | Memanggil `notFound()` dan komponen `ProfileNotFound` menampilkan `"Profil pengguna tidak ditemukan"` | "calls notFound when profile does not exist and renders not-found message (UC15 Alt 1)" lulus | Pass |
+| C16-UT06 | `UserProfilePage()` | Negatif | `fetchUserProfile("u2")` mengembalikan `PROFILE_FAILED` | Merender *alert* `"Gagal memuat profil"` | "shows error alert when profile lookup fails" lulus | Pass |
 
 <br>
 
@@ -719,7 +1035,63 @@ Tabel 4.4.2. Hasil Pengujian Use Case UC02
 | UC02-TC01 | KF03, KF04 | Normal | 1. Buka "Profil", klik "Edit Preferensi".<br>2. Tambahkan dua tag materi (Enter), pilih format "Daring", klik "Tambah Slot" dan isi hari serta jam.<br>3. Klik "Simpan".<br>4. Kembali ke "Profil". | Tag: Struktur Data, Basis Data<br>Format: Daring<br>Slot: Senin 19.00–21.00 | Sistem memvalidasi, menyimpan tag, format, dan kalender ke basis data, lalu menampilkan "Preferensi berhasil disimpan" | Tampil "Preferensi berhasil disimpan". Halaman Profil menampilkan tag Struktur Data dan Basis Data, format Daring, serta ketersediaan Senin 19:00–21:00. Baris `preferences` di basis data sama (INT-TC06) | Pass |
 | UC02-TC02 | KF03, KF04 | Alternatif 1: Menyimpan Preferensi Tanpa Memilih Preferensi | 1. Buka "Profil", klik "Edit Preferensi".<br>2. Biarkan tag, format, dan slot kosong.<br>3. Klik "Simpan". | Semua pilihan kosong | Sistem menunda penyimpanan dan menampilkan "Silahkan Isi Semua Pilihan Preferensi" | Tampil *alert* "Silahkan Isi Semua Pilihan Preferensi" dan tidak ada data tersimpan (Profil tetap "Belum ada tag materi") | Pass |
 
-*[Anggota lain menambahkan subbab 4.4.3 s.d. 4.4.7 di sini, sesuai nomor use case.]*
+### 4.4.3 Use Case Membuat Sesi Belajar
+
+**ID Use Case:** UC03  
+**Nama Use Case:** Membuat Sesi Belajar  
+**Akun:** `mentor.demo@mahasiswa.itb.ac.id`
+
+Tabel 4.4.3. Hasil Pengujian Use Case UC03
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| *[UC03-TC01 s.d. UC03-TC04]* | KF05, KF06, KF14 | *[Normal, Alternatif 1–3: diisi Matthew]* | *[...]* | *[...]* | *[...]* | *[Diisi setelah diuji]* | *[Diisi setelah diuji]* |
+| UC03-TC05 | KF20 | Alternatif 4: Jadwal Lintas Hari atau Durasi Sesi Tidak Valid | 1. Buka "Buat Sesi Baru".<br>2. Isi judul, deskripsi, format Luring, dan kapasitas 5.<br>3. Isi jadwal tidak valid (tiga percobaan sesuai kolom Masukan), lalu klik "Buat Sesi". | Tanggal 21/11/2026: (a) 21.30–03.00, yaitu jam selesai lebih awal dari jam mulai sehingga sesi melewati tengah malam (formulir hanya memiliki satu tanggal); (b) 10.00–10.05 (5 menit); (c) 07.00–19.30 (12 jam 30 menit) | (a)–(c) ditolak dengan pesan "Pilih jadwal yang valid: sesi harus dimulai dan selesai pada hari yang sama dengan durasi 10 menit hingga 12 jam." dan tidak ada sesi tersimpan | Ketiga percobaan ditolak dengan pesan "Pilih jadwal yang valid: sesi harus dimulai dan selesai pada hari yang sama dengan durasi 10 menit hingga 12 jam."; formulir tetap terbuka dan tidak ada sesi baru yang tersimpan | Pass |
+
+### 4.4.4 Use Case Mencari dan Bergabung ke Sesi
+
+**ID Use Case:** UC04  
+**Nama Use Case:** Mencari dan Bergabung ke Sesi  
+**Akun:** `mentee.satu@mahasiswa.itb.ac.id` (kata sandi `password123`)
+
+Tabel 4.4.4. Hasil Pengujian Use Case UC04
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC04-TC01 | KF07, KF08 | Normal | 1. Login sebagai `mentee.satu` dengan preferensi yang cocok dengan sesi tersedia.<br>2. Buka `/discover` atau bagian "Rekomendasi Sesi untukmu" di Beranda.<br>3. Pilih sesi rekomendasi "Aljabar Linear Session" (Sabtu, 21 November 2026 11.16–19.16 WIB, Luring, Mentor Demo), lalu klik "Gabung Sesi". | Akun `mentee.satu`, sesi "Aljabar Linear Session" | Sistem menampilkan rekomendasi sesi yang cocok; setelah klik "Gabung Sesi", Mentee masuk daftar peserta dan tampil pesan "Berhasil bergabung" | Sesi "Aljabar Linear Session" muncul pada bagian Rekomendasi. Setelah menekan "Gabung Sesi" pada detail sesi, tampil *alert* hijau "Berhasil bergabung" dan tombol berubah menjadi "Buka Ruang Obrolan" serta "Batalkan Keikutsertaan" (bukti `UC04-TC01-a.png`, `UC04-TC01-b.png`) | Pass |
+| UC04-TC02 | KF07 | Alternatif 1: Tidak Ada Rekomendasi Sesi yang Cocok | 1. Atur preferensi `mentee.satu` agar tidak beririsan dengan sesi yang tersedia.<br>2. Buka `/discover`.<br>3. Amati bagian "Rekomendasi Sesi untukmu" dan klik "Ubah Preferensi". | Preferensi tanpa irisan sesi tersedia | Sistem menampilkan pesan "Belum ada sesi yang cocok dengan jadwalmu" beserta tombol "Ubah Preferensi" yang mengarahkan ke `/profile/preferences` | Pada `/discover`, bagian "Rekomendasi Sesi untukmu" menampilkan "Belum ada sesi yang cocok dengan jadwalmu" dengan tombol "Ubah Preferensi" yang mengarahkan ke `/profile/preferences`, sementara bagian "Semua Sesi" tetap menampilkan 1 sesi terbuka (bukti `UC04-TC02.png`) | Pass |
+| UC04-TC03 | KF21 | Alternatif 2: Jadwal Sesi Bertabrakan dengan Sesi yang Sudah Diikuti | 1. Mentor 1 (`mentor.demo`) membuat sesi "Latihan RPL A".<br>2. Mentor 2 (`mentee.dua`, berperan sebagai Mentor) membuat sesi "Latihan RPL B" dengan tanggal dan jam yang sama persis.<br>3. Mentee (`mentee.satu`) bergabung ke "Latihan RPL A".<br>4. Mentee membuka "Latihan RPL B" dan menekan "Gabung Sesi". | Kedua sesi: 21/11/2026 20.00–21.00, format Daring, kapasitas 5 | Langkah 3 berhasil. Langkah 4 ditolak dengan pesan "Jadwal sesi ini bertabrakan dengan sesi lain yang kamu ikuti." dan Mentee tidak tercatat sebagai peserta "Latihan RPL B" | Bergabung ke "Latihan RPL A" berhasil. Saat bergabung ke "Latihan RPL B" (Sabtu, 21 November 2026, 20.00–21.00 WIB), tampil pesan "Jadwal sesi ini bertabrakan dengan sesi lain yang kamu ikuti." dan peserta sesi B tetap "0 dari 5 slot terisi" | Pass |
+| UC04-TC04 | KF13 | Tambahan: Sesi Penuh | 1. Login sebagai Mentee yang belum terdaftar pada sesi berkapasitas 1 yang sudah terisi.<br>2. Buka detail sesi tersebut. | Sesi Daring 16.47–18.49 WIB, kapasitas 1/1 | Sistem menolak pendaftaran dengan pesan bahwa sesi penuh dan tombol bergabung dinonaktifkan | Detail sesi menampilkan kapasitas "1/1 peserta", pesan "Sesi penuh. Kuota peserta sudah terpenuhi, kamu tidak bisa bergabung.", dan tombol "Sesi Penuh" yang tidak dapat diklik | Pass |
+
+### 4.4.5 Use Case Mengonfirmasi Keterlaksanaan Sesi
+
+### 4.4.6 Use Case Melihat Riwayat Sesi
+
+**ID Use Case:** UC06  
+**Nama Use Case:** Melihat Riwayat Sesi  
+**Akun:** `mentee.satu@mahasiswa.itb.ac.id` (memiliki riwayat) dan `hiupl.uji@mahasiswa.itb.ac.id` (tanpa riwayat)
+
+Tabel 4.4.6. Hasil Pengujian Use Case UC06
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC06-TC01 | KF11 | Normal | 1. Login sebagai `mentee.satu`.<br>2. Klik "Riwayat" pada navigasi.<br>3. Pilih salah satu sesi. | Akun dengan sesi berstatus Selesai/Tidak Terlaksana/Dibatalkan | Halaman Riwayat menampilkan sesi masa lalu yang dikelompokkan per status; detail sesi menampilkan peran, materi, jadwal, dan status | Halaman History menampilkan sesi `mentee.satu` dalam kelompok "Berlangsung" (4), "Terlaksana" (2: Diskusi Basis Data, Kalkulus), dan "Dibatalkan" (1: Review Struktur Data), masing-masing dengan tanggal, jam, peran (Mentee/Mentor), dan status. Catatan: halaman juga menampilkan kelompok "Berlangsung" untuk sesi yang belum dikonfirmasi, sedangkan SKPL hanya menyebut sesi berstatus akhir; langkah 3 (detail sesi) dibuka melalui tombol pada setiap baris | Pass |
+| UC06-TC02 | KF11 | Alternatif 1: Riwayat Kosong | 1. Login sebagai akun tanpa sesi.<br>2. Klik "Riwayat". | Akun tanpa sesi | Halaman Riwayat menampilkan pesan "Belum ada sesi" | Halaman History akun `riwayat.kosong` menampilkan "Belum ada sesi" dengan keterangan "Sesi yang Anda ikuti akan muncul di halaman riwayat." | Pass |
+
+### 4.4.7 Use Case Memberikan Penilaian Sehabis Sesi
+
+**ID Use Case:** UC07  
+**Nama Use Case:** Memberikan Penilaian Sehabis Sesi  
+**Akun:** `mentee.satu@mahasiswa.itb.ac.id` (peserta sesi yang sudah berakhir)
+
+Tombol "Skip" pada SKPL diwujudkan sebagai tombol "Nanti" pada formulir *feedback*.
+
+Tabel 4.4.7. Hasil Pengujian Use Case UC07
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC07-TC01 | KF10 | Normal | 1. Login sebagai `mentee.satu`, buka "History".<br>2. Pada sesi "Diskusi Basis Data" (Terlaksana), klik "Beri Penilaian".<br>3. Pilih 5 bintang, lalu klik "Kirim". | Rating 5, catatan kosong (opsional) | Sistem menyimpan *feedback* dan menampilkan "Terima kasih atas feedback Anda" | Tampil dialog "Terima kasih atas feedback Anda" dengan keterangan "Penilaian Anda sudah tersimpan." dan tombol "Kembali ke Riwayat". Tabel `feedbacks` berisi rating 5 dari `mentee.satu` untuk sesi "Diskusi Basis Data" | Pass |
+| UC07-TC02 | KF10 | Alternatif 1: Pengguna Tidak Mengisi Form Feedback | 1. Pada sesi "Kalkulus" (Terlaksana), klik "Beri Penilaian".<br>2. Tanpa memilih bintang dan tanpa catatan, klik "Kirim".<br>3. Klik "Nanti" untuk menutup formulir. | Tanpa rating dan catatan | Sistem tidak menyimpan *feedback*; formulir dapat ditutup dengan tombol "Nanti" (padanan "Skip" pada SKPL) dan status sesi tetap "Terlaksana" | Tombol "Kirim" tanpa bintang ditolak dengan pesan "Pilih penilaian dari 1 sampai 5 bintang."; tidak ada baris `feedbacks` untuk sesi "Kalkulus" dan sesi tetap di kelompok "Terlaksana". Formulir menyediakan tombol "Nanti" untuk menutup tanpa menyimpan | Pass |
 
 ### 4.4.8 Use Case Berkomunikasi Menggunakan Grup Obrolan Sementara
 
@@ -753,6 +1125,80 @@ Tabel 4.4.9. Hasil Pengujian Use Case UC09
 
 <br>
 
+### 4.4.10 Use Case Membatalkan Keikutsertaan Sesi
+
+**ID Use Case:** UC10  
+**Nama Use Case:** Membatalkan Keikutsertaan Sesi  
+**Lingkungan:** `npm run dev` (http://localhost:3000) dengan proyek Supabase *hosted* tim, peramban Google Chrome, 20 November 2026 sebelum 16.47 WIB.  
+**Akun:** `mentee.satu@mahasiswa.itb.ac.id`, peserta sesi "Latihan Biasa" (Mentor: `mentor.demo`) berkapasitas 1 (16.47–18.49 WIB) yang belum dimulai.
+
+Tabel 4.4.10. Hasil Pengujian Use Case UC10
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC10-TC01 | KF15 | Normal | 1. Buka detail sesi terdaftar yang belum dimulai.<br>2. Klik "Batalkan Keikutsertaan".<br>3. Klik "Ya, Batalkan". | Sesi terdaftar yang belum dimulai | Sistem menampilkan detail sesi dengan tombol pembatalan, lalu pesan konfirmasi; setelah dikonfirmasi, sistem menghapus Mentee dari daftar pendaftar dan menampilkan "Berhasil Membatalkan Keikutsertaan" | Detail sesi menampilkan tombol "Batalkan Keikutsertaan" di bawah "Buka Ruang Obrolan". Setelah diklik tampil konfirmasi "Yakin ingin membatalkan keikutsertaanmu di sesi ini?" dengan tombol "Kembali" dan "Ya, Batalkan". Setelah "Ya, Batalkan", Mentee dikeluarkan dari daftar peserta: basis data menunjukkan sesi "Latihan Biasa" tidak lagi memiliki peserta (0/1) dan baris `session_participants` milik `mentee.satu` sudah terhapus. Aplikasi menampilkan pesan "Berhasil Membatalkan Keikutsertaan" (`ParticipantSessionPanel`) | Pass |
+| UC10-TC02 | KF15 | Alternatif 1: Mentee Tidak Jadi Membatalkan | 1. Buka detail sesi terdaftar yang belum dimulai.<br>2. Klik "Batalkan Keikutsertaan".<br>3. Klik "Kembali". | Sesi terdaftar yang belum dimulai | Sistem menutup pesan konfirmasi dan keikutsertaan tidak berubah | Dialog konfirmasi tertutup, tombol "Batalkan Keikutsertaan" tampil kembali, dan kapasitas tetap 1/1 peserta | Pass |
+
+
+<br>
+
+### 4.4.11 Use Case Menghapus Sesi
+
+### 4.4.12 Use Case Mengedit Sesi
+
+**ID Use Case:** UC12  
+**Nama Use Case:** Mengedit Sesi  
+**Akun:** `mentor.demo@mahasiswa.itb.ac.id`
+
+Tabel 4.4.12. Hasil Pengujian Use Case UC12
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| *[UC12-TC01 s.d. UC12-TC03]* | KF17, KF06, KF14 | *[Normal, Alternatif 1–2: diisi Matthew]* | *[...]* | *[...]* | *[...]* | *[Diisi setelah diuji]* | *[Diisi setelah diuji]* |
+| UC12-TC04 | KF20 | Alternatif 3: Jadwal yang Direvisi Lintas Hari atau Durasinya Tidak Valid | 1. Buka detail sesi milik pengguna, klik "Edit Sesi".<br>2. Ubah jadwal menjadi tidak valid (tiga percobaan sesuai kolom Masukan), lalu klik "Simpan Perubahan".<br>3. Kembali ke detail sesi. | (a) "Struktur Data" (`mentor.demo`): 18.33–05.33, jam selesai lebih awal dari jam mulai (lintas hari); (b) "Latihan AlGeo 1" (`mentee.satu` sebagai Mentor), 22/11/2026: 10.00–22.05 (12 jam 5 menit); (c) sesi yang sama: 07.00–19.30 (12 jam 30 menit) | (a)–(c) ditolak dengan pesan jadwal tidak valid; jadwal sesi tidak berubah | Ketiga percobaan ditolak dengan pesan "Pilih jadwal yang valid: sesi harus dimulai dan selesai pada hari yang sama dengan durasi 10 menit hingga 12 jam." dan perubahan tidak disimpan. Kasus durasi kurang dari 10 menit sudah diuji pada UC03-TC05 (b) dan VAL-UT16 | Pass |
+
+### 4.4.13 Use Case Melihat Feedback Sesi
+
+**ID Use Case:** UC13  
+**Nama Use Case:** Melihat Feedback Sesi  
+**Akun:** `mentor.demo@mahasiswa.itb.ac.id` (Mentor sesi "Diskusi Basis Data")
+
+UC13 tidak memiliki skenario alternatif pada SKPL.
+
+Tabel 4.4.13. Hasil Pengujian Use Case UC13
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC13-TC01 | KF18 | Normal | 1. Login sebagai `mentor.demo`.<br>2. Buka "Riwayat", pilih sesi yang sudah selesai.<br>3. Klik "Lihat Feedback". | Sesi "Diskusi Basis Data" (20/11/2026 09.00–10.00, Selesai) dengan *feedback* `mentee.dua` (rating 4, "Penjelasan normalisasi jelas, tapi contoh soalnya kurang banyak.") dan *feedback* `mentee.satu` dari UC07-TC01 | Daftar *feedback* Mentee tampil beserta rating, catatan, rata-rata, dan distribusi rating | Halaman *feedback* sesi "Diskusi Basis Data" (Jum, 20 Nov 2026, 09.00–10.00, 2 peserta) menampilkan rata-rata 4.0 dari 1 penilaian, distribusi rating (rating 4: 1), serta *feedback* Mentee Dua bintang 4 dengan komentar "Penjelasan normalisasi jelas, tapi contoh soalnya kurang banyak." | Pass |
+
+### 4.4.14 Use Case Membuka Beranda Utama
+
+**ID Use Case:** UC14  
+**Nama Use Case:** Membuka Beranda Utama  
+**Akun:** `mentee.satu@mahasiswa.itb.ac.id`
+
+Tabel 4.4.14. Hasil Pengujian Use Case UC14
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC14-TC01 | KF07 | Normal | 1. Login sebagai `mentee.satu` yang sudah memiliki preferensi belajar.<br>2. Akses `/dashboard`.<br>3. Amati isi halaman Beranda. | Akun `mentee.satu` dengan preferensi terisi | Sistem menampilkan sapaan pengguna, daftar "Sesi Aktif Terdekat", dan kartu "Rekomendasi Sesi untukmu" hasil *matchmaking* | Beranda menampilkan sapaan "Halo, Mentee Satu!", 2 sesi pada "Sesi Aktif Terdekat" ("Struktur Data" dan "Uji HIUPL Obrolan dan Notifikasi"), serta kartu rekomendasi "Aljabar Linear Session" dengan tombol "Gabung Sesi" (bukti `UC14-TC01.png`) | Pass |
+| UC14-TC02 | KF07 | Alternatif 1: Preferensi Belum Diatur (Khusus Mentee) | 1. Login sebagai Mentee tanpa preferensi cocok / belum mengatur preferensi.<br>2. Buka `/dashboard`.<br>3. Amati bagian Rekomendasi dan tombol pengaturan preferensi. | Akun Mentee pada `/dashboard` | Bagian "Sesi Aktif Terdekat" tetap tampil, sedangkan bagian Rekomendasi menampilkan ajakan mengatur/mengubah preferensi beserta tombol menuju `/profile/preferences` | "Sesi Aktif Terdekat" tetap tampil; bagian "Rekomendasi Sesi untukmu" menampilkan status kosong dengan tombol "Ubah Preferensi" menuju `/profile/preferences` (bukti `UC14-TC02.png`). Skenario `PREFERENCE_NOT_SET` ("Preferensi belajar kamu belum diatur" + tombol "Atur Preferensi") juga terverifikasi lulus pada unit test `C11-UT02` | Pass |
+
+### 4.4.15 Use Case Melihat Profil
+
+**ID Use Case:** UC15  
+**Nama Use Case:** Melihat Profil  
+**Akun:** `mentee.satu@mahasiswa.itb.ac.id`
+
+Tabel 4.4.15. Hasil Pengujian Use Case UC15
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC15-TC01 | KF19 | Normal | 1. Login sebagai `mentee.satu`, buka halaman profil sendiri (`/profile`).<br>2. Buka halaman profil Mentor Demo (`/profile/<id>`) melalui tautan "Lihat profil" pada detail sesi. | Profil sendiri (`mentee.satu`) dan profil pengguna lain (`mentor.demo`) | Halaman Profil menampilkan nama, `@username`, universitas, program studi, bio, tag materi, format belajar, dan ketersediaan waktu; tombol "Edit Profil" dan "Edit Preferensi" hanya tampil pada profil sendiri | Profil sendiri menampilkan "Mentee Satu" (`@mentee_satu`, ITB · Sistem dan Teknologi Informasi, tag "Struktur Data", format "Luring", slot Senin/Rabu/Jumat/Sabtu) beserta tombol "Edit Profil" dan "Edit Preferensi". Profil "Mentor Demo" (`@mentor_demo`, ITB · Teknik Informatika, bio "Suka mengajar struktur data.") tampil tanpa tombol edit (bukti `UC15-TC01-a.png`, `UC15-TC01-b.png`) | Pass |
+| UC15-TC02 | KF19 | Alternatif 1: Profil Tidak Ditemukan | 1. Login, lalu akses URL `/profile/<id-tidak-valid>` untuk pengguna yang tidak terdaftar. | ID pengguna tidak terdaftar | Sistem menampilkan halaman 404 dengan pesan "Profil pengguna tidak ditemukan" dan tombol "Kembali ke Beranda" | Tampil halaman 404 dengan label "404", judul "Profil pengguna tidak ditemukan", keterangan "Pengguna yang kamu cari tidak terdaftar atau akun telah dihapus.", dan tombol "Kembali ke Beranda" (bukti `UC15-TC02.png`) | Pass |
+
+<br>
+
 ## 4.5 Pengujian Kebutuhan Non-Fungsional (KNF)
 
 Setiap KNF pada Tabel 3.2 SKPL diuji secara terukur berdasarkan parameter yang telah didefinisikan. Setiap pengujian memuat target terukur, metode dan alat yang sesuai dengan parameter (misalnya Chrome DevTools untuk *response time* dan inspeksi basis data untuk *security*), serta hasil aktual berupa angka atau data. KNF yang belum dipenuhi atau tidak diimplementasikan dicantumkan beserta alasan dan rencana perbaikan.
@@ -767,8 +1213,8 @@ Tabel 4.5. Hasil Pengujian KNF
 | KNF03-TC02 | KNF03 | *Reliability* (ketepatan waktu) | Pengingat terkirim tepat saat sesi masuk jendela 15 menit, tanpa tindakan manual | Sesi uji dibuat pukul 20.49 WIB (mulai 21.03 WIB, sudah di dalam jendela 15 menit). *Endpoint* tidak dipanggil selama 3 menit, lalu dipanggil manual dan hasilnya diperiksa; konfigurasi repositori juga diperiksa | Panggilan `curl` manual pukul 20.52 WIB masih menghasilkan `sent: 2` dengan judul "Sesi dimulai 11 menit lagi". Artinya selama 20.49–20.52 WIB belum ada pemanggilan apa pun, karena fungsi hanya mengirim untuk sesi dengan `reminder_sent = false`. Repositori juga tidak memuat penjadwal (`pg_cron`, `vercel.json`, atau Supabase Cron) | Fail. **Penyebab:** *route* cron sudah ada tetapi tidak ada penjadwal yang memanggilnya. **Usulan:** jadwalkan `POST /api/cron/reminders` dan `/api/cron/chat-cleanup` setiap 1 menit dengan Supabase Cron (`pg_cron` + `pg_net`) atau Vercel Cron setelah *deploy*, lalu ulangi KNF03-TC02 |
 | KNF04-TC01 | KNF04 | *Security* | Registrasi email non-universitas ditolak dan tidak ada akun baru | Registrasi `hiupl.uji@gmail.com` lewat `/register` (UC01-TC03), lalu periksa `auth.users` (`auth.admin.listUsers()`) dan `public.users` dengan *service role* | Ditolak dengan pesan "Harap gunakan email universitas yang valid". 0 baris di `auth.users` dan `public.users`; seluruh 6 akun di `auth.users` berdomain `.ac.id` | Pass |
 | KNF04-TC02 | KNF04 | *Security* | Akun non-universitas tidak dapat dibuat melalui jalur mana pun | Memanggil `supabase.auth.signUp()` langsung dengan *anon key* publik (yang memang dikirim ke peramban) memakai `bypass.knf04@example.com` | **Akun dibuat** dengan sesi aktif, tanpa baris `public.users`, dan dapat membaca tabel `sessions` (4 baris). Akun uji dihapus segera setelah pengujian | Fail. **Penyebab:** validasi domain hanya dilakukan `processRegistration()`; Supabase Auth menerima pendaftaran publik dari klien mana pun. **Usulan:** tolak domain non-`.ac.id` di sisi Supabase dengan *Before User Created Hook* atau *trigger* pada `auth.users`, atau nonaktifkan *public sign-up* dan buat akun hanya dari server dengan *service role*; tambahkan juga syarat baris `public.users` pada kebijakan RLS |
-| KNF02-TC01 | KNF02 | *Response time* | *[Diisi Hugo]* | *[...]* | *[...]* | *[...]* |
-| KNF05-TC01 | KNF05 | *Response time* | *[Diisi Markus]* | *[...]* | *[...]* | *[...]* |
+| KNF02-TC01 | KNF02 | *Response time* | Rekomendasi sesi pada Beranda tampil < 3 detik (3.000 ms) | Chrome DevTools (tab Network, *Disable cache* aktif) saat memuat `/dashboard` dengan akun `mentee.satu` yang memiliki preferensi; diukur 5 kali lalu dihitung rata-rata dan maksimum | 5 kali pengukuran respons `/dashboard`: **675 ms, 700 ms, 729 ms, 666 ms, 949 ms**. Rata-rata: **743,8 ms** (0,74 detik), maksimum: **949 ms** (0,95 detik). Pada tangkapan layar `KNF02-TC01.png`, *DOMContentLoaded* 2,07 detik dan *Load* 2,74 detik — seluruhnya di bawah batas 3 detik | Pass |
+| KNF05-TC01 | KNF05 | *Response time* | Halaman Riwayat (`/history`) selesai dimuat < 3 detik | Chrome DevTools tab Network (*Disable cache*, tanpa *throttling*), login sebagai `mentee.satu`, muat ulang `/history` 5 kali, catat waktu *Load*, ambil rata-rata dan maksimum | Lima kali muat ulang: 2.704, 2.804, 2.695, 3.570, dan 3.222 ms. Rata-rata 2.999 ms, minimum 2.695 ms, maksimum 3.570 ms; 2 dari 5 percobaan melebihi 3 detik. Pada tangkapan layar, dokumen `history` membutuhkan 1,50 s di server dan `main-app.js` berukuran 1.761 kB (*bundle* mode pengembangan yang belum diminifikasi) | Fail. **Penyebab:** pengukuran dilakukan pada `npm run dev` (kode belum diminifikasi dan halaman dikompilasi ulang), serta `SessionHistory.listForUser()` menjalankan beberapa *query* Supabase *hosted* sebelum halaman dirender. **Usulan:** ukur ulang pada mode produksi (`npm run build && npm start`) dan, jika masih lambat, gabungkan *query* riwayat menjadi satu *view*/RPC |
 
 Catatan KNF01-TC01: kolom `encrypted_password` berada pada skema `auth` yang tidak diekspos PostgREST maupun Admin API, sehingga hanya dapat dibaca melalui SQL Editor Supabase Dashboard (atau `psql` pada Supabase lokal). Kueri dijalankan oleh David pada proyek Supabase *hosted* tim pada 20 November 2026.
 
@@ -784,6 +1230,35 @@ Tabel 4.6. Bukti Hasil Pengujian
 | :--- | :--- |
 | C12-UT01 – C12-UT46 | <img src="./assets/C12-unit.png" width="90%"> |
 | VAL-UT01 – VAL-UT07 | <img src="./assets/Validator-unit.png" width="90%"> |
+| VAL-UT08 – VAL-UT17 | <img src="./assets/Validator-unit-markus.png" width="90%"> |
+| C06-UT01 – C06-UT07 | <img src="./assets/C06-unit.png" width="90%"> |
+| C07-UT01 – C07-UT12 | <img src="./assets/C07-unit.png" width="90%"> |
+| C14-UT01 – C14-UT23 | <img src="./assets/C14-unit.png" width="90%"> |
+| Coverage C06, C07, C14, Validator | <img src="./assets/coverage-markus.png" width="90%"> |
+| C04-UT01 – C04-UT15, C11-UT01 – C11-UT07, C16-UT01 – C16-UT06 | <img src="./assets/C04-C11-C16-unit.png" width="90%"> |
+| C04 (`matchSession`, `searchSession`), C11, C16 (coverage) | <img src="./assets/coverage-hugo.png" width="90%"> |
+| UC04-TC01 | <img src="./assets/UC04-TC01-a.png" width="45%"> <img src="./assets/UC04-TC01-b.png" width="45%"><br>Detail sesi peserta dan pesan "Berhasil bergabung" setelah bergabung ke "Aljabar Linear Session" |
+| UC04-TC02 | <img src="./assets/UC04-TC02.png" width="45%"> |
+| UC14-TC01 | <img src="./assets/UC14-TC01.png" width="45%"> |
+| UC14-TC02 | <img src="./assets/UC14-TC02.png" width="45%"> |
+| UC15-TC01 | <img src="./assets/UC15-TC01-a.png" width="45%"> <img src="./assets/UC15-TC01-b.png" width="45%"><br>Profil sendiri (`mentee.satu`, dengan tombol edit) dan profil pengguna lain (`mentor.demo`, tanpa tombol edit) |
+| UC15-TC02 | <img src="./assets/UC15-TC02.png" width="45%"> |
+| KNF02-TC01 | <img src="./assets/KNF02-TC01.png" width="90%"><br>Pengukuran Chrome DevTools Network pada `/dashboard` (5 kali ukur: rata-rata 743,8 ms, maks 949 ms) |
+| C04-UT21 – C04-UT37 | <img src="./assets/C04-unit.png" width="90%"> |
+| C04-UT38 – C04-UT60 | <img src="./assets/C04-unit-markus.png" width="90%"> |
+| Coverage C04, C13 | <img src="./assets/coverage-markus-c04-c13.png" width="90%"> |
+| C13-UT21 – C13-UT41 | <img src="./assets/C13-unit-a.png" width="45%"> <img src="./assets/C13-unit-b.png" width="45%"> |
+| UC04-TC04 | <img src="./assets/UC04-TC04.png" width="45%"><br>Sesi berkapasitas 1/1 menampilkan pesan "Sesi penuh" dan tombol bergabung nonaktif |
+| UC10-TC01, UC10-TC02 | <img src="./assets/UC10-TC01-a.png" width="30%"> <img src="./assets/UC10-TC01-b.png" width="30%"> <img src="./assets/UC10-TC01-c.png" width="30%"><br>Tombol "Batalkan Keikutsertaan", dialog konfirmasi dengan pilihan "Kembali" dan "Ya, Batalkan", dan pesan "Berhasil Membatalkan Keikutsertaan" |
+| UC03-TC05 | <img src="./assets/UC03-TC05-a.png" width="30%"> <img src="./assets/UC03-TC05-b.png" width="30%"> <img src="./assets/UC03-TC05-c.png" width="30%"><br>(a) 21.30–03.00, jam selesai lebih awal dari jam mulai (lintas hari); (b) 10.00–10.05 (5 menit); (c) 07.00–19.30 (12,5 jam): ketiganya ditolak |
+| UC04-TC03 | <img src="./assets/UC04-TC03.png" width="90%"><br>`mentee.satu` ditolak saat bergabung ke "Latihan RPL B" karena sudah mengikuti "Latihan RPL A" pada jam yang sama |
+| UC06-TC01 | <img src="./assets/UC06-TC01.png" width="90%"><br>Riwayat `mentee.satu` dikelompokkan Berlangsung, Terlaksana, dan Dibatalkan |
+| UC06-TC02 | <img src="./assets/UC06-TC02.png" width="90%"><br>Akun tanpa sesi menampilkan "Belum ada sesi" |
+| UC07-TC01 | <img src="./assets/UC07-TC01.png" width="90%"><br>Dialog "Terima kasih atas feedback Anda" setelah memberi 5 bintang |
+| UC07-TC02 | <img src="./assets/UC07-TC02.png" width="90%"><br>"Kirim" tanpa bintang ditolak; tombol "Nanti" untuk menutup tanpa menyimpan |
+| UC12-TC04 | <img src="./assets/UC12-TC04.png" width="30%"> <img src="./assets/UC12-TC04-a.png" width="30%"> <img src="./assets/UC12-TC04-c.png" width="30%"><br>(a) 18.33–05.33 lintas hari; (b) 10.00–22.05 (12 jam 5 menit); (c) 07.00–19.30 (12 jam 30 menit): ketiganya ditolak |
+| UC13-TC01 | <img src="./assets/UC13-TC01.png" width="90%"><br>Daftar *feedback*, rata-rata, dan distribusi rating sesi "Diskusi Basis Data" |
+| KNF05-TC01 | <img src="./assets/KNF05-TC01.png" width="90%"><br>Contoh satu kali muat ulang `/history` pada Chrome DevTools (Network) |
 | C09-UT01 – C09-UT07 | <img src="./assets/C09-unit.png" width="90%"> |
 | C10-UT01 – C10-UT10 | <img src="./assets/C10-unit.png" width="90%"> |
 | C05-UT01 – C05-UT16 | <img src="./assets/C05-unit.png" width="90%"> |
@@ -820,22 +1295,42 @@ Tabel 4.6. Bukti Hasil Pengujian
 
 # BAB 5: Traceability
 
-Petakan setiap KF ke KNF, use case, kelas perancangan, file implementasi, dan test case. Tabel traceability berikut akan menjadi sarana verifikasi KF. Setiap KF memiliki minimal satu test case dan dinyatakan terpenuhi apabila **seluruh** test case terkaitnya berkesimpulan `Pass`. KF yang tidak diimplementasikan tetap dicantumkan beserta alasannya.
+Tabel 5.1 memetakan setiap KF ke KNF, *use case*, kelas perancangan, berkas implementasi, dan *test case*. Sebuah KF dinyatakan **Terpenuhi** apabila seluruh *test case* terkaitnya berkesimpulan Pass, **Belum terpenuhi** apabila ada *test case* yang Fail, dan **Belum lengkap** apabila masih ada *test case* yang belum diisi. Seluruh KF01–KF21 telah diimplementasikan. Kelas bertingkat Tidak perlu tetap tercantum karena teruji tidak langsung melalui *test case use case*.
 
 Tabel 5.1. Matriks Kerunutan KF terhadap Implementasi dan Pengujian
 
-| KF ID | KNF Terkait | Use Case ID | Kelas Terkait | Implementasi File Terkait | Test Case (UC) | Test Case (Unit/Integrasi/KNF) |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| *KF05* | *KNF01* | *UC03* | *C02 - Pesanan* | *`src/...`* | *UC03-TC01* | *C02-UT05, INT-TC04, KNF01-TC01* |
-| *KF01* | *-* | *UC01<br>UC02* | *[C01 - Nama kelas]<br>[C02 - Nama kelas]* | *[path/ke/file1]<br>[path/ke/file2]* | *UC01-TC01, UC01-TC02<br>UC02-TC01* | *-* |
-| *KF02* | *[KNFXX atau -]* | *[UCXX]* | *[CXX - Nama kelas]* | *[path/ke/file]* | *[UCXX-TCYY]* | *[CXX-UTYY, INT-TCYY, KNFXX-TCYY atau -]* |
-| *KFXX* | *-* | *[UCXX atau -]* | *[CXX - Nama kelas atau -]* | *Tidak diimplementasikan: [alasan]* | *-* | *-* |
-| *...* | *...* | *...* | *...* | *...* | *...* | *...* |
+| KF ID | KNF Terkait | Use Case ID | Kelas Terkait | Implementasi File Terkait | Test Case (UC) | Test Case (Unit/Integrasi/KNF) | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| KF01 | KNF04 | UC01 | C01 - User<br>C10 - Profile<br>C12 - UserControl | `src/controllers/userController.ts`<br>`src/models/user.ts`, `src/models/profile.ts`<br>`src/lib/validator.ts`, `src/lib/adapters/authAdapter.ts`<br>`src/app/register/` | UC01-TC01 (Fail), UC01-TC03 | C12-UT01 s.d. C12-UT46, C10-UT01 s.d. C10-UT10, VAL-UT01 s.d. VAL-UT04, INT-TC01, INT-TC03, INT-TC04 (Fail), INT-TC05, KNF04-TC01, KNF04-TC02 (Fail) | **Belum terpenuhi**: pengguna langsung masuk setelah registrasi (UC01-TC01) dan domain email dapat dilewati melalui Supabase Auth (INT-TC04, KNF04-TC02) |
+| KF02 | KNF01 | UC01 | C12 - UserControl | `src/controllers/userController.ts`<br>`src/lib/adapters/authAdapter.ts`<br>`src/middleware.ts`, `src/app/login/` | UC01-TC02 | C12-UT01 s.d. C12-UT46, INT-TC02, INT-TC35, KNF01-TC01, KNF01-TC02 | Terpenuhi |
+| KF03 | - | UC02 | C09 - Preference<br>C12 - UserControl | `src/models/preference.ts`<br>`src/controllers/userController.ts`<br>`src/app/profile/preferences/` | UC02-TC01, UC02-TC02 | C09-UT01 s.d. C09-UT07, VAL-UT05 s.d. VAL-UT07, INT-TC06 | Terpenuhi |
+| KF04 | - | UC02 | C09 - Preference<br>C12 - UserControl | `src/models/preference.ts`<br>`src/components/PreferenceForm.tsx` | UC02-TC01, UC02-TC02 | C09-UT01 s.d. C09-UT07, VAL-UT05 s.d. VAL-UT07, INT-TC06 | Terpenuhi |
+| KF05 | - | UC03 | C04 - Session<br>C13 - SessionControl<br>C18 - HostSessionPage | `src/controllers/sessionController.ts`<br>`src/models/session.ts`<br>`src/components/HostSessionPanel.tsx`, `src/app/sessions/new/` | *[UC03-TC01 diisi Matthew]* | C04-UT38 s.d. C04-UT40, *[C13-UT01 dst. diisi Matthew]* | Belum lengkap: menunggu UC03-TC01 dan C13 bagian pembuatan sesi |
+| KF06 | - | UC03, UC12 | C04 - Session<br>C13 - SessionControl | `src/controllers/sessionController.ts`<br>`src/models/session.ts`<br>`src/supabase/migrations/20261110000000_reject_overlapping_mentor_sessions.sql` | *[Skenario jadwal Mentor bertabrakan pada UC03/UC12 diisi Matthew]* | C04-UT39, C04-UT48 | Belum lengkap: menunggu TC use case UC03/UC12 |
+| KF07 | KNF02 | UC04, UC14 | C04 - Session<br>C11 - Dashboard<br>C13 - SessionControl | `src/models/session.ts` (`matchSession()`, `searchSession()`)<br>`src/app/dashboard/`, `src/app/discover/` | UC04-TC01, UC04-TC02, UC14-TC01, UC14-TC02 | C04-UT01 s.d. C04-UT15, C04-UT55 s.d. C04-UT57, C11-UT01 s.d. C11-UT07, KNF02-TC01 | Terpenuhi |
+| KF08 | - | UC04 | C04 - Session<br>C13 - SessionControl<br>C19 - ParticipantSessionPage | `src/controllers/sessionParticipationController.ts`<br>`src/models/session.ts`<br>`src/components/ParticipantSessionPanel.tsx`, `src/app/sessions/[id]/page.tsx` | UC04-TC01 | C13-UT21 s.d. C13-UT34, C04-UT24 s.d. C04-UT27, C04-UT58 s.d. C04-UT60 | Terpenuhi |
+| KF09 | KNF03 | UC09 | C22 - Notification<br>C23 - PopUpNotification | `src/controllers/notificationController.ts`, `src/controllers/reminderController.ts`<br>`src/lib/adapters/cronAdapter.ts`, `src/app/api/cron/reminders/`<br>`src/components/PopUpNotification.tsx` | UC09-TC01 (Fail), UC09-TC02 | C22-UT01 s.d. C22-UT19, INT-TC07 s.d. INT-TC15, INT-TC34 (Fail), KNF03-TC01, KNF03-TC02 (Fail) | **Belum terpenuhi**: belum ada penjadwal Cron dan *pop-up* Realtime tidak tampil di halaman yang terbuka |
+| KF10 | - | UC05, UC07 | C06 - Feedback<br>C07 - SessionHistory<br>C14 - FeedbackControl<br>C20 - FeedbackForm | `src/controllers/feedbackController.ts`, `src/controllers/sessionHistoryController.ts`<br>`src/models/feedback.ts`, `src/models/sessionHistory.ts`<br>`src/components/FeedbackForm.tsx` | UC07-TC01, UC07-TC02, *[UC05 diisi Matthew]* | C14-UT01 s.d. C14-UT16, C06-UT01 s.d. C06-UT03, C07-UT11, C07-UT12, VAL-UT08, VAL-UT09 | Belum lengkap: menunggu TC UC05 (konfirmasi keterlaksanaan) |
+| KF11 | KNF05 | UC06 | C07 - SessionHistory<br>C24 - HistoryPage | `src/controllers/sessionHistoryController.ts`<br>`src/models/sessionHistory.ts`, `src/models/sessionHistoryTypes.ts`<br>`src/app/history/`, `src/components/SessionHistoryView.tsx` | UC06-TC01, UC06-TC02 | C07-UT01 s.d. C07-UT10, KNF05-TC01 (Fail) | **Belum terpenuhi**: waktu muat riwayat maksimum 3.570 ms pada mode pengembangan (KNF05-TC01) |
+| KF12 | - | UC08 | C05 - GroupChat<br>C08 - ChatMessage<br>C21 - GroupChatPage | `src/controllers/chatController.ts`, `src/controllers/chatCleanupController.ts`<br>`src/models/groupChat.ts`, `src/models/chatMessage.ts`<br>`src/lib/adapters/realtimeAdapter.ts`, `src/app/sessions/[id]/chat/` | UC08-TC01, UC08-TC02 (Fail), UC08-TC03 | C05-UT01 s.d. C05-UT16, C08-UT01 s.d. C08-UT10, INT-TC16 s.d. INT-TC26, INT-TC30 s.d. INT-TC33 (INT-TC32 Fail) | **Belum terpenuhi**: pesan anggota lain tidak tampil secara *real-time* (UC08-TC02, INT-TC32) |
+| KF13 | - | UC04 | C04 - Session<br>C13 - SessionControl | `src/models/session.ts` (`checkCapacity()`, `addParticipant()`)<br>`src/supabase/migrations/20261115000000_session_capacity_guard.sql` | UC04-TC04 | C04-UT21 s.d. C04-UT37, C13-UT23, C13-UT26, C13-UT28, INT-TC27 | Terpenuhi |
+| KF14 | - | UC03, UC12 | C13 - SessionControl | `src/lib/validator.ts` (`validateCapacity()`)<br>`src/controllers/sessionController.ts` | *[Skenario kapasitas tidak valid pada UC03/UC12 diisi Matthew]* | C04-UT40, C04-UT22, C04-UT23 | Belum lengkap: menunggu TC use case UC03/UC12 |
+| KF15 | - | UC10 | C04 - Session<br>C13 - SessionControl<br>C19 - ParticipantSessionPage | `src/controllers/sessionParticipationController.ts` (`cancelSession()`)<br>`src/models/session.ts` (`removeParticipant()`) | UC10-TC01, UC10-TC02 | C13-UT35 s.d. C13-UT41, C04-UT28 s.d. C04-UT30, C04-UT35 | Terpenuhi |
+| KF16 | - | UC11 | C04 - Session<br>C13 - SessionControl<br>C18 - HostSessionPage | `src/controllers/sessionController.ts`<br>`src/models/session.ts` (`deleteSession()`)<br>`src/supabase/migrations/20261112000000_delete_session.sql`, `src/components/DeleteSessionButton.tsx` | *[UC11 diisi Matthew]* | C04-UT49 s.d. C04-UT51 | Belum lengkap: menunggu TC UC11 |
+| KF17 | - | UC12 | C04 - Session<br>C13 - SessionControl<br>C18 - HostSessionPage | `src/controllers/sessionController.ts`<br>`src/models/session.ts` (`updateSession()`)<br>`src/components/EditSessionPanel.tsx`, `src/app/sessions/[id]/edit/` | *[UC12-TC01 s.d. UC12-TC03 diisi Matthew]* | C04-UT46 s.d. C04-UT48 | Belum lengkap: menunggu TC UC12 Normal dan Alternatif 1–2 |
+| KF18 | - | UC06, UC13 | C06 - Feedback<br>C14 - FeedbackControl | `src/controllers/feedbackController.ts` (`retrieveFeedbackBySession()`)<br>`src/models/feedback.ts`<br>`src/app/sessions/[id]/feedback/`, `src/components/SessionFeedbackView.tsx` | UC13-TC01 | C14-UT17 s.d. C14-UT23, C06-UT04 s.d. C06-UT07 | Terpenuhi |
+| KF19 | - | UC15 | C10 - Profile<br>C12 - UserControl<br>C16 - ProfilePage | `src/models/profile.ts`<br>`src/controllers/userController.ts`<br>`src/app/profile/` | UC15-TC01, UC15-TC02 | C10-UT01 s.d. C10-UT10, C16-UT01 s.d. C16-UT06 | Terpenuhi |
+| KF20 | - | UC03, UC12 | C13 - SessionControl<br>Validator | `src/lib/validator.ts` (`validateSessionTime()`)<br>`src/controllers/sessionController.ts`<br>`src/supabase/migrations/20261116000000_session_time_rules.sql` | UC03-TC05, UC12-TC04 | VAL-UT15 s.d. VAL-UT17, INT-TC28 | Terpenuhi |
+| KF21 | - | UC04 | C04 - Session<br>C13 - SessionControl<br>Validator | `src/lib/validator.ts` (`hasScheduleConflict()`)<br>`src/controllers/sessionParticipationController.ts`<br>`src/supabase/migrations/20261116000000_session_time_rules.sql` (`enforce_participant_schedule`) | UC04-TC03 | VAL-UT10 s.d. VAL-UT14, C13-UT29, C04-UT27, INT-TC29 | Terpenuhi |
+
+Ringkasan: 11 KF terpenuhi (KF02, KF03, KF04, KF07, KF08, KF13, KF15, KF18, KF19, KF20, KF21), 4 KF belum terpenuhi (KF01, KF09, KF11, KF12), dan 6 KF belum lengkap karena menunggu *test case* bagian pembuatan, pengubahan, penghapusan, dan konfirmasi sesi (KF05, KF06, KF10, KF14, KF16, KF17).
 
 Tabel 5.2. Matriks Kerunutan KNF terhadap Pengujian
 
-| ID KNF | Parameter | KF/UC Terkait | Test Case |
-| :--- | :--- | :--- | :--- |
-| *KNF01* | *Reliability* | *KF05 / UC03* | *KNF01-TC01* |
-| *KNFXX* | *[Parameter]* | *[KFXX / UCXX atau -]* | *[KNFXX-TCYY]* |
-| *...* | *...* | *...* | *...* |
+| ID KNF | Parameter | KF/UC Terkait | Test Case | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| KNF01 | Security | KF02 / UC01 | KNF01-TC01, KNF01-TC02 | Terpenuhi |
+| KNF02 | Response Time | KF07 / UC14 | KNF02-TC01 | Terpenuhi |
+| KNF03 | Reliability | KF09 / UC09 | KNF03-TC01, KNF03-TC02 (Fail) | **Belum terpenuhi** |
+| KNF04 | Security | KF01 / UC01 | KNF04-TC01, KNF04-TC02 (Fail) | **Belum terpenuhi** |
+| KNF05 | Response Time | KF11 / UC06 | KNF05-TC01 (Fail) | **Belum terpenuhi** |

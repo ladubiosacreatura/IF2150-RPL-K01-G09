@@ -56,6 +56,20 @@ describe("checkFeedbackEligibility", () => {
     });
   });
 
+  it("accepts a session id written in upper case", async () => {
+    await expect(checkFeedbackEligibility(idSession.toUpperCase())).resolves.toMatchObject({
+      ok: true,
+    });
+  });
+
+  it("reports lookup failures", async () => {
+    history.findForUser.mockRejectedValueOnce(new Error("network"));
+    await expect(checkFeedbackEligibility(idSession)).resolves.toEqual({
+      ok: false,
+      error: "SESSION_LOOKUP_FAILED",
+    });
+  });
+
   it.each([
     ["the user is not in the session", null, "NOT_PARTICIPANT"],
     ["the user is the mentor", { ...completedSession(), role: "MENTOR" }, "NOT_PARTICIPANT"],
@@ -101,6 +115,14 @@ describe("submitFeedback", () => {
       error: "INVALID_RATING",
     });
     expect(feedback.create).not.toHaveBeenCalled();
+  });
+
+  it("accepts a comment of exactly 500 characters after trimming", async () => {
+    const comment = "a".repeat(500);
+    await expect(submitFeedback(idSession, 3, `  ${comment}  `)).resolves.toMatchObject({
+      ok: true,
+    });
+    expect(feedback.create).toHaveBeenCalledWith(idSession, "mentee-1", "mentor-1", 3, comment);
   });
 
   it("rejects comments longer than 500 characters", async () => {
@@ -194,6 +216,14 @@ describe("retrieveFeedbackBySession", () => {
     await expect(retrieveFeedbackBySession(idSession)).resolves.toMatchObject({
       ok: true,
       data: { feedbacks: [], averageRating: 0 },
+    });
+  });
+
+  it("averages a single lowest rating to exactly 1", async () => {
+    feedback.getFeedbackBySession.mockResolvedValueOnce([entry("a", 1)]);
+    await expect(retrieveFeedbackBySession(idSession)).resolves.toMatchObject({
+      ok: true,
+      data: { averageRating: 1, ratingCounts: expect.arrayContaining([{ rating: 1, count: 1 }]) },
     });
   });
 
