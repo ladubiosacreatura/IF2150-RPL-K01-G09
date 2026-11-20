@@ -347,11 +347,31 @@ Tabel 4.1.1. Identifikasi Tingkat Pengujian Kelas
 
 | ID Kelas | Nama Kelas | Tingkat | Alasan | Test Case Terkait |
 | :--- | :--- | :--- | :--- | :--- |
-| *C02* | *Pesanan* | *Mendalam* | *Memuat `hitungTotal()` dan transisi status pembayaran* | *C02-UT01 s.d. C02-UT08* |
-| *C03* | *Keranjang* | *Sedang* | *Delegasi sederhana ke Produk dan Pesanan* | *C03-UT01 s.d. C03-UT03, INT-TC02* |
-| *C01* | *Pelanggan* | *Tidak perlu* | *Hanya menyimpan data akun, tanpa logika* | *-* |
-| *[CXX]* | *[Nama kelas]* | *[Mendalam/Sedang/Tidak perlu]* | *[Alasan penentuan tingkat pengujian]* | *[ID test case atau -]* |
-| *...* | *...* | *...* | *...* | *...* |
+| *C01* | *User* | *Tidak perlu* | *Entity yang hanya menyimpan dan memetakan data akun (`idUser`, `username`, `email`). Registrasi, login, dan validasi email ditangani `UserControl` (C12) dan `AuthAdapter`* | *Tidak langsung: UC01-TC01 s.d. UC01-TC03, INT-TC05* |
+| *C02* | *Mentor* | *Tidak perlu* | *Tidak menjadi kelas tersendiri pada implementasi (peran pada kolom `sessions.id_mentor`, B.1 M9). Logikanya ada pada `Session` (C04) dan `SessionControl` (C13)* | *Tidak langsung: TC UC03, UC11, UC12, UC13* |
+| *C03* | *Mentee* | *Tidak perlu* | *Tidak menjadi kelas tersendiri pada implementasi (peran pada tabel `session_participants`, B.1 M9). Logikanya ada pada `Session` (C04), `SessionControl` (C13), dan `FeedbackControl` (C14)* | *Tidak langsung: TC UC04, UC07, UC10* |
+| *C04* | *Session* | *Mendalam* | *Memuat aturan bisnis kapasitas (`checkCapacity()`, 1–20 peserta), irisan jadwal (`getSessionsByMentorInRange()`, `getSessionsByParticipantInRange()`), transisi status, `hasStarted()`, dan `needsConfirmation()` (aturan 48 jam)* | *C04-UT01 dst. (`session.test.ts`, `sessionCapacityGuard.test.ts`), INT-TC27 s.d. INT-TC29* |
+| *C05* | *GroupChat* | *Mendalam* | *Memuat aturan keanggotaan (`isMember()`), status aktif, dan retensi 48 jam (`expiresAt`, pembersihan melalui Cron)* | *C05-UT01 s.d. C05-UT16, INT-TC16 s.d. INT-TC26* |
+| *C06* | *Feedback* | *Sedang* | *Operasi simpan dan baca *feedback* (CRUD) dengan sedikit logika; validasi rating dan kelayakan berada di `FeedbackControl` (C14)* | *C06-UT01 dst. (`feedbackController.test.ts`)* |
+| *C07* | *SessionHistory* | *Sedang* | *Mengambil sesi arsip pengguna dan mengelompokkannya per status (`getGroupedByStatus()`) tanpa aturan bisnis tambahan* | *C07-UT01 dst. (`sessionHistory.test.ts`, `sessionHistoryController.test.ts`), KNF05-TC01* |
+| *C08* | *ChatMessage* | *Sedang* | *Membuat dan membaca pesan (CRUD) serta memetakan baris basis data; validasi isi pesan dan keanggotaan berada di `ChatController` dan RLS* | *C08-UT01 s.d. C08-UT10, INT-TC20 s.d. INT-TC26* |
+| *C09* | *Preference* | *Mendalam* | *Memuat pembaruan preferensi yang divalidasi (`validatePreference()`) dan pemetaan data preferensi yang menjadi masukan *matchmaking** | *C09-UT01 s.d. C09-UT07, INT-TC06* |
+| *C10* | *Profile* | *Sedang* | *Operasi buat, baca, dan ubah profil (CRUD) dengan sedikit logika* | *C10-UT01 s.d. C10-UT10, INT-TC05* |
+| *C11* | *Dashboard* | *Tidak perlu* | *Halaman *view* yang hanya memuat dan menampilkan data. *Matchmaking* yang dipanggilnya diimplementasikan dan diuji pada `SessionControl` (C13)* | *Tidak langsung: TC UC04, UC14* |
+| *C12* | *UserControl* | *Mendalam* | *Memuat validasi email domain universitas, persetujuan data, dan alur registrasi/login melalui `AuthAdapter` (keamanan dan integrasi eksternal)* | *C12-UT01 s.d. C12-UT46, VAL-UT01 s.d. VAL-UT07, INT-TC01 s.d. INT-TC06, KNF01-TC01, KNF04-TC01* |
+| *C13* | *SessionControl* | *Mendalam* | *Memuat Algo-C13-01 s.d. Algo-C13-04: validasi waktu sesi (`validateSessionTime()`, tidak lintas hari, 10 menit–12 jam), konflik jadwal Mentor dan Mentee, kapasitas, *matchmaking* (`matchSession()`), dan konfirmasi sesi* | *C13-UT01 dst. (`sessionController.test.ts`, `sessionParticipationController.test.ts`, `sessionTimeRules.test.ts`), INT-TC27 s.d. INT-TC29, KNF02-TC01* |
+| *C14* | *FeedbackControl* | *Mendalam* | *Memuat aturan kelayakan *feedback* (`checkFeedbackEligibility()`: hanya Mentee peserta, sesi selesai, belum pernah memberi) dan validasi rating 1–5 (`validateRating()`) sebelum `submitFeedback()`* | *C14-UT01 dst. (`feedbackController.test.ts`)* |
+| *C15* | *LoginPage* | *Tidak perlu* | *Kelas *view* yang menampilkan formulir dan meneruskan masukan ke `UserControl`* | *Tidak langsung: UC01-TC01 s.d. UC01-TC03* |
+| *C16* | *ProfilePage* | *Tidak perlu* | *Kelas *view* yang menampilkan profil dan formulir preferensi* | *Tidak langsung: UC02-TC01, UC02-TC02, TC UC15* |
+| *C17* | *SessionPage* | *Tidak perlu* | *Kelas *view* untuk detail sesi dan konfirmasi keterlaksanaan; logikanya di `SessionControl`* | *Tidak langsung: TC UC05* |
+| *C18* | *HostSessionPage* | *Tidak perlu* | *Kelas *view* untuk formulir buat, edit, hapus sesi dan daftar *feedback*; validasi di `SessionControl`* | *Tidak langsung: TC UC03, UC11, UC12, UC13* |
+| *C19* | *ParticipantSessionPage* | *Tidak perlu* | *Kelas *view* untuk bergabung dan membatalkan keikutsertaan* | *Tidak langsung: TC UC04, UC10* |
+| *C20* | *FeedbackForm* | *Tidak perlu* | *Kelas *view* yang menampilkan formulir rating dan komentar; validasi di `FeedbackControl`* | *Tidak langsung: TC UC07* |
+| *C21* | *GroupChatPage* | *Tidak perlu* | *Kelas *view* yang menampilkan pesan dan menerima pembaruan Realtime* | *Tidak langsung: UC08-TC01 s.d. UC08-TC03, INT-TC30 s.d. INT-TC33* |
+| *C22* | *Notification* | *Mendalam* | *Memuat pembentukan pengingat 15 menit sebelum sesi tanpa duplikat (Cron) dan status baca (`markAsRead()`)* | *C22-UT01 s.d. C22-UT19, INT-TC07 s.d. INT-TC15, KNF03-TC01, KNF03-TC02* |
+| *C23* | *PopUpNotification* | *Tidak perlu* | *Kelas *view* yang menampilkan *pop-up* notifikasi* | *Tidak langsung: UC09-TC01, UC09-TC02, INT-TC34* |
+| *C24* | *HistoryPage* | *Tidak perlu* | *Kelas *view* yang menampilkan daftar riwayat; pengelompokan di `SessionHistory`* | *Tidak langsung: TC UC06, KNF05-TC01* |
+| *-* | *Validator (`lib/validator.ts`)* | *Mendalam* | *Modul pendukung tanpa ID kelas DPPL berisi fungsi validasi murni (`validateEmail()`, `validatePreference()`, `validateCapacity()`, `validateSessionTime()`, `validateRating()`, `hasScheduleConflict()`) yang dipakai banyak kelas* | *VAL-UT01 s.d. VAL-UT07* |
 
 ## 4.2 Pengujian Unit Kelas
 
@@ -363,14 +383,141 @@ Lokasi file test: `src/tests/`. Unit test kelas Model memakai *fake* klien Supab
 
 Kolom *Hasil Pengujian* diambil dari keluaran `npm test` pada branch `test/user-chat-notification` (tag `v9.2` ditambah test M10, tanpa perubahan kode aplikasi): **20 berkas, 226 test, seluruhnya lulus**. Nama test Vitest dicantumkan dalam tanda kutip agar setiap ID dapat ditelusuri ke berkas test.
 
-### 4.2.1 Kelas UserControl
+### 4.2.1 Kelas Session
+
+**Tingkat:** Mendalam  
+
+*[Diisi: Tabel 4.2.1. Hasil Pengujian Unit Kelas C04 dan Tabel 4.2.1b. Ringkasan Cakupan Kelas C04]*
+
+### 4.2.2 Kelas GroupChat
+
+**ID Kelas:** C05  
+**Nama Kelas:** GroupChat (`src/models/groupChat.ts`, dengan ChatController `src/controllers/chatController.ts` dan `src/controllers/chatCleanupController.ts`)  
+**Tingkat:** Mendalam  
+**Berkas test:** `src/tests/groupChatModel.test.ts` (baru pada M10), `src/tests/chat.test.ts`
+
+Tabel 4.2.2. Hasil Pengujian Unit Kelas C05
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C05-UT01 | `findBySession()` | Normal | Baris `group_chats` sesi `s1` | Objek `GroupChat` aktif untuk `s1` | "maps the chat of the session" lulus | Pass |
+| C05-UT02 | `findBySession()` | Batas | Grup tidak terlihat (RLS); ID bukan UUID | `null` | "returns null when the chat is hidden or the ID is not a UUID" lulus | Pass |
+| C05-UT03 | `findBySession()` | Negatif | Galat basis data | Melempar galat | "throws other database errors" lulus | Pass |
+| C05-UT04 | `findMenteeIds()` | Normal | Dua peserta | `["a", "b"]` terurut `joined_at` | "lists the participants in join order" lulus | Pass |
+| C05-UT05 | `findMenteeIds()` | Negatif | Kueri gagal | Melempar galat | "throws when the query fails" lulus | Pass |
+| C05-UT06 | `closeExpired()` | Normal | `now` tertentu | RPC `close_expired_group_chats` dengan `p_retention_hours = 48`, mengembalikan jumlah grup | "calls close_expired_group_chats with the 48-hour retention" lulus | Pass |
+| C05-UT07 | `closeExpired()` | Negatif | RPC ditolak | Melempar galat | "throws when the function fails" lulus | Pass |
+| C05-UT08 | `isActive()` | Normal | 1 jam sebelum sesi berakhir; 48 jam kurang 1 ms setelah berakhir | `true` | "is active during the session and until just before 48 hours after it ends" lulus | Pass |
+| C05-UT09 | `isActive()` | Batas | Tepat 48 jam setelah sesi berakhir | `false` | "is inactive from exactly 48 hours after the session ends" lulus | Pass |
+| C05-UT10 | `isActive()` | Negatif | Grup sudah ditutup (`is_active = false`) | `false` | "is inactive once the chat has been closed" lulus | Pass |
+| C05-UT11 | `getGroupChat()` (ChatController) | Normal | Anggota membuka grup sesi | Data sesi, anggota (Mentor ditandai), nama pengirim termasuk mantan peserta, dan pesan | "returns the session, members, sender names, and messages for a member" lulus | Pass |
+| C05-UT12 | `getGroupChat()` | Negatif | Pengguna bukan anggota (grup tidak terlihat) | `null` | "returns null when the user cannot see the chat" lulus | Pass |
+| C05-UT13 | `getGroupChat()` | Negatif | Tanpa sesi login | `null` | "returns null without a session" lulus | Pass |
+| C05-UT14 | `getGroupChat()` | Batas | Grup melewati masa aktif | `active = false` | "reports an expired chat as inactive" lulus | Pass |
+| C05-UT15 | `GET /api/cron/chat-cleanup` | Negatif | Tanpa `CRON_SECRET` yang benar | HTTP 401, `closeExpired()` tidak dipanggil | "rejects calls without the cron secret" lulus | Pass |
+| C05-UT16 | `GET /api/cron/chat-cleanup` | Normal | Dengan `CRON_SECRET` | HTTP 200 dan jumlah grup yang ditutup | "closes expired chats" lulus | Pass |
+
+Tabel 4.2.2b. Ringkasan Cakupan Kelas C05
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `findBySession()`, `findById()`, `getId()`, `isActive()`, `isMember()`, `getMessages()`, `searchMessage()`, `displayMessage()`, `editMessage()`, `deleteMessage()` |
+| Operasi yang diuji | `findBySession()`, `isActive()`, `findMenteeIds()`, `closeExpired()`; `getMessages()` sebagai `ChatMessage.findByGroupChat()` (C08-UT04 s.d. C08-UT06); `isMember()` diwujudkan sebagai fungsi SQL `is_session_member()` pada RLS dan diuji pada INT-TC13 s.d. INT-TC15. `findById()`/`getId()` digantikan properti `idGroupChat`; `displayMessage()` berada di `ChatRoom`. `searchMessage()`, `editMessage()`, `deleteMessage()` tidak diimplementasikan (DPPL revisi D) |
+| ID Algoritma yang tercakup | Algo-C05-01, Q-C05-01, Q-C05-05 (melalui `close_expired_group_chats()`) |
+| Coverage (wajib ≥ 70%) | `models/groupChat.ts`: 100%; `controllers/chatController.ts`: 100% baris, 85% cabang; `controllers/chatCleanupController.ts` dan `app/api/cron/chat-cleanup/route.ts`: 100%. Bukti `C05-unit.png` dan `coverage-david.png` |
+
+### 4.2.3 Kelas Feedback
+
+**Tingkat:** Sedang  
+
+*[Diisi: Tabel 4.2.3. Hasil Pengujian Unit Kelas C06]*
+
+### 4.2.4 Kelas SessionHistory
+
+**Tingkat:** Sedang  
+
+*[Diisi: Tabel 4.2.4. Hasil Pengujian Unit Kelas C07]*
+
+### 4.2.5 Kelas ChatMessage
+
+**ID Kelas:** C08  
+**Nama Kelas:** ChatMessage (`src/models/chatMessage.ts`, dengan `sendMessage()` pada `src/controllers/chatController.ts`)  
+**Tingkat:** Sedang  
+**Berkas test:** `src/tests/chatMessage.test.ts` (baru pada M10), `src/tests/chat.test.ts`
+
+Tabel 4.2.5. Hasil Pengujian Unit Kelas C08
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C08-UT01 | `create()` | Normal | `("g1", "u1", "Halo semua")` | *Insert* `{ id_group_chat, id_sender, text }`, mengembalikan `ChatMessage` | "inserts the message and maps the saved row" lulus | Pass |
+| C08-UT02 | `create()` | Negatif | RLS menolak (`42501`) | Melempar `CHAT_CLOSED` | "reports CHAT_CLOSED when row level security refuses the insert" lulus | Pass |
+| C08-UT03 | `create()` | Negatif | *Check constraint* teks | Melempar galat basis data | "throws other database errors" lulus | Pass |
+| C08-UT04 | `findByGroupChat()` | Normal | Dua pesan | Dua pesan terurut `time_stamp` | "returns the messages of the chat ordered by time" lulus | Pass |
+| C08-UT05 | `findByGroupChat()` | Batas | Grup tanpa pesan | `[]` | "returns an empty list for a chat without messages" lulus | Pass |
+| C08-UT06 | `findByGroupChat()` | Negatif | Kueri gagal | Melempar galat | "throws when the query fails" lulus | Pass |
+| C08-UT07 | `sendMessage()` | Normal | Pesan berspasi dari anggota login | Pesan di-*trim* lalu disimpan | "saves the trimmed message for the logged-in member" lulus | Pass |
+| C08-UT08 | `sendMessage()` | Batas/Negatif | Pesan kosong; pesan 2.001 karakter (batas 2.000) | `EMPTY_MESSAGE`; `MESSAGE_TOO_LONG` tanpa akses basis data | "rejects empty and overlong messages before touching the database" lulus | Pass |
+| C08-UT09 | `sendMessage()` | Negatif | `create()` melempar `CHAT_CLOSED` | `CHAT_EXPIRED` | "reports a chat the database refuses as ended" lulus | Pass |
+| C08-UT10 | `sendMessage()` | Negatif | Tanpa login; galat lain | `NOT_AUTHENTICATED`; `SEND_FAILED` | "requires a logged-in user and reports database failures" lulus | Pass |
+
+### 4.2.6 Kelas Preference
+
+**ID Kelas:** C09  
+**Nama Kelas:** Preference (`src/models/preference.ts`)  
+**Tingkat:** Mendalam  
+**Berkas test:** `src/tests/preference.test.ts` (baru pada M10)
+
+Tabel 4.2.6. Hasil Pengujian Unit Kelas C09
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C09-UT01 | `getPreferenceByUser()` | Normal | Baris `preferences` milik `u1` | Objek `Preference` dengan tag, slot, dan format yang sama; kueri `eq("id_user", "u1")` | "maps the stored row of the user" lulus | Pass |
+| C09-UT02 | `getPreferenceByUser()` | Batas | Pengguna belum punya preferensi | `null` | "returns null when the user has no preference yet" lulus | Pass |
+| C09-UT03 | `getPreferenceByUser()` | Negatif | ID bukan UUID (galat `22P02`) | `null`, tidak melempar | "returns null for an ID that is not a UUID" lulus | Pass |
+| C09-UT04 | `getPreferenceByUser()` | Negatif | Galat koneksi | Melempar galat dengan pesan basis data | "throws other database errors" lulus | Pass |
+| C09-UT05 | `updatePreference()` | Normal | Tag, slot, format `DARING` | *Upsert* `{ id_user, material_tag, availability, session_format_preference }`, mengembalikan `Preference` | "upserts tags, availability, and format, then returns the saved preference" lulus | Pass |
+| C09-UT06 | `updatePreference()` | Negatif | Basis data menolak (`23514`) | Melempar galat | "throws when the database rejects the row" lulus | Pass |
+| C09-UT07 | `getPreferenceDetails()` | Batas | Tag dan slot kosong, format `null` | Nilai kosong dikembalikan apa adanya | "returns empty lists and a null format unchanged" lulus | Pass |
+
+Tabel 4.2.6b. Ringkasan Cakupan Kelas C09
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `getPreferenceByUser()`, `getPreference()`, `getPreferenceDetails()`, `updatePreference()`, `isComplete()`, `getMaterialTag()`, `getAvailability()`, `getSessionFormatPreference()`, `getUserId()` |
+| Operasi yang diuji | `getPreferenceByUser()`, `updatePreference()`, `getPreferenceDetails()`; `isComplete()` sebagai `validatePreference()` (VAL-UT05 s.d. VAL-UT07). `getPreference()` digabung ke `getPreferenceByUser()`, sedangkan *getter* menjadi properti `readonly` (Tabel B.5 M9) |
+| ID Algoritma yang tercakup | Algo-C09-01, Q-C09-01, Q-C09-02 (diwujudkan sebagai *upsert*) |
+| Coverage (wajib ≥ 70%) | `models/preference.ts`: 100% baris, cabang, dan fungsi. Bukti `C09-unit.png` dan `coverage-david.png` |
+
+### 4.2.7 Kelas Profile
+
+**ID Kelas:** C10  
+**Nama Kelas:** Profile (`src/models/profile.ts`)  
+**Tingkat:** Sedang  
+**Berkas test:** `src/tests/profile.test.ts` (baru pada M10)
+
+Tabel 4.2.7. Hasil Pengujian Unit Kelas C10
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C10-UT01 | `create()` | Normal | `idUser = u1` dan data profil | *Insert* kolom `id_user, name, university, study_program, bio`; `getProfileData()` sama dengan masukan | "inserts the profile and maps the saved row" lulus | Pass |
+| C10-UT02 | `create()` | Negatif | *Duplicate key* | Melempar galat | "throws when the insert fails" lulus | Pass |
+| C10-UT03 | `findByUser()` | Normal | Baris profil ada | Objek `Profile` dengan nama yang sama | "returns the profile of the user" lulus | Pass |
+| C10-UT04 | `findByUser()` | Batas | Baris tidak ada; ID bukan UUID | `null` | "returns null when missing or when the ID is not a UUID" lulus | Pass |
+| C10-UT05 | `findByUser()` | Negatif | *Timeout* | Melempar galat | "throws other database errors" lulus | Pass |
+| C10-UT06 | `findByUsers()` | Batas | Daftar ID kosong | `[]` tanpa kueri | "skips the query for an empty list" lulus | Pass |
+| C10-UT07 | `findByUsers()` | Normal | `["u1", "u2"]` | Dua profil; kueri `in("id_user", ...)` | "loads several profiles at once" lulus | Pass |
+| C10-UT08 | `findByUsers()` | Negatif | Kueri gagal | Melempar galat | "throws when the query fails" lulus | Pass |
+| C10-UT09 | `updateProfile()` | Normal | Bio kosong | *Upsert* data profil dan mengembalikan profil baru | "upserts the new identity data" lulus | Pass |
+| C10-UT10 | `updateProfile()` | Negatif | RLS menolak | Melempar galat | "throws when the update fails" lulus | Pass |
+
+### 4.2.8 Kelas UserControl
 
 **ID Kelas:** C12  
 **Nama Kelas:** UserControl (`src/controllers/userController.ts`, dengan `src/lib/adapters/authAdapter.ts`)  
 **Tingkat:** Mendalam  
 **Berkas test:** `src/tests/userController.test.ts`, `src/tests/authAdapter.test.ts`
 
-Tabel 4.2.1. Hasil Pengujian Unit Kelas C12
+Tabel 4.2.8. Hasil Pengujian Unit Kelas C12
 
 | ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -421,162 +568,35 @@ Tabel 4.2.1. Hasil Pengujian Unit Kelas C12
 | C12-UT45 | `authAdapter.getSessionUser()` | Batas | Pengguna tanpa email | `email = ""` | "uses an empty email when Supabase has none" lulus | Pass |
 | C12-UT46 | `authAdapter.getSessionUser()` | Negatif | Tanpa sesi | `null` | "returns null without a session" lulus | Pass |
 
-Tabel 4.2.1b. Ringkasan Cakupan Kelas C12
+Tabel 4.2.8b. Ringkasan Cakupan Kelas C12
 
 | Informasi | Keterangan |
 | :--- | :--- |
 | Daftar operasi public pada DPPL | `authLogin()`, `getCurrentUser()`, `validateEmail()`, `processRegistration()`, `saveProfile()`, `savePreference()`, `fetchUserProfile()`, `fetchUserPreference()` |
-| Operasi yang diuji | Seluruh operasi DPPL. `validateEmail()` diwujudkan di `lib/validator.ts` dan diuji pada 4.2.2. Ditambah `logout()` dan seluruh fungsi `authAdapter` (atribut `authAdapter` pada DPPL) |
+| Operasi yang diuji | Seluruh operasi DPPL. `validateEmail()` diwujudkan di `lib/validator.ts` dan diuji pada 4.2.12. Ditambah `logout()` dan seluruh fungsi `authAdapter` (atribut `authAdapter` pada DPPL) |
 | ID Algoritma yang tercakup | Algo-C12-01 (`processRegistration()`, `savePreference()`, `fetchUserProfile()`) |
 | Coverage (wajib ≥ 70%) | `userController.ts`: 99,03% baris, 94,23% cabang, 97,58% *statement*; `authAdapter.ts`: 100% baris dan cabang (`@vitest/coverage-v8`, bukti `C12-unit.png` dan `coverage-david.png` pada 4.6) |
 
-### 4.2.2 Validator (validasi email dan preferensi)
+### 4.2.9 Kelas SessionControl
 
-**ID Kelas:** Validator (komponen tambahan M6, tanpa ID kelas; operasi `validateEmail()` milik C12 dan `isComplete()` milik C09 pada DPPL)  
-**Nama Kelas:** Validator (`src/lib/validator.ts`)  
 **Tingkat:** Mendalam  
-**Berkas test:** `src/tests/validator.test.ts`
 
-Subbab ini hanya memuat `validateEmail()` dan `validatePreference()`. `validateSessionTime()` diuji oleh Markus, sedangkan `validateCapacity()`, `validateRating()`, dan `hasScheduleConflict()` diuji bersama kelas pemakainya. ID memakai awalan `VAL` karena Validator tidak memiliki ID kelas; nomor setelah `VAL-UT07` dipakai anggota lain.
+*[Diisi: Tabel 4.2.9. Hasil Pengujian Unit Kelas C13 dan Tabel 4.2.9b. Ringkasan Cakupan Kelas C13]*
 
-Tabel 4.2.2. Hasil Pengujian Unit Validator
+### 4.2.10 Kelas FeedbackControl
 
-| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| VAL-UT01 | `validateEmail()` | Normal | `mentee.satu@mahasiswa.itb.ac.id`, `a@ui.ac.id` | `true` | "accepts university addresses" lulus | Pass |
-| VAL-UT02 | `validateEmail()` | Batas | `"  Mentee.Satu@Mahasiswa.ITB.AC.ID  "` | `true` (spasi diabaikan, tidak peka huruf besar) | "ignores surrounding spaces and letter case" lulus | Pass |
-| VAL-UT03 | `validateEmail()` | Negatif | `someone@gmail.com`, `fake@ac.id.evil.com`, `no-at-sign.ac.id` | `false` | "rejects non-university addresses" lulus | Pass |
-| VAL-UT04 | `validateEmail()` | Batas | `a@ac.id` (tanpa nama institusi), `a@itb.ac.id.`, string kosong | `false` | "requires an institution name before ac.id" lulus | Pass |
-| VAL-UT05 | `validatePreference()` | Normal | 1 tag, 1 slot, format `DARING` | `true` | "requires tags, availability, and format" lulus | Pass |
-| VAL-UT06 | `validatePreference()` | Batas | Tepat 1 tag dan 1 slot dengan format `BOTH` dan `LURING` | `true` | "accepts the minimum of one tag and one slot, and the BOTH format" lulus | Pass |
-| VAL-UT07 | `validatePreference()` | Negatif | Tag kosong; slot kosong; format `null`; semuanya kosong | `false` | "requires tags, availability, and format", "rejects a completely empty preference" lulus | Pass |
-
-Tabel 4.2.2b. Ringkasan Cakupan Validator (bagian email dan preferensi)
-
-| Informasi | Keterangan |
-| :--- | :--- |
-| Daftar operasi public pada DPPL | `validateEmail()` (C12), `isComplete()` (C09, diwujudkan sebagai `validatePreference()`) |
-| Operasi yang diuji | `validateEmail()`, `validatePreference()` |
-| ID Algoritma yang tercakup | Bagian validasi email pada Algo-C12-01 dan `isComplete()` pada Algo-C09-01 |
-| Coverage (wajib ≥ 70%) | `lib/validator.ts`: 100% baris, cabang, dan fungsi (seluruh berkas, termasuk fungsi milik anggota lain). Bukti `Validator-unit.png` dan `coverage-david.png` |
-
-### 4.2.3 Kelas Preference
-
-**ID Kelas:** C09  
-**Nama Kelas:** Preference (`src/models/preference.ts`)  
 **Tingkat:** Mendalam  
-**Berkas test:** `src/tests/preference.test.ts` (baru pada M10)
 
-Tabel 4.2.3. Hasil Pengujian Unit Kelas C09
+*[Diisi: Tabel 4.2.10. Hasil Pengujian Unit Kelas C14 dan Tabel 4.2.10b. Ringkasan Cakupan Kelas C14]*
 
-| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| C09-UT01 | `getPreferenceByUser()` | Normal | Baris `preferences` milik `u1` | Objek `Preference` dengan tag, slot, dan format yang sama; kueri `eq("id_user", "u1")` | "maps the stored row of the user" lulus | Pass |
-| C09-UT02 | `getPreferenceByUser()` | Batas | Pengguna belum punya preferensi | `null` | "returns null when the user has no preference yet" lulus | Pass |
-| C09-UT03 | `getPreferenceByUser()` | Negatif | ID bukan UUID (galat `22P02`) | `null`, tidak melempar | "returns null for an ID that is not a UUID" lulus | Pass |
-| C09-UT04 | `getPreferenceByUser()` | Negatif | Galat koneksi | Melempar galat dengan pesan basis data | "throws other database errors" lulus | Pass |
-| C09-UT05 | `updatePreference()` | Normal | Tag, slot, format `DARING` | *Upsert* `{ id_user, material_tag, availability, session_format_preference }`, mengembalikan `Preference` | "upserts tags, availability, and format, then returns the saved preference" lulus | Pass |
-| C09-UT06 | `updatePreference()` | Negatif | Basis data menolak (`23514`) | Melempar galat | "throws when the database rejects the row" lulus | Pass |
-| C09-UT07 | `getPreferenceDetails()` | Batas | Tag dan slot kosong, format `null` | Nilai kosong dikembalikan apa adanya | "returns empty lists and a null format unchanged" lulus | Pass |
-
-Tabel 4.2.3b. Ringkasan Cakupan Kelas C09
-
-| Informasi | Keterangan |
-| :--- | :--- |
-| Daftar operasi public pada DPPL | `getPreferenceByUser()`, `getPreference()`, `getPreferenceDetails()`, `updatePreference()`, `isComplete()`, `getMaterialTag()`, `getAvailability()`, `getSessionFormatPreference()`, `getUserId()` |
-| Operasi yang diuji | `getPreferenceByUser()`, `updatePreference()`, `getPreferenceDetails()`; `isComplete()` sebagai `validatePreference()` (VAL-UT05 s.d. VAL-UT07). `getPreference()` digabung ke `getPreferenceByUser()`, sedangkan *getter* menjadi properti `readonly` (Tabel B.5 M9) |
-| ID Algoritma yang tercakup | Algo-C09-01, Q-C09-01, Q-C09-02 (diwujudkan sebagai *upsert*) |
-| Coverage (wajib ≥ 70%) | `models/preference.ts`: 100% baris, cabang, dan fungsi. Bukti `C09-unit.png` dan `coverage-david.png` |
-
-### 4.2.4 Kelas Profile
-
-**ID Kelas:** C10  
-**Nama Kelas:** Profile (`src/models/profile.ts`)  
-**Tingkat:** Sedang  
-**Berkas test:** `src/tests/profile.test.ts` (baru pada M10)
-
-Tabel 4.2.4. Hasil Pengujian Unit Kelas C10
-
-| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| C10-UT01 | `create()` | Normal | `idUser = u1` dan data profil | *Insert* kolom `id_user, name, university, study_program, bio`; `getProfileData()` sama dengan masukan | "inserts the profile and maps the saved row" lulus | Pass |
-| C10-UT02 | `create()` | Negatif | *Duplicate key* | Melempar galat | "throws when the insert fails" lulus | Pass |
-| C10-UT03 | `findByUser()` | Normal | Baris profil ada | Objek `Profile` dengan nama yang sama | "returns the profile of the user" lulus | Pass |
-| C10-UT04 | `findByUser()` | Batas | Baris tidak ada; ID bukan UUID | `null` | "returns null when missing or when the ID is not a UUID" lulus | Pass |
-| C10-UT05 | `findByUser()` | Negatif | *Timeout* | Melempar galat | "throws other database errors" lulus | Pass |
-| C10-UT06 | `findByUsers()` | Batas | Daftar ID kosong | `[]` tanpa kueri | "skips the query for an empty list" lulus | Pass |
-| C10-UT07 | `findByUsers()` | Normal | `["u1", "u2"]` | Dua profil; kueri `in("id_user", ...)` | "loads several profiles at once" lulus | Pass |
-| C10-UT08 | `findByUsers()` | Negatif | Kueri gagal | Melempar galat | "throws when the query fails" lulus | Pass |
-| C10-UT09 | `updateProfile()` | Normal | Bio kosong | *Upsert* data profil dan mengembalikan profil baru | "upserts the new identity data" lulus | Pass |
-| C10-UT10 | `updateProfile()` | Negatif | RLS menolak | Melempar galat | "throws when the update fails" lulus | Pass |
-
-### 4.2.5 Kelas GroupChat
-
-**ID Kelas:** C05  
-**Nama Kelas:** GroupChat (`src/models/groupChat.ts`, dengan ChatController `src/controllers/chatController.ts` dan `src/controllers/chatCleanupController.ts`)  
-**Tingkat:** Mendalam  
-**Berkas test:** `src/tests/groupChatModel.test.ts` (baru pada M10), `src/tests/chat.test.ts`
-
-Tabel 4.2.5. Hasil Pengujian Unit Kelas C05
-
-| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| C05-UT01 | `findBySession()` | Normal | Baris `group_chats` sesi `s1` | Objek `GroupChat` aktif untuk `s1` | "maps the chat of the session" lulus | Pass |
-| C05-UT02 | `findBySession()` | Batas | Grup tidak terlihat (RLS); ID bukan UUID | `null` | "returns null when the chat is hidden or the ID is not a UUID" lulus | Pass |
-| C05-UT03 | `findBySession()` | Negatif | Galat basis data | Melempar galat | "throws other database errors" lulus | Pass |
-| C05-UT04 | `findMenteeIds()` | Normal | Dua peserta | `["a", "b"]` terurut `joined_at` | "lists the participants in join order" lulus | Pass |
-| C05-UT05 | `findMenteeIds()` | Negatif | Kueri gagal | Melempar galat | "throws when the query fails" lulus | Pass |
-| C05-UT06 | `closeExpired()` | Normal | `now` tertentu | RPC `close_expired_group_chats` dengan `p_retention_hours = 48`, mengembalikan jumlah grup | "calls close_expired_group_chats with the 48-hour retention" lulus | Pass |
-| C05-UT07 | `closeExpired()` | Negatif | RPC ditolak | Melempar galat | "throws when the function fails" lulus | Pass |
-| C05-UT08 | `isActive()` | Normal | 1 jam sebelum sesi berakhir; 48 jam kurang 1 ms setelah berakhir | `true` | "is active during the session and until just before 48 hours after it ends" lulus | Pass |
-| C05-UT09 | `isActive()` | Batas | Tepat 48 jam setelah sesi berakhir | `false` | "is inactive from exactly 48 hours after the session ends" lulus | Pass |
-| C05-UT10 | `isActive()` | Negatif | Grup sudah ditutup (`is_active = false`) | `false` | "is inactive once the chat has been closed" lulus | Pass |
-| C05-UT11 | `getGroupChat()` (ChatController) | Normal | Anggota membuka grup sesi | Data sesi, anggota (Mentor ditandai), nama pengirim termasuk mantan peserta, dan pesan | "returns the session, members, sender names, and messages for a member" lulus | Pass |
-| C05-UT12 | `getGroupChat()` | Negatif | Pengguna bukan anggota (grup tidak terlihat) | `null` | "returns null when the user cannot see the chat" lulus | Pass |
-| C05-UT13 | `getGroupChat()` | Negatif | Tanpa sesi login | `null` | "returns null without a session" lulus | Pass |
-| C05-UT14 | `getGroupChat()` | Batas | Grup melewati masa aktif | `active = false` | "reports an expired chat as inactive" lulus | Pass |
-| C05-UT15 | `GET /api/cron/chat-cleanup` | Negatif | Tanpa `CRON_SECRET` yang benar | HTTP 401, `closeExpired()` tidak dipanggil | "rejects calls without the cron secret" lulus | Pass |
-| C05-UT16 | `GET /api/cron/chat-cleanup` | Normal | Dengan `CRON_SECRET` | HTTP 200 dan jumlah grup yang ditutup | "closes expired chats" lulus | Pass |
-
-Tabel 4.2.5b. Ringkasan Cakupan Kelas C05
-
-| Informasi | Keterangan |
-| :--- | :--- |
-| Daftar operasi public pada DPPL | `findBySession()`, `findById()`, `getId()`, `isActive()`, `isMember()`, `getMessages()`, `searchMessage()`, `displayMessage()`, `editMessage()`, `deleteMessage()` |
-| Operasi yang diuji | `findBySession()`, `isActive()`, `findMenteeIds()`, `closeExpired()`; `getMessages()` sebagai `ChatMessage.findByGroupChat()` (C08-UT04 s.d. C08-UT06); `isMember()` diwujudkan sebagai fungsi SQL `is_session_member()` pada RLS dan diuji pada INT-TC13 s.d. INT-TC15. `findById()`/`getId()` digantikan properti `idGroupChat`; `displayMessage()` berada di `ChatRoom`. `searchMessage()`, `editMessage()`, `deleteMessage()` tidak diimplementasikan (DPPL revisi D) |
-| ID Algoritma yang tercakup | Algo-C05-01, Q-C05-01, Q-C05-05 (melalui `close_expired_group_chats()`) |
-| Coverage (wajib ≥ 70%) | `models/groupChat.ts`: 100%; `controllers/chatController.ts`: 100% baris, 85% cabang; `controllers/chatCleanupController.ts` dan `app/api/cron/chat-cleanup/route.ts`: 100%. Bukti `C05-unit.png` dan `coverage-david.png` |
-
-### 4.2.6 Kelas ChatMessage
-
-**ID Kelas:** C08  
-**Nama Kelas:** ChatMessage (`src/models/chatMessage.ts`, dengan `sendMessage()` pada `src/controllers/chatController.ts`)  
-**Tingkat:** Sedang  
-**Berkas test:** `src/tests/chatMessage.test.ts` (baru pada M10), `src/tests/chat.test.ts`
-
-Tabel 4.2.6. Hasil Pengujian Unit Kelas C08
-
-| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| C08-UT01 | `create()` | Normal | `("g1", "u1", "Halo semua")` | *Insert* `{ id_group_chat, id_sender, text }`, mengembalikan `ChatMessage` | "inserts the message and maps the saved row" lulus | Pass |
-| C08-UT02 | `create()` | Negatif | RLS menolak (`42501`) | Melempar `CHAT_CLOSED` | "reports CHAT_CLOSED when row level security refuses the insert" lulus | Pass |
-| C08-UT03 | `create()` | Negatif | *Check constraint* teks | Melempar galat basis data | "throws other database errors" lulus | Pass |
-| C08-UT04 | `findByGroupChat()` | Normal | Dua pesan | Dua pesan terurut `time_stamp` | "returns the messages of the chat ordered by time" lulus | Pass |
-| C08-UT05 | `findByGroupChat()` | Batas | Grup tanpa pesan | `[]` | "returns an empty list for a chat without messages" lulus | Pass |
-| C08-UT06 | `findByGroupChat()` | Negatif | Kueri gagal | Melempar galat | "throws when the query fails" lulus | Pass |
-| C08-UT07 | `sendMessage()` | Normal | Pesan berspasi dari anggota login | Pesan di-*trim* lalu disimpan | "saves the trimmed message for the logged-in member" lulus | Pass |
-| C08-UT08 | `sendMessage()` | Batas/Negatif | Pesan kosong; pesan 2.001 karakter (batas 2.000) | `EMPTY_MESSAGE`; `MESSAGE_TOO_LONG` tanpa akses basis data | "rejects empty and overlong messages before touching the database" lulus | Pass |
-| C08-UT09 | `sendMessage()` | Negatif | `create()` melempar `CHAT_CLOSED` | `CHAT_EXPIRED` | "reports a chat the database refuses as ended" lulus | Pass |
-| C08-UT10 | `sendMessage()` | Negatif | Tanpa login; galat lain | `NOT_AUTHENTICATED`; `SEND_FAILED` | "requires a logged-in user and reports database failures" lulus | Pass |
-
-### 4.2.7 Kelas Notification
+### 4.2.11 Kelas Notification
 
 **ID Kelas:** C22  
 **Nama Kelas:** Notification (`src/models/notification.ts`, dengan `src/controllers/notificationController.ts`, `src/controllers/reminderController.ts`, `src/lib/adapters/cronAdapter.ts`, `src/app/api/cron/reminders/route.ts`)  
 **Tingkat:** Mendalam  
 **Berkas test:** `src/tests/notificationModel.test.ts` (baru pada M10), `src/tests/notification.test.ts`
 
-Tabel 4.2.7. Hasil Pengujian Unit Kelas C22
+Tabel 4.2.11. Hasil Pengujian Unit Kelas C22
 
 | ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -600,7 +620,7 @@ Tabel 4.2.7. Hasil Pengujian Unit Kelas C22
 | C22-UT18 | `GET/POST /api/cron/reminders` | Negatif | *Secret* salah | HTTP 401, pengingat tidak dikirim | "rejects calls without the cron secret" lulus | Pass |
 | C22-UT19 | `GET/POST /api/cron/reminders` | Normal | *Secret* benar | HTTP 200 `{ ok: true, sent: 3 }`, `leadMinutes = 15` | "sends reminders for sessions starting within 15 minutes" lulus | Pass |
 
-Tabel 4.2.7b. Ringkasan Cakupan Kelas C22
+Tabel 4.2.11b. Ringkasan Cakupan Kelas C22
 
 | Informasi | Keterangan |
 | :--- | :--- |
@@ -609,7 +629,35 @@ Tabel 4.2.7b. Ringkasan Cakupan Kelas C22
 | ID Algoritma yang tercakup | Algo-C22-01, Q-C22-01 (di dalam `send_session_reminders()`), Q-C22-03 (`markAsRead()` dengan filter pemilik), Q-C22-04 (dengan filter belum dibaca dan waktu) |
 | Coverage (wajib ≥ 70%) | `models/notification.ts`, `controllers/notificationController.ts`, `controllers/reminderController.ts`, `lib/adapters/cronAdapter.ts`, `app/api/cron/reminders/route.ts`: masing-masing 100% baris, cabang, dan fungsi. Bukti `C22-unit.png` dan `coverage-david.png` |
 
-*[Anggota lain melanjutkan subbab 4.2.8 dan seterusnya untuk kelas Mendalam/Sedang miliknya dengan pola yang sama.]*
+### 4.2.12 Validator (validasi email dan preferensi)
+
+**ID Kelas:** Validator (komponen tambahan M6, tanpa ID kelas; operasi `validateEmail()` milik C12 dan `isComplete()` milik C09 pada DPPL)  
+**Nama Kelas:** Validator (`src/lib/validator.ts`)  
+**Tingkat:** Mendalam  
+**Berkas test:** `src/tests/validator.test.ts`
+
+Subbab ini hanya memuat `validateEmail()` dan `validatePreference()`. `validateSessionTime()` diuji oleh Markus, sedangkan `validateCapacity()`, `validateRating()`, dan `hasScheduleConflict()` diuji bersama kelas pemakainya. ID memakai awalan `VAL` karena Validator tidak memiliki ID kelas; nomor setelah `VAL-UT07` dipakai anggota lain.
+
+Tabel 4.2.12. Hasil Pengujian Unit Validator
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| VAL-UT01 | `validateEmail()` | Normal | `mentee.satu@mahasiswa.itb.ac.id`, `a@ui.ac.id` | `true` | "accepts university addresses" lulus | Pass |
+| VAL-UT02 | `validateEmail()` | Batas | `"  Mentee.Satu@Mahasiswa.ITB.AC.ID  "` | `true` (spasi diabaikan, tidak peka huruf besar) | "ignores surrounding spaces and letter case" lulus | Pass |
+| VAL-UT03 | `validateEmail()` | Negatif | `someone@gmail.com`, `fake@ac.id.evil.com`, `no-at-sign.ac.id` | `false` | "rejects non-university addresses" lulus | Pass |
+| VAL-UT04 | `validateEmail()` | Batas | `a@ac.id` (tanpa nama institusi), `a@itb.ac.id.`, string kosong | `false` | "requires an institution name before ac.id" lulus | Pass |
+| VAL-UT05 | `validatePreference()` | Normal | 1 tag, 1 slot, format `DARING` | `true` | "requires tags, availability, and format" lulus | Pass |
+| VAL-UT06 | `validatePreference()` | Batas | Tepat 1 tag dan 1 slot dengan format `BOTH` dan `LURING` | `true` | "accepts the minimum of one tag and one slot, and the BOTH format" lulus | Pass |
+| VAL-UT07 | `validatePreference()` | Negatif | Tag kosong; slot kosong; format `null`; semuanya kosong | `false` | "requires tags, availability, and format", "rejects a completely empty preference" lulus | Pass |
+
+Tabel 4.2.12b. Ringkasan Cakupan Validator (bagian email dan preferensi)
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `validateEmail()` (C12), `isComplete()` (C09, diwujudkan sebagai `validatePreference()`) |
+| Operasi yang diuji | `validateEmail()`, `validatePreference()` |
+| ID Algoritma yang tercakup | Bagian validasi email pada Algo-C12-01 dan `isComplete()` pada Algo-C09-01 |
+| Coverage (wajib ≥ 70%) | `lib/validator.ts`: 100% baris, cabang, dan fungsi (seluruh berkas, termasuk fungsi milik anggota lain). Bukti `Validator-unit.png` dan `coverage-david.png` |
 
 <br>
 
