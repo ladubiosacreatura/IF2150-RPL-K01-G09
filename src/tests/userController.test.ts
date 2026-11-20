@@ -15,17 +15,20 @@ const profile = vi.hoisted(() => ({
   updateProfile: vi.fn(),
 }));
 const preference = vi.hoisted(() => ({ getPreferenceByUser: vi.fn(), updatePreference: vi.fn() }));
+const navigation = vi.hoisted(() => ({ redirect: vi.fn() }));
 
 vi.mock("@/lib/adapters/authAdapter", () => auth);
 vi.mock("@/models/user", () => ({ User: user }));
 vi.mock("@/models/profile", () => ({ Profile: profile }));
 vi.mock("@/models/preference", () => ({ Preference: preference }));
+vi.mock("next/navigation", () => navigation);
 
 const {
   authLogin,
   fetchUserPreference,
   fetchUserProfile,
   getCurrentUser,
+  logout,
   processRegistration,
   savePreference,
   saveProfile,
@@ -146,6 +149,15 @@ describe("authLogin", () => {
 
     auth.signIn.mockRejectedValueOnce(new Error("fetch failed"));
     expect(await authLogin("a@itb.ac.id", "wrong")).toEqual({ ok: false, error: "LOGIN_FAILED" });
+  });
+});
+
+describe("logout", () => {
+  it("ends the session and returns to the login page", async () => {
+    auth.signOut.mockResolvedValue(undefined);
+    await logout();
+    expect(auth.signOut).toHaveBeenCalled();
+    expect(navigation.redirect).toHaveBeenCalledWith("/login");
   });
 });
 

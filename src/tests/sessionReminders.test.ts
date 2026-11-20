@@ -136,3 +136,26 @@ describe("send_session_reminders", () => {
     }
   });
 });
+
+describe("KNF03 delivery rate", () => {
+  it("delivers exactly one reminder to every member of 100 sessions due at once", async () => {
+    const members = Object.fromEntries(
+      Array.from({ length: 300 }, (_, i) => [
+        `knf03_${i}`,
+        `20000000-0000-0000-0000-${String(i).padStart(12, "0")}`,
+      ]),
+    );
+    await addUsers(db, members);
+    const ids = Object.values(members);
+    for (let s = 0; s < 100; s++) {
+      await addSession(ids[s * 3], 1 + (s % 15), {
+        participants: [ids[s * 3 + 1], ids[s * 3 + 2]],
+      });
+    }
+
+    expect(await sendReminders()).toBe(300);
+    const delivered = new Set((await notifications()).map((n) => `${n.id_session}:${n.id_user}`));
+    expect(delivered.size).toBe(300);
+    expect(await sendReminders()).toBe(0);
+  }, 60_000);
+});
