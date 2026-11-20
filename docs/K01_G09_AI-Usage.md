@@ -118,6 +118,7 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 | Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |
 | :--- | :--- | :--- | :--- |
 | Claude Code (Claude Opus 5.5) | Mengerjakan HIUPL: menambah unit test model dan AuthAdapter, menjalankan pengujian use case UC01, UC02, UC08, UC09, pengujian integrasi dengan Supabase | "make unit test for UC01, UC02, UC08, UC09 and SQL query to check database" | Pengujian dijalankan pada aplikasi dan Supabase yang sebenarnya, seluruh hasil (termasuk Fail) diambil dari keluaran test, respons HTTP, isi basis data, dan tangkapan layar, bukan perkiraan. |
+| Gemini 4 Neon | menambah unit test Vitest untuk `matchSession()`, `searchSession()`, `Dashboard`, dan `ProfileView`, serta menyusun tabel hasil pengujian Subbab 4.2, 4.4, 4.5, dan 4.6 pada HIUPL | "make unit tests for X" "make the table for X" "insert my images in assets into the docs and link them properly" | Seluruh unit test dan coverage dijalankan ulang langsung dengan Vitest; pengujian UC04, UC14, UC15 serta pengukuran response time KNF02 (5 kali ukur di Chrome DevTools) dilakukan di browser dan seluruh bukti tangkapan layar diverifikasi sebelum ditautkan. |
 
 ---
 ### Pernyataan Integritas dan Persetujuan

@@ -277,15 +277,36 @@ Tabel 3.2. Implementasi Modul
 
 ## 3.3 Implementasi Antarmuka
 
-Daftar antarmuka yang telah diimplementasikan. Gunakan ID dan nama layar yang sama dengan ID dan nama layar pada tugas DPPL.
+Kolom *Nama File Executable* diisi `-` karena aplikasi web Next.js tidak menghasilkan berkas executable per layar (hasil *build* berada di `.next/`).
 
 Tabel 3.3. Implementasi Antarmuka
 
 | No | ID Antarmuka | Nama Antarmuka | Nama File Fisik | Nama File Executable |
 | :--- | :--- | :--- | :--- | :--- |
-| 1 | *[I-01]* | *[Nama layar]* | *[path/ke/file]* | *[Nama file executable, atau - jika tidak ada]* |
-| 2 | *[I-02]* | *[Nama layar]* | *[path/ke/file]* | *[...]* |
-| ... | *...* | *...* | *...* | *...* |
+| 1 | I-01 | Masuk | `src/app/login/page.tsx`; `src/components/LoginForm.tsx` | - |
+| 2 | I-02 | Daftar Akun | `src/app/register/page.tsx`; `src/components/RegisterForm.tsx` | - |
+| 3 | I-02a | Daftar Akun Gagal | `src/app/register/page.tsx`; `src/components/RegisterForm.tsx` (status galat validasi pada formulir) | - |
+| 4 | I-03 | Beranda | `src/app/dashboard/page.tsx`; `src/components/Sidebar.tsx` | - |
+| 5 | I-03a | Beranda (Preferensi Belum Diatur) | `src/app/dashboard/page.tsx` (peringatan preferensi saat `PREFERENCE_NOT_SET`) | - |
+| 6 | I-04 | Discover | `src/app/discover/page.tsx`; `src/components/ParticipantSessionPanel.tsx` (`DiscoverCatalog`) | - |
+| 7 | I-05 | Detail Sesi (Mentee) | `src/app/sessions/[id]/page.tsx`; `src/components/ParticipantSessionPanel.tsx` | - |
+| 8 | I-05a | Detail Sesi (Mentor) | `src/app/sessions/[id]/page.tsx`; `src/components/ParticipantSessionPanel.tsx`; `src/components/DeleteSessionButton.tsx` | - |
+| 9 | I-06 | Edit Sesi | `src/app/sessions/[id]/edit/page.tsx`; `src/components/EditSessionPanel.tsx` | - |
+| 10 | I-07 | Profil | `src/app/profile/page.tsx`; `src/app/profile/[id]/page.tsx`; `src/app/profile/not-found.tsx`; `src/components/ProfileView.tsx` | - |
+| 11 | I-08 | Edit Preferensi | `src/app/profile/preferences/page.tsx`; `src/components/PreferenceForm.tsx`; `src/components/AvailabilityEditor.tsx` | - |
+| 12 | I-09 | History | `src/app/history/page.tsx`; `src/components/SessionHistoryView.tsx` | - |
+| 13 | I-10 | Grup Obrolan | `src/app/sessions/[id]/chat/page.tsx`; `src/components/ChatRoom.tsx` | - |
+| 14 | I-11 | Buat Sesi | `src/app/sessions/new/page.tsx`; `src/components/HostSessionPanel.tsx` | - |
+| 15 | I-12 | Konfirmasi Hapus Sesi | `src/components/DeleteSessionButton.tsx` (dialog konfirmasi pada `src/app/sessions/[id]/page.tsx`) | - |
+| 16 | I-13 | Konfirmasi Keluar Sesi | `src/components/ParticipantSessionPanel.tsx` (dialog konfirmasi pembatalan pada `src/app/sessions/[id]/page.tsx`) | - |
+| 17 | I-14 | Konfirmasi Keterlaksanaan & Penilaian | `src/app/sessions/[id]/feedback/page.tsx`; `src/components/FeedbackForm.tsx`; `src/components/SessionHistoryView.tsx` | - |
+| 18 | I-15 | Feedback Sesi | `src/app/sessions/[id]/feedback/page.tsx`; `src/components/SessionFeedbackView.tsx` | - |
+| 19 | I-16 | Notifikasi Pengingat Sesi | `src/components/PopUpNotification.tsx` (dipasang global pada `src/app/layout.tsx`) | - |
+
+Catatan perbedaan terhadap BAB 6 DPPL:
+1. Seluruh layar `I-01` sampai `I-16` telah diimplementasikan (tidak ada layar yang dilewatkan). Rute akar `/` (`src/app/page.tsx`) mengalihkan pengguna ke `/dashboard` (`I-03`).
+2. Pada `I-07` (Profil), kartu statistik sesi dan rating (`I07-03`) tidak diimplementasikan; sebagai tambahan, tersedia tombol dan formulir `Edit Profil` pada profil milik sendiri untuk memperbarui nama, universitas, program studi, dan bio.
+3. Pada `I-14`, konfirmasi keterlaksanaan sesi tersedia melalui halaman Riwayat (`SessionHistoryView`) maupun `/sessions/[id]/feedback` (`FeedbackForm`), sementara pemberian rating dan komentar dilakukan melalui `FeedbackForm` pada `/sessions/[id]/feedback`.
 
 ## 3.4 File Lain
 
@@ -385,9 +406,43 @@ Kolom *Hasil Pengujian* diambil dari keluaran `npm test` pada branch `test/user-
 
 ### 4.2.1 Kelas Session
 
+**ID Kelas:** C04  
+**Nama Kelas:** Session (`src/models/session.ts`)  
 **Tingkat:** Mendalam  
+**Berkas test (bagian *matchmaking* & pencarian):** `src/tests/sessionParticipationController.test.ts`, `src/tests/sessionMatchSearch.test.ts` (baru pada M10)
 
-*[Diisi: Tabel 4.2.1. Hasil Pengujian Unit Kelas C04 dan Tabel 4.2.1b. Ringkasan Cakupan Kelas C04]*
+Bagian `C04-UT01` s.d. `C04-UT15` di bawah menguji operasi `matchSession()` dan `searchSession()` (bagian Hugo). Operasi pembuatan, pengubahan, penghapusan, konfirmasi, kapasitas, dan partisipasi sesi dilanjutkan pada nomor ID berikutnya oleh Matthew dan Fabian.
+
+Tabel 4.2.1. Hasil Pengujian Unit Kelas C04
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C04-UT01 | `matchSession()` | Normal | Preferensi tag `["Struktur Data", "Kalkulus"]`, slot Senin 08:00–12:00 WIB, format `DARING`; 4 kandidat (cocok tag, cocok topik fallback, tag salah, format salah) | Mengembalikan 2 sesi yang cocok terurut naik berdasarkan `scheduledTime` | "matches sessions by material tag intersection, WIB availability slot, and format" lulus | Pass |
+| C04-UT02 | `matchSession()` | Normal | Preferensi format `BOTH` dengan kandidat `DARING` dan `LURING` | Kedua kandidat dikembalikan | "matches both DARING and LURING sessions when format preference is BOTH" lulus | Pass |
+| C04-UT03 | `matchSession()` | Batas | Sesi Minggu 00:30–02:00 WIB (`2026-11-14T17:30:00Z`, batas hari UTC vs WIB) dan sesi di luar jam luang; preferensi `day: 0` (Minggu) 00:00–03:00 | Hanya sesi Minggu dini hari WIB yang cocok | "evaluates day (0 = Sunday) and time range in WIB (Asia/Jakarta, UTC+7)" lulus | Pass |
+| C04-UT04 | `matchSession()` | Negatif | Kandidat sesi milik sendiri, sudah diikuti, penuh (`3/3`), sudah dimulai, dan 1 sesi valid | Hanya sesi valid yang dikembalikan | "excludes own sessions, already joined sessions, full sessions, and started sessions" lulus | Pass |
+| C04-UT05 | `matchSession()` | Negatif | Preferensi tidak lengkap: `sessionFormatPreference: null`, `availability: []`, `materialTag: []`, atau tag hanya spasi | Mengembalikan `[]` | "returns empty array when preference is incomplete or tags are blank" lulus | Pass |
+| C04-UT06 | `matchSession()` | Normal | Tag berspasi ganda dan beda huruf besar/kecil (`"  struktur   data "`, `"KALKULUS"`), urutan masukan terbalik | Tetap cocok dan diurutkan naik berdasarkan `scheduledTime` | "matches by tag or topic (case- and whitespace-insensitive) and sorts ascending by scheduledTime" lulus | Pass |
+| C04-UT07 | `matchSession()` | Batas | Sesi tepat di batas slot 08:00–12:00 WIB vs mulai 07:59 WIB vs selesai 12:01 WIB | Hanya sesi tepat di batas 08:00–12:00 WIB yang cocok | "matches exact availability slot boundaries and rejects sessions 1 minute outside" lulus | Pass |
+| C04-UT08 | `matchSession()` | Batas | Sesi 22:00–00:00 WIB (lintas hari) dibandingkan slot berakhir `23:59` vs `23:00` | Cocok hanya pada slot `23:59`, ditolak pada `23:00` | "handles cross-day boundary only when availability slot ends at 23:59" lulus | Pass |
+| C04-UT09 | `matchSession()` | Negatif | Status `SELESAI`, `capacity = 0`, tanggal tidak valid, `endTime < scheduledTime`, `scheduledTime === now`, serta slot waktu tidak valid (`25:00`, `12:00–08:00`) | Semuanya ditolak (`[]`) | "rejects non-TERJADWAL status, invalid capacity, invalid timestamps, and malformed availability slots" lulus | Pass |
+| C04-UT10 | `matchSession()` | Batas | Kapasitas 1 dengan `participantCount = 0` vs `participantCount = 1` | Sesi `0/1` diterima, `1/1` ditolak | "handles capacity boundary (capacity - 1 accepted, capacity rejected)" lulus | Pass |
+| C04-UT11 | `searchSession()` | Normal | Filter terpisah menurut kata kunci topik (`"pohon"`), tag (`"rekayasa"`), format (`LURING`), tanggal (`2026-11-16`), dan hari WIB (`2`) | Setiap filter mengembalikan sesi yang sesuai | "filters by topic or material tag keyword, format, date, and WIB day" lulus | Pass |
+| C04-UT12 | `searchSession()` | Batas | Kriteria kosong `{}` dan `{ format: "ALL", query: "   ", day: null }` | Mengembalikan seluruh sesi tanpa penyaringan | "returns all sessions when criteria are empty or format is ALL" lulus | Pass |
+| C04-UT13 | `searchSession()` | Normal/Negatif | Kata kunci berspasi dan huruf besar (`"  POHON   biner "`) vs kata kunci tanpa kecocokan (`"fisika kuantum"`) | Cocok untuk `"pohon biner"`, mengembalikan `[]` jika tidak ada kecocokan | "normalizes query whitespace and letter case and returns empty array when nothing matches" lulus | Pass |
+| C04-UT14 | `searchSession()` | Normal/Batas | `schedule` cocok melalui *fallback* `dateKey` WIB saat `session.schedule` kosong; kombinasi query + format + hari + tanggal; kombinasi yang tidak cocok | Mengembalikan sesi yang memenuhi seluruh kriteria atau `[]` | "matches schedule via WIB dateKey fallback and combines multiple filters" lulus | Pass |
+| C04-UT15 | `searchSession()` | Batas | Filter `day: 1.5` (bukan bilangan bulat) | Filter hari diabaikan, seluruh sesi dikembalikan | "ignores non-integer day filters" lulus | Pass |
+
+*[Matthew dan Fabian melanjutkan baris C04-UT16 dst. untuk operasi buat, ubah, hapus, konfirmasi, kapasitas, dan partisipasi sesi.]*
+
+Tabel 4.2.1b. Ringkasan Cakupan Kelas C04 (bagian `matchSession()` dan `searchSession()`)
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL (bagian *matchmaking* & pencarian) | `matchSession()`, `searchSession()` |
+| Operasi yang diuji | `matchSession()` (beserta fungsi bantu `matchesAvailability()`, `parseMinutes()`, `toWib()`, `normalizeTag()`) dan `searchSession()` |
+| ID Algoritma yang tercakup | Algo-C04-01 (`matchSession()`), Algo-C04-02 (`searchSession()`) |
+| Coverage (wajib ≥ 70%) | `models/session.ts` blok `matchSession()` & `searchSession()` (baris 122–249): **92,86% *statement*** (78/84) dan **93,55% cabang** (87/93) menggunakan `@vitest/coverage-v8`. Bukti `C04-C11-C16-unit.png` dan `coverage-hugo.png` pada 4.6 |
 
 ### 4.2.2 Kelas GroupChat
 
@@ -659,6 +714,45 @@ Tabel 4.2.12b. Ringkasan Cakupan Validator (bagian email dan preferensi)
 | ID Algoritma yang tercakup | Bagian validasi email pada Algo-C12-01 dan `isComplete()` pada Algo-C09-01 |
 | Coverage (wajib ≥ 70%) | `lib/validator.ts`: 100% baris, cabang, dan fungsi (seluruh berkas, termasuk fungsi milik anggota lain). Bukti `Validator-unit.png` dan `coverage-david.png` |
 
+### 4.2.13 Kelas Dashboard (pengujian unit tambahan)
+
+**ID Kelas:** C11  
+**Nama Kelas:** Dashboard (`src/app/dashboard/page.tsx`, `src/app/discover/page.tsx`)  
+**Tingkat:** Tidak perlu pada 4.1 (diuji tambahan untuk verifikasi perilaku tampilan Beranda dan Discover)  
+**Berkas test:** `src/tests/dashboard.test.ts` (baru pada M10)
+
+Tabel 4.2.13. Hasil Pengujian Unit Kelas C11
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C11-UT01 | `DashboardPage()` | Normal | Pengguna login dengan 1 sesi aktif terdekat dan 1 rekomendasi sesi | Merender sapaan `"Halo, Mentee Satu!"`, daftar sesi aktif terdekat, tombol `"Buka Ruang Obrolan"`, rekomendasi sesi, dan tombol `"Gabung Sesi"` | "renders greeting, upcoming sessions, and recommendations for a logged-in user" lulus | Pass |
+| C11-UT02 | `DashboardPage()` | Batas | `getUpcomingSessions()` kosong dan `findRecommendation()` mengembalikan `PREFERENCE_NOT_SET` | Merender status kosong sesi aktif, peringatan `"Preferensi belajar kamu belum diatur"`, dan tombol `"Atur Preferensi"` | "shows preference prompt when PREFERENCE_NOT_SET (UC14 Alt 1)" lulus | Pass |
+| C11-UT03 | `DashboardPage()` | Batas | `findRecommendation()` mengembalikan `[]` | Merender pesan `"Belum ada sesi yang cocok dengan jadwalmu"` dan tautan `"Ubah Preferensi"` | "shows empty recommendation message when no sessions match (UC04 Alt 1)" lulus | Pass |
+| C11-UT04 | `DashboardPage()` | Negatif | `getUpcomingSessions()` mengembalikan `UPCOMING_LOOKUP_FAILED` dan `findRecommendation()` mengembalikan `RECOMMENDATION_FAILED` | Merender *alert* `"Gagal memuat sesi aktif terdekat"` dan `"Gagal memuat rekomendasi sesi"` | "shows error alerts when upcoming or recommendation lookup fails" lulus | Pass |
+| C11-UT05 | `DashboardPage()` | Negatif | `getCurrentUser()` mengembalikan `null` | Mengalihkan pengguna ke `/login` (`redirect("/login")`) | "redirects to /login when user is unauthenticated" lulus | Pass |
+| C11-UT06 | `DiscoverPage()` | Normal | Pengguna login dengan 1 sesi terbuka dan 1 rekomendasi | Merender judul `"Discover"`, kartu sesi, dan jumlah `"1 sesi tersedia"` | "renders open sessions and recommendations catalog" lulus | Pass |
+| C11-UT07 | `DiscoverPage()` | Negatif | `getOpenSessions()` gagal (`OPEN_SESSIONS_FAILED`); pengguna tanpa sesi (`null`) | Merender *alert* `"Gagal memuat daftar sesi"`; mengalihkan ke `/login` saat belum login | "shows error alert when open sessions fail to load and redirects when unauthenticated" lulus | Pass |
+
+*Catatan cakupan C11 (`@vitest/coverage-v8`): `app/dashboard/page.tsx` mencapai 100% baris (88,23% statement, 75% cabang, 100% fungsi) dan `app/discover/page.tsx` mencapai 100% baris (80% statement, 75% cabang, 100% fungsi).*
+
+### 4.2.14 Tampilan Profil (`ProfileView` / Kelas ProfilePage, pengujian unit tambahan)
+
+**ID Kelas:** C16  
+**Nama Kelas:** ProfilePage (`src/components/ProfileView.tsx`, `src/app/profile/page.tsx`, `src/app/profile/[id]/page.tsx`, `src/app/profile/not-found.tsx`)  
+**Tingkat:** Tidak perlu pada 4.1 (diuji tambahan untuk tampilan `ProfileView` dan penanganan galat UC15)  
+**Berkas test:** `src/tests/profileView.test.ts` (baru pada M10)
+
+Tabel 4.2.14. Hasil Pengujian Unit `ProfileView` dan Halaman Profil
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C16-UT01 | `ProfileView` | Normal | Profil lengkap, preferensi format `BOTH`, 2 tag, slot hari Minggu & Senin, `isOwnProfile = true` | Merender nama, `@username`, universitas, prodi, bio, tag materi, format Daring & Luring, slot ketersediaan per hari, serta tombol `"Edit Profil"` dan `"Edit Preferensi"` | "renders user identity, bio, tags, formats, grouped availability, and edit buttons for own profile" lulus | Pass |
+| C16-UT02 | `ProfileView` | Normal | Profil pengguna lain (`isOwnProfile = false`) | Menampilkan data profil tanpa tombol `"Edit Profil"` maupun `"Edit Preferensi"` | "hides edit buttons when viewing another user's profile" lulus | Pass |
+| C16-UT03 | `ProfileView` | Batas | `name = ""`, `bio = ""`, `preference = null` | Merender teks fallback `"Belum ada bio."`, `"Belum ada tag materi."`, `"Belum diatur."`, dan `"Belum ada jadwal ketersediaan."` | "renders empty-state fallbacks when bio and preference are missing" lulus | Pass |
+| C16-UT04 | `OwnProfilePage()` | Normal/Negatif | Pengguna login vs `getCurrentUser() = null` | Merender profil sendiri dengan `"Edit Profil"`; mengalihkan ke `/login` saat belum login | "renders own profile page and redirects to /login when unauthenticated" lulus | Pass |
+| C16-UT05 | `UserProfilePage()` & `ProfileNotFound` | Negatif | `fetchUserProfile("missing-id")` mengembalikan `USER_NOT_FOUND` | Memanggil `notFound()` dan komponen `ProfileNotFound` menampilkan `"Profil pengguna tidak ditemukan"` | "calls notFound when profile does not exist and renders not-found message (UC15 Alt 1)" lulus | Pass |
+| C16-UT06 | `UserProfilePage()` | Negatif | `fetchUserProfile("u2")` mengembalikan `PROFILE_FAILED` | Merender *alert* `"Gagal memuat profil"` | "shows error alert when profile lookup fails" lulus | Pass |
+
 <br>
 
 ## 4.3 Pengujian Integrasi
@@ -767,7 +861,24 @@ Tabel 4.4.2. Hasil Pengujian Use Case UC02
 | UC02-TC01 | KF03, KF04 | Normal | 1. Buka "Profil", klik "Edit Preferensi".<br>2. Tambahkan dua tag materi (Enter), pilih format "Daring", klik "Tambah Slot" dan isi hari serta jam.<br>3. Klik "Simpan".<br>4. Kembali ke "Profil". | Tag: Struktur Data, Basis Data<br>Format: Daring<br>Slot: Senin 19.00–21.00 | Sistem memvalidasi, menyimpan tag, format, dan kalender ke basis data, lalu menampilkan "Preferensi berhasil disimpan" | Tampil "Preferensi berhasil disimpan". Halaman Profil menampilkan tag Struktur Data dan Basis Data, format Daring, serta ketersediaan Senin 19:00–21:00. Baris `preferences` di basis data sama (INT-TC06) | Pass |
 | UC02-TC02 | KF03, KF04 | Alternatif 1: Menyimpan Preferensi Tanpa Memilih Preferensi | 1. Buka "Profil", klik "Edit Preferensi".<br>2. Biarkan tag, format, dan slot kosong.<br>3. Klik "Simpan". | Semua pilihan kosong | Sistem menunda penyimpanan dan menampilkan "Silahkan Isi Semua Pilihan Preferensi" | Tampil *alert* "Silahkan Isi Semua Pilihan Preferensi" dan tidak ada data tersimpan (Profil tetap "Belum ada tag materi") | Pass |
 
-*[Anggota lain menambahkan subbab 4.4.3 s.d. 4.4.7 di sini, sesuai nomor use case.]*
+*[Anggota lain menambahkan subbab 4.4.3 di sini.]*
+
+### 4.4.4 Use Case Mencari dan Bergabung ke Sesi
+
+**ID Use Case:** UC04  
+**Nama Use Case:** Mencari dan Bergabung ke Sesi  
+**Akun:** `mentee.satu@mahasiswa.itb.ac.id` (kata sandi `password123`)
+
+Tabel 4.4.4. Hasil Pengujian Use Case UC04
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC04-TC01 | KF07, KF08 | Normal | 1. Login sebagai `mentee.satu` dengan preferensi yang cocok dengan sesi tersedia.<br>2. Buka `/discover` atau bagian "Rekomendasi Sesi untukmu" di Beranda.<br>3. Pilih sesi rekomendasi "Aljabar Linear Session" (Sabtu, 21 November 2026 11.16–19.16 WIB, Luring, Mentor Demo), lalu klik "Gabung Sesi". | Akun `mentee.satu`, sesi "Aljabar Linear Session" | Sistem menampilkan rekomendasi sesi yang cocok; setelah klik "Gabung Sesi", Mentee masuk daftar peserta dan tampil pesan "Berhasil bergabung" | Sesi "Aljabar Linear Session" muncul pada bagian Rekomendasi. Setelah menekan "Gabung Sesi" pada detail sesi, tampil *alert* hijau "Berhasil bergabung" dan tombol berubah menjadi "Buka Ruang Obrolan" serta "Batalkan Keikutsertaan" (bukti `UC04-TC01-a.png`, `UC04-TC01-b.png`) | Pass |
+| UC04-TC02 | KF07 | Alternatif 1: Tidak Ada Rekomendasi Sesi yang Cocok | 1. Atur preferensi `mentee.satu` agar tidak beririsan dengan sesi yang tersedia.<br>2. Buka `/discover`.<br>3. Amati bagian "Rekomendasi Sesi untukmu" dan klik "Ubah Preferensi". | Preferensi tanpa irisan sesi tersedia | Sistem menampilkan pesan "Belum ada sesi yang cocok dengan jadwalmu" beserta tombol "Ubah Preferensi" yang mengarahkan ke `/profile/preferences` | Pada `/discover`, bagian "Rekomendasi Sesi untukmu" menampilkan "Belum ada sesi yang cocok dengan jadwalmu" dengan tombol "Ubah Preferensi" yang mengarahkan ke `/profile/preferences`, sementara bagian "Semua Sesi" tetap menampilkan 1 sesi terbuka (bukti `UC04-TC02.png`) | Pass |
+
+*[Markus menambahkan Alternatif 2 (jadwal Mentee bertabrakan) dan Fabian menambahkan skenario sesi penuh (KF13) pada Tabel 4.4.4.]*
+
+*[Anggota lain menambahkan subbab 4.4.5 s.d. 4.4.7 di sini, sesuai nomor use case.]*
 
 ### 4.4.8 Use Case Berkomunikasi Menggunakan Grup Obrolan Sementara
 
@@ -797,7 +908,33 @@ Tabel 4.4.9. Hasil Pengujian Use Case UC09
 | UC09-TC01 | KF09 | Normal (langkah 1: pengingat terkirim) | 1. Buat sesi uji yang dimulai 14 menit kemudian (20.49 WIB) dengan `mentee.satu` sebagai peserta.<br>2. Biarkan `mentee.satu` membuka aplikasi.<br>3. Tunggu hingga 20.52 WIB, lalu panggil `POST /api/cron/reminders` dengan `CRON_SECRET`.<br>4. Amati layar, lalu pindah ke Beranda. | Sesi mulai 21.03 WIB | Ketika 15 menit sebelum sesi dimulai, sistem mendeteksi pemicu waktu dan mengirim notifikasi pengingat ke akun partisipan | Tidak ada penjadwal yang memanggil *endpoint*: panggilan manual pukul 20.52 WIB masih menghasilkan `sent: 2`, artinya pengingat belum dikirim sejak sesi masuk jendela 15 menit pukul 20.49 WIB. Setelah dipanggil manual, notifikasi "Sesi dimulai 11 menit lagi" terbentuk untuk Mentor dan peserta (INT-TC09), tetapi *pop-up* baru tampil setelah pindah ke Beranda, tidak di halaman yang sedang terbuka (INT-TC34) | Fail. **Penyebab:** (1) belum ada penjadwal yang memanggil `/api/cron/reminders` setiap menit (KNF03-TC02); (2) langganan Realtime `notifications` tanpa token login (INT-TC34). **Usulan:** pasang Supabase Cron (`pg_cron` + `pg_net`) atau Vercel Cron setiap 1 menit, dan perbaiki `realtimeAdapter.ts` seperti pada UC08-TC02 |
 | UC09-TC02 | KF09 | Normal (langkah 2: menekan notifikasi) | 1. Pada *pop-up* pengingat klik "Lihat Detail". | Notifikasi sesi uji | Sistem mengarahkan pengguna ke halaman detail sesi | Pengguna diarahkan ke `/sessions/73454a03-...` yang menampilkan topik, tanggal, jam 21.03–22.03 WIB, format, tautan, peserta, dan tombol "Buka Ruang Obrolan". Notifikasi ditandai `is_read = true` | Pass |
 
-*[Anggota lain menambahkan subbab 4.4.10 s.d. 4.4.15 di sini.]*
+*[Anggota lain menambahkan subbab 4.4.10 s.d. 4.4.13 di sini.]*
+
+### 4.4.14 Use Case Membuka Beranda Utama
+
+**ID Use Case:** UC14  
+**Nama Use Case:** Membuka Beranda Utama  
+**Akun:** `mentee.satu@mahasiswa.itb.ac.id`
+
+Tabel 4.4.14. Hasil Pengujian Use Case UC14
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC14-TC01 | KF07 | Normal | 1. Login sebagai `mentee.satu` yang sudah memiliki preferensi belajar.<br>2. Akses `/dashboard`.<br>3. Amati isi halaman Beranda. | Akun `mentee.satu` dengan preferensi terisi | Sistem menampilkan sapaan pengguna, daftar "Sesi Aktif Terdekat", dan kartu "Rekomendasi Sesi untukmu" hasil *matchmaking* | Beranda menampilkan sapaan "Halo, Mentee Satu!", 2 sesi pada "Sesi Aktif Terdekat" ("Struktur Data" dan "Uji HIUPL Obrolan dan Notifikasi"), serta kartu rekomendasi "Aljabar Linear Session" dengan tombol "Gabung Sesi" (bukti `UC14-TC01.png`) | Pass |
+| UC14-TC02 | KF07 | Alternatif 1: Preferensi Belum Diatur (Khusus Mentee) | 1. Login sebagai Mentee tanpa preferensi cocok / belum mengatur preferensi.<br>2. Buka `/dashboard`.<br>3. Amati bagian Rekomendasi dan tombol pengaturan preferensi. | Akun Mentee pada `/dashboard` | Bagian "Sesi Aktif Terdekat" tetap tampil, sedangkan bagian Rekomendasi menampilkan ajakan mengatur/mengubah preferensi beserta tombol menuju `/profile/preferences` | "Sesi Aktif Terdekat" tetap tampil; bagian "Rekomendasi Sesi untukmu" menampilkan status kosong dengan tombol "Ubah Preferensi" menuju `/profile/preferences` (bukti `UC14-TC02.png`). Skenario `PREFERENCE_NOT_SET` ("Preferensi belajar kamu belum diatur" + tombol "Atur Preferensi") juga terverifikasi lulus pada unit test `C11-UT02` | Pass |
+
+### 4.4.15 Use Case Melihat Profil
+
+**ID Use Case:** UC15  
+**Nama Use Case:** Melihat Profil  
+**Akun:** `mentee.satu@mahasiswa.itb.ac.id`
+
+Tabel 4.4.15. Hasil Pengujian Use Case UC15
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC15-TC01 | KF19 | Normal | 1. Login sebagai `mentee.satu`, buka halaman profil sendiri (`/profile`).<br>2. Buka halaman profil Mentor Demo (`/profile/<id>`) melalui tautan "Lihat profil" pada detail sesi. | Profil sendiri (`mentee.satu`) dan profil pengguna lain (`mentor.demo`) | Halaman Profil menampilkan nama, `@username`, universitas, program studi, bio, tag materi, format belajar, dan ketersediaan waktu; tombol "Edit Profil" dan "Edit Preferensi" hanya tampil pada profil sendiri | Profil sendiri menampilkan "Mentee Satu" (`@mentee_satu`, ITB · Sistem dan Teknologi Informasi, tag "Struktur Data", format "Luring", slot Senin/Rabu/Jumat/Sabtu) beserta tombol "Edit Profil" dan "Edit Preferensi". Profil "Mentor Demo" (`@mentor_demo`, ITB · Teknik Informatika, bio "Suka mengajar struktur data.") tampil tanpa tombol edit (bukti `UC15-TC01-a.png`, `UC15-TC01-b.png`) | Pass |
+| UC15-TC02 | KF19 | Alternatif 1: Profil Tidak Ditemukan | 1. Login, lalu akses URL `/profile/<id-tidak-valid>` untuk pengguna yang tidak terdaftar. | ID pengguna tidak terdaftar | Sistem menampilkan halaman 404 dengan pesan "Profil pengguna tidak ditemukan" dan tombol "Kembali ke Beranda" | Tampil halaman 404 dengan label "404", judul "Profil pengguna tidak ditemukan", keterangan "Pengguna yang kamu cari tidak terdaftar atau akun telah dihapus.", dan tombol "Kembali ke Beranda" (bukti `UC15-TC02.png`) | Pass |
 
 <br>
 
@@ -815,7 +952,7 @@ Tabel 4.5. Hasil Pengujian KNF
 | KNF03-TC02 | KNF03 | *Reliability* (ketepatan waktu) | Pengingat terkirim tepat saat sesi masuk jendela 15 menit, tanpa tindakan manual | Sesi uji dibuat pukul 20.49 WIB (mulai 21.03 WIB, sudah di dalam jendela 15 menit). *Endpoint* tidak dipanggil selama 3 menit, lalu dipanggil manual dan hasilnya diperiksa; konfigurasi repositori juga diperiksa | Panggilan `curl` manual pukul 20.52 WIB masih menghasilkan `sent: 2` dengan judul "Sesi dimulai 11 menit lagi". Artinya selama 20.49–20.52 WIB belum ada pemanggilan apa pun, karena fungsi hanya mengirim untuk sesi dengan `reminder_sent = false`. Repositori juga tidak memuat penjadwal (`pg_cron`, `vercel.json`, atau Supabase Cron) | Fail. **Penyebab:** *route* cron sudah ada tetapi tidak ada penjadwal yang memanggilnya. **Usulan:** jadwalkan `POST /api/cron/reminders` dan `/api/cron/chat-cleanup` setiap 1 menit dengan Supabase Cron (`pg_cron` + `pg_net`) atau Vercel Cron setelah *deploy*, lalu ulangi KNF03-TC02 |
 | KNF04-TC01 | KNF04 | *Security* | Registrasi email non-universitas ditolak dan tidak ada akun baru | Registrasi `hiupl.uji@gmail.com` lewat `/register` (UC01-TC03), lalu periksa `auth.users` (`auth.admin.listUsers()`) dan `public.users` dengan *service role* | Ditolak dengan pesan "Harap gunakan email universitas yang valid". 0 baris di `auth.users` dan `public.users`; seluruh 6 akun di `auth.users` berdomain `.ac.id` | Pass |
 | KNF04-TC02 | KNF04 | *Security* | Akun non-universitas tidak dapat dibuat melalui jalur mana pun | Memanggil `supabase.auth.signUp()` langsung dengan *anon key* publik (yang memang dikirim ke peramban) memakai `bypass.knf04@example.com` | **Akun dibuat** dengan sesi aktif, tanpa baris `public.users`, dan dapat membaca tabel `sessions` (4 baris). Akun uji dihapus segera setelah pengujian | Fail. **Penyebab:** validasi domain hanya dilakukan `processRegistration()`; Supabase Auth menerima pendaftaran publik dari klien mana pun. **Usulan:** tolak domain non-`.ac.id` di sisi Supabase dengan *Before User Created Hook* atau *trigger* pada `auth.users`, atau nonaktifkan *public sign-up* dan buat akun hanya dari server dengan *service role*; tambahkan juga syarat baris `public.users` pada kebijakan RLS |
-| KNF02-TC01 | KNF02 | *Response time* | *[Diisi Hugo]* | *[...]* | *[...]* | *[...]* |
+| KNF02-TC01 | KNF02 | *Response time* | Rekomendasi sesi pada Beranda tampil < 3 detik (3.000 ms) | Chrome DevTools (tab Network, *Disable cache* aktif) saat memuat `/dashboard` dengan akun `mentee.satu` yang memiliki preferensi; diukur 5 kali lalu dihitung rata-rata dan maksimum | 5 kali pengukuran respons `/dashboard`: **675 ms, 700 ms, 729 ms, 666 ms, 949 ms**. Rata-rata: **743,8 ms** (0,74 detik), maksimum: **949 ms** (0,95 detik). Pada tangkapan layar `KNF02-TC01.png`, *DOMContentLoaded* 2,07 detik dan *Load* 2,74 detik — seluruhnya di bawah batas 3 detik | Pass |
 | KNF05-TC01 | KNF05 | *Response time* | *[Diisi Markus]* | *[...]* | *[...]* | *[...]* |
 
 Catatan KNF01-TC01: kolom `encrypted_password` berada pada skema `auth` yang tidak diekspos PostgREST maupun Admin API, sehingga hanya dapat dibaca melalui SQL Editor Supabase Dashboard (atau `psql` pada Supabase lokal). Kueri dijalankan oleh David pada proyek Supabase *hosted* tim pada 20 November 2026.
@@ -838,6 +975,8 @@ Tabel 4.6. Bukti Hasil Pengujian
 | C08-UT01 – C08-UT10 | <img src="./assets/C08-unit.png" width="90%"> |
 | C22-UT01 – C22-UT19 | <img src="./assets/C22-unit.png" width="90%"> |
 | C12, C09, C05, C22, Validator (coverage) | <img src="./assets/coverage-david.png" width="90%"> |
+| C04-UT01 – C04-UT15, C11-UT01 – C11-UT07, C16-UT01 – C16-UT06 | <img src="./assets/C04-C11-C16-unit.png" width="90%"> |
+| C04 (`matchSession`, `searchSession`), C11, C16 (coverage) | <img src="./assets/coverage-hugo.png" width="90%"> |
 | INT-TC01, INT-TC02 | Lihat UC01-TC01 dan UC01-TC02 |
 | INT-TC03 – INT-TC06 | <img src="./assets/INT-auth-db.png" width="90%"> |
 | INT-TC07 – INT-TC10, INT-TC16 | <img src="./assets/INT-cron.png" width="90%"> |
@@ -851,13 +990,20 @@ Tabel 4.6. Bukti Hasil Pengujian
 | UC01-TC03 | <img src="./assets/UC01-TC03.png" width="45%"> |
 | UC02-TC01 | <img src="./assets/UC02-TC01-a.png" width="45%"> <img src="./assets/UC02-TC01-b.png" width="45%"><br>Pesan "Preferensi berhasil disimpan"; halaman Profil setelah disimpan |
 | UC02-TC02 | <img src="./assets/UC02-TC02.png" width="45%"> |
+| UC04-TC01 | <img src="./assets/UC04-TC01-a.png" width="45%"> <img src="./assets/UC04-TC01-b.png" width="45%"><br>Detail sesi peserta dan pesan "Berhasil bergabung" setelah bergabung ke "Aljabar Linear Session" |
+| UC04-TC02 | <img src="./assets/UC04-TC02.png" width="45%"> |
 | UC08-TC01 | <img src="./assets/UC08-TC01-a.png" width="45%"> <img src="./assets/UC08-TC01-b.png" width="45%"><br>Tombol "Buka Ruang Obrolan" di Beranda; grup obrolan beserta riwayat pesan |
 | UC08-TC02 | <img src="./assets/UC08-TC02-a.png" width="45%"> <img src="./assets/UC08-TC02-b.png" width="45%"><br>Pesan sendiri langsung tampil; balasan Mentor (sudah tersimpan) tidak tampil tanpa muat ulang |
 | UC08-TC03 | <img src="./assets/UC08-TC03.png" width="45%"> |
 | UC09-TC01 | <img src="./assets/UC09-TC01.png" width="45%"><br>*Pop-up* baru tampil setelah pindah ke Beranda; keluaran cron pada INT-cron.png |
 | UC09-TC02 | <img src="./assets/UC09-TC02.png" width="45%"> |
+| UC14-TC01 | <img src="./assets/UC14-TC01.png" width="45%"> |
+| UC14-TC02 | <img src="./assets/UC14-TC02.png" width="45%"> |
+| UC15-TC01 | <img src="./assets/UC15-TC01-a.png" width="45%"> <img src="./assets/UC15-TC01-b.png" width="45%"><br>Profil sendiri (`mentee.satu`, dengan tombol edit) dan profil pengguna lain (`mentor.demo`, tanpa tombol edit) |
+| UC15-TC02 | <img src="./assets/UC15-TC02.png" width="45%"> |
 | KNF01-TC01 | <img src="./assets/KNF01-TC01.png" width="70%"><br>Hasil kueri pada SQL Editor Supabase Dashboard |
 | KNF01-TC02 | <img src="./assets/KNF01-TC02.png" width="90%"> |
+| KNF02-TC01 | <img src="./assets/KNF02-TC01.png" width="90%"><br>Pengukuran Chrome DevTools Network pada `/dashboard` (5 kali ukur: rata-rata 743,8 ms, maks 949 ms) |
 | KNF03-TC01, KNF03-TC02 | <img src="./assets/KNF03.png" width="90%"> |
 | KNF04-TC01, KNF04-TC02 | <img src="./assets/KNF04.png" width="90%"><br>Tampilan penolakan: UC01-TC03 |
 | *...* | *...* |
