@@ -802,7 +802,36 @@ Tabel 4.4.2. Hasil Pengujian Use Case UC02
 | UC02-TC01 | KF03, KF04 | Normal | 1. Buka "Profil", klik "Edit Preferensi".<br>2. Tambahkan dua tag materi (Enter), pilih format "Daring", klik "Tambah Slot" dan isi hari serta jam.<br>3. Klik "Simpan".<br>4. Kembali ke "Profil". | Tag: Struktur Data, Basis Data<br>Format: Daring<br>Slot: Senin 19.00–21.00 | Sistem memvalidasi, menyimpan tag, format, dan kalender ke basis data, lalu menampilkan "Preferensi berhasil disimpan" | Tampil "Preferensi berhasil disimpan". Halaman Profil menampilkan tag Struktur Data dan Basis Data, format Daring, serta ketersediaan Senin 19:00–21:00. Baris `preferences` di basis data sama (INT-TC06) | Pass |
 | UC02-TC02 | KF03, KF04 | Alternatif 1: Menyimpan Preferensi Tanpa Memilih Preferensi | 1. Buka "Profil", klik "Edit Preferensi".<br>2. Biarkan tag, format, dan slot kosong.<br>3. Klik "Simpan". | Semua pilihan kosong | Sistem menunda penyimpanan dan menampilkan "Silahkan Isi Semua Pilihan Preferensi" | Tampil *alert* "Silahkan Isi Semua Pilihan Preferensi" dan tidak ada data tersimpan (Profil tetap "Belum ada tag materi") | Pass |
 
-*[Anggota lain menambahkan subbab 4.4.3 s.d. 4.4.7 di sini, sesuai nomor use case.]*
+### 4.4.3 Use Case Membuat Sesi Belajar
+
+**ID Use Case:** UC03
+**Nama Use Case:** Membuat Sesi Belajar
+**Akun:** `mentor.demo@mahasiswa.itb.ac.id`
+
+Tabel 4.4.3. Hasil Pengujian Use Case UC03
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC03-TC01 | KF14 | Alternatif 1: Kapasitas Melebihi Batas Maksimum; Alternatif 2: Kapasitas Kurang dari Batas Minimum | 1. Buka "Buat Sesi Baru" sebagai `mentor.demo`.<br>2. Coba kapasitas 21 dan 0 pada formulir dengan data sesi lain tetap terisi.<br>3. Amati validasi untuk tiap nilai. | Kapasitas: (a) 21; (b) 0 | Kedua nilai ditolak dan sistem menampilkan pesan bahwa batas peserta harus antara 1 dan 20 orang | Untuk kapasitas 21, tampil pesan "Batas peserta harus antara 1 dan 20 orang" pada formulir (a). Pesan yang sama tampil saat kapasitas 0 (b). Bukti: `UC03-TC01-a.png`, `UC03-TC01-b.png`. | Pass |
+| UC03-TC02 | KF06 | Alternatif 3: Waktu Sesi Bertabrakan | 1. Login sebagai `mentor.demo`.<br>2. Buka "Buat Sesi Baru" dan kirim sesi "Data mining" dengan jadwal yang bertabrakan dengan sesi Mentor lainnya. | Jadwal sesi beririsan dengan sesi lain milik `mentor.demo` | Sistem menolak pembuatan sesi dan memberi tahu bahwa jadwal bertabrakan | Pembuatan ditolak. Formulir menampilkan pesan "Jadwal sesi bertabrakan dengan sesi lain yang kamu buat. Pilih waktu yang berbeda."; data sesi tetap terisi untuk diperbaiki. Bukti: `UC03-TC02.png`. | Pass |
+| UC03-TC03 | KF05 | Normal | 1. Login sebagai `mentor.demo`.<br>2. Buka "Buat Sesi Baru".<br>3. Isi data sesi yang valid dengan judul "Data mining", lalu klik "Buat Sesi". | Judul: Data mining; data jadwal, format, dan kapasitas valid | Sistem menyimpan sesi dan menampilkan konfirmasi keberhasilan serta tautan untuk melihat sesi | Sesi berhasil dibuat. Formulir menampilkan "Sesi berhasil dibuat." dan tautan "Lihat sesi"; judul "Data mining" tetap tampil. Bukti: `UC03-TC03.png`. | Pass |
+
+*[Subbab UC04 ditambahkan sesuai pembagian use case.]*
+
+### 4.4.5 Use Case Mengonfirmasi Keterlaksanaan Sesi
+
+**ID Use Case:** UC05
+**Nama Use Case:** Mengonfirmasi Keterlaksanaan Sesi
+**Akun:** `mentee.satu@mahasiswa.itb.ac.id` dan `mentor.demo@mahasiswa.itb.ac.id` (peserta sesi yang waktu akhirnya telah lewat)
+
+Tabel 4.4.5. Hasil Pengujian Use Case UC05
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC05-TC01 | KF10 | Normal: Sesi Ditandai Terlaksana | 1. Login sebagai Mentor peserta sesi.<br>2. Buka "Riwayat" dan temukan "Diskusi Basis Data".<br>3. Konfirmasi sesi sebagai terlaksana. | Sesi "Diskusi Basis Data", 20/11/2026 09.00–10.00 | Status sesi berubah menjadi Terlaksana dan sesi muncul pada kelompok status tersebut | Pada riwayat, "Diskusi Basis Data" (20 Nov, 09.00–10.00, peran Mentor) tampil dengan status "Terlaksana" dan tombol "Lihat Feedback". Bukti: `UC05-TC01.png`. | Pass |
+| UC05-TC02 | KF10 | Alternatif 1: Sesi Ditandai Tidak Terlaksana | 1. Login sebagai Mentor peserta sesi.<br>2. Buka "Riwayat" dan temukan "Uji HIUPL Obrolan dan Notifikasi".<br>3. Konfirmasi sesi sebagai tidak terlaksana. | Sesi "Uji HIUPL Obrolan dan Notifikasi", 19/11/2026 21.03–22.03 | Status sesi berubah menjadi Tidak Terlaksana dan sesi muncul pada kelompok status tersebut | Pada riwayat, sesi tersebut (19 Nov, 21.03–22.03, peran Mentor) tampil pada bagian "Tidak Terlaksana" dengan tombol "Lihat Detail". Bukti: `UC05-TC02.png`. | Pass |
+
+*[Subbab UC06 dan UC07 ditambahkan sesuai pembagian use case.]*
 
 ### 4.4.8 Use Case Berkomunikasi Menggunakan Grup Obrolan Sementara
 
@@ -832,7 +861,36 @@ Tabel 4.4.9. Hasil Pengujian Use Case UC09
 | UC09-TC01 | KF09 | Normal (langkah 1: pengingat terkirim) | 1. Buat sesi uji yang dimulai 14 menit kemudian (20.49 WIB) dengan `mentee.satu` sebagai peserta.<br>2. Biarkan `mentee.satu` membuka aplikasi.<br>3. Tunggu hingga 20.52 WIB, lalu panggil `POST /api/cron/reminders` dengan `CRON_SECRET`.<br>4. Amati layar, lalu pindah ke Beranda. | Sesi mulai 21.03 WIB | Ketika 15 menit sebelum sesi dimulai, sistem mendeteksi pemicu waktu dan mengirim notifikasi pengingat ke akun partisipan | Tidak ada penjadwal yang memanggil *endpoint*: panggilan manual pukul 20.52 WIB masih menghasilkan `sent: 2`, artinya pengingat belum dikirim sejak sesi masuk jendela 15 menit pukul 20.49 WIB. Setelah dipanggil manual, notifikasi "Sesi dimulai 11 menit lagi" terbentuk untuk Mentor dan peserta (INT-TC09), tetapi *pop-up* baru tampil setelah pindah ke Beranda, tidak di halaman yang sedang terbuka (INT-TC34) | Fail. **Penyebab:** (1) belum ada penjadwal yang memanggil `/api/cron/reminders` setiap menit (KNF03-TC02); (2) langganan Realtime `notifications` tanpa token login (INT-TC34). **Usulan:** pasang Supabase Cron (`pg_cron` + `pg_net`) atau Vercel Cron setiap 1 menit, dan perbaiki `realtimeAdapter.ts` seperti pada UC08-TC02 |
 | UC09-TC02 | KF09 | Normal (langkah 2: menekan notifikasi) | 1. Pada *pop-up* pengingat klik "Lihat Detail". | Notifikasi sesi uji | Sistem mengarahkan pengguna ke halaman detail sesi | Pengguna diarahkan ke `/sessions/73454a03-...` yang menampilkan topik, tanggal, jam 21.03–22.03 WIB, format, tautan, peserta, dan tombol "Buka Ruang Obrolan". Notifikasi ditandai `is_read = true` | Pass |
 
-*[Anggota lain menambahkan subbab 4.4.10 s.d. 4.4.15 di sini.]*
+*[Subbab 4.4.10 UC10 ditambahkan sesuai pembagian use case.]*
+
+### 4.4.11 Use Case Menghapus Sesi
+
+**ID Use Case:** UC11
+**Nama Use Case:** Menghapus Sesi
+**Akun:** `mentor.demo@mahasiswa.itb.ac.id` (pemilik sesi uji)
+
+Tabel 4.4.11. Hasil Pengujian Use Case UC11
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC11-TC01 | KF16 | Normal | 1. Login sebagai `mentor.demo` dan buka detail sesi "Data mining" yang dibuatnya.<br>2. Klik "Hapus Sesi".<br>3. Pada dialog, klik "Hapus Sesi" untuk mengonfirmasi. | Sesi "Data mining" dengan 0 peserta | Sistem menampilkan konfirmasi penghapusan; setelah dikonfirmasi, sesi dihapus dan Mentor kembali ke Beranda | Dialog "Hapus sesi ini?" menyatakan sesi dan grup obrolannya dihapus serta 0 peserta diberi tahu, dengan pilihan "Batal" dan "Hapus Sesi" (bukti `UC11-TC01-a.png`). Setelah konfirmasi, aplikasi kembali ke Beranda; sesi "Data mining" tidak lagi terlihat pada daftar sesi Mentor (bukti `UC11-TC01-b.png`). | Pass |
+| UC11-TC02 | KF16 | Alternatif 1: Mentor Tidak Jadi Menghapus Sesi | 1. Buka detail sesi milik `mentor.demo`.<br>2. Klik "Hapus Sesi".<br>3. Pada dialog, klik "Batal". | Sesi uji milik Mentor | Dialog tertutup dan sesi tetap ada tanpa perubahan | Belum ada bukti hasil pengujian untuk skenario ini. | Belum diuji |
+
+### 4.4.12 Use Case Mengedit Sesi
+
+**ID Use Case:** UC12
+**Nama Use Case:** Mengedit Sesi
+**Akun:** `mentor.demo@mahasiswa.itb.ac.id`
+
+Tabel 4.4.12. Hasil Pengujian Use Case UC12
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC12-TC01 | KF17 | Normal | 1. Buka formulir edit sesi "Latihan Biasa" milik `mentor.demo`.<br>2. Ubah judul menjadi "Latihan Biasa 2" dan klik "Simpan Perubahan".<br>3. Periksa daftar sesi di Beranda. | Judul sesi: "Latihan Biasa 2" | Sistem menyimpan perubahan, menampilkan "Data Sesi Berhasil Diperbarui", dan menampilkan judul terbaru pada Beranda | Formulir edit terisi dengan data sesi saat ini (bukti `UC12-TC01-a.png`). Setelah judul diubah, tampil pesan "Data Sesi Berhasil Diperbarui" (bukti `UC12-TC01-b.png`); Beranda menampilkan sesi "Latihan Biasa 2" (bukti `UC12-TC01-c.png`). | Pass |
+| UC12-TC02 | KF06 | Alternatif 1: Jadwal Revisi Bertabrakan | 1. Buka formulir edit sesi milik `mentor.demo`.<br>2. Ubah jadwal sehingga beririsan dengan sesi lain milik Mentor, lalu simpan. | Jadwal 21/11/2026 06.00–11.17 yang beririsan dengan sesi lain | Sistem menolak perubahan jadwal dan menampilkan peringatan konflik; jadwal lama tidak berubah | Perubahan ditolak dengan pesan "Jadwal sesi bertabrakan dengan sesi lain yang kamu buat. Pilih waktu yang berbeda." Formulir tetap terbuka. Bukti: `UC12-TC02-a.png`, `UC12-TC02-b.png`. | Pass |
+| UC12-TC03 | KF14 | Alternatif 2: Kapasitas Revisi di Bawah Batas Minimum | 1. Buka formulir edit "Aljabar Linear Session" yang sudah memiliki 2 peserta.<br>2. Coba kapasitas 0, kemudian 1, dan simpan tiap percobaan. | Kapasitas: 0 dan 1; sesi sudah memiliki 2 peserta | Sistem menolak kapasitas kurang dari 1, serta menolak kapasitas yang lebih kecil dari jumlah peserta yang sudah bergabung | Kapasitas 0 ditolak dengan pesan "Batas peserta harus antara 1 dan 20 orang" (bukti `UC12-TC03-a.png`). Kapasitas 1 ditolak karena sudah ada 2 peserta, dengan pesan "Batas peserta tidak boleh lebih sedikit dari peserta yang sudah bergabung" (bukti `UC12-TC03-b.png`, `UC12-TC03-c.png`). | Pass |
+
+*[Subbab UC13, UC14, dan UC15 ditambahkan sesuai pembagian use case.]*
 
 <br>
 
