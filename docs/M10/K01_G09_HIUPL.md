@@ -486,7 +486,7 @@ Tabel 4.2.1b. Ringkasan Cakupan Kelas C04 (bagian `matchSession()` dan `searchSe
 | Daftar operasi public pada DPPL (bagian *matchmaking* & pencarian) | `matchSession()`, `searchSession()` |
 | Operasi yang diuji | `matchSession()` (beserta fungsi bantu `matchesAvailability()`, `parseMinutes()`, `toWib()`, `normalizeTag()`) dan `searchSession()` |
 | ID Algoritma yang tercakup | Algo-C04-01 (`matchSession()`), Algo-C04-02 (`searchSession()`) |
-| Coverage (wajib ≥ 70%) | `models/session.ts` blok `matchSession()` & `searchSession()` (baris 122–249): **92,86% *statement*** (78/84) dan **93,55% cabang** (87/93) menggunakan `@vitest/coverage-v8`. Bukti `C04-C11-C16-unit.png` dan `coverage-hugo.png` pada 4.6 |
+| Coverage (wajib ≥ 70%) | `models/session.ts` blok `matchSession()` & `searchSession()` (baris 122–249): **92,86% *statement*** (78/84) dan **93,55% cabang** (87/93) menggunakan `@vitest/coverage-v8`. Bukti `C04-C11-C16-unit.png` dan `coverage-C04-C11-C16.png` pada 4.6 |
 
 Tabel 4.2.1c. Ringkasan Cakupan Kelas C04 (bagian kapasitas, partisipan, dan operasi basis data)
 
@@ -495,7 +495,7 @@ Tabel 4.2.1c. Ringkasan Cakupan Kelas C04 (bagian kapasitas, partisipan, dan ope
 | Daftar operasi public pada DPPL | `addParticipant()`, `removeParticipant()`, `checkCapacity()`, `saveSession()` (diwujudkan `createSession()`), `getSessionById()` (`findById()`), `getSessionsMade()`/`isOwnedBy()` (`findForMentor()`), `editSchedule()`/`editDescription()`/`editPreference()` (`updateSession()`), `markAsDeleted()` (`deleteSession()`), `getUpcomingByUser()`, `getAvailableSessions()`, `getSessionDetails()` (`getSessionDetail()`) |
 | Operasi yang diuji | `checkCapacity()`, `addParticipant()`, `removeParticipant()`, dan *trigger* `enforce_session_capacity()`. Pada implementasi `checkCapacity()` berupa fungsi dengan parameter `(participantCount, capacity)` (rancangan: metode tanpa parameter), dan `addParticipant()` mengembalikan `void` serta melempar `SessionFullError`, `SessionAlreadyJoinedError`, atau `ParticipantScheduleConflictError` (rancangan: `Promise<boolean>`) |
 | ID Algoritma yang tercakup | Algo-C04-01 (`addParticipant`, `removeParticipant`), Q-C04-08, Q-C04-09 |
-| Coverage (wajib ≥ 70%) | Seluruh berkas `models/session.ts` (gabungan seluruh test C04): 100% baris, 95,93% cabang, 98,34% *statement*, 100% fungsi (`@vitest/coverage-v8`). Bukti `C04-unit.png`, `C04-unit-markus.png`, `C04-unit-matthew.png`, dan `coverage-markus-c04-c13.png` |
+| Coverage (wajib ≥ 70%) | Seluruh berkas `models/session.ts` (gabungan seluruh test C04): 100% baris, 95,93% cabang, 98,34% *statement*, 100% fungsi (`@vitest/coverage-v8`). Bukti `C04-unit-a.png`, `C04-unit-b.png`, `C04-unit-c.png`, dan `coverage-C04-C13.png` |
 
 ### 4.2.2 Kelas GroupChat
 
@@ -532,7 +532,7 @@ Tabel 4.2.2b. Ringkasan Cakupan Kelas C05
 | Daftar operasi public pada DPPL | `findBySession()`, `findById()`, `getId()`, `isActive()`, `isMember()`, `getMessages()`, `searchMessage()`, `displayMessage()`, `editMessage()`, `deleteMessage()` |
 | Operasi yang diuji | `findBySession()`, `isActive()`, `findMenteeIds()`, `closeExpired()`; `getMessages()` sebagai `ChatMessage.findByGroupChat()` (C08-UT04 s.d. C08-UT06); `isMember()` diwujudkan sebagai fungsi SQL `is_session_member()` pada RLS dan diuji pada INT-TC13 s.d. INT-TC15. `findById()`/`getId()` digantikan properti `idGroupChat`; `displayMessage()` berada di `ChatRoom`. `searchMessage()`, `editMessage()`, `deleteMessage()` tidak diimplementasikan (DPPL revisi D) |
 | ID Algoritma yang tercakup | Algo-C05-01, Q-C05-01, Q-C05-05 (melalui `close_expired_group_chats()`) |
-| Coverage (wajib ≥ 70%) | `models/groupChat.ts`: 100%; `controllers/chatController.ts`: 100% baris, 85% cabang; `controllers/chatCleanupController.ts` dan `app/api/cron/chat-cleanup/route.ts`: 100%. Bukti `C05-unit.png` dan `coverage-david.png` |
+| Coverage (wajib ≥ 70%) | `models/groupChat.ts`: 100%; `controllers/chatController.ts`: 100% baris, 85% cabang; `controllers/chatCleanupController.ts` dan `app/api/cron/chat-cleanup/route.ts`: 100%. Bukti `C05-unit.png` dan `coverage-C05-C09-C12-C22-Validator.png` |
 
 ### 4.2.3 Kelas Feedback
 
@@ -633,7 +633,7 @@ Tabel 4.2.6b. Ringkasan Cakupan Kelas C09
 | Daftar operasi public pada DPPL | `getPreferenceByUser()`, `getPreference()`, `getPreferenceDetails()`, `updatePreference()`, `isComplete()`, `getMaterialTag()`, `getAvailability()`, `getSessionFormatPreference()`, `getUserId()` |
 | Operasi yang diuji | `getPreferenceByUser()`, `updatePreference()`, `getPreferenceDetails()`; `isComplete()` sebagai `validatePreference()` (VAL-UT05 s.d. VAL-UT07). `getPreference()` digabung ke `getPreferenceByUser()`, sedangkan *getter* menjadi properti `readonly` (Tabel B.5 M9) |
 | ID Algoritma yang tercakup | Algo-C09-01, Q-C09-01, Q-C09-02 (diwujudkan sebagai *upsert*) |
-| Coverage (wajib ≥ 70%) | `models/preference.ts`: 100% baris, cabang, dan fungsi. Bukti `C09-unit.png` dan `coverage-david.png` |
+| Coverage (wajib ≥ 70%) | `models/preference.ts`: 100% baris, cabang, dan fungsi. Bukti `C09-unit.png` dan `coverage-C05-C09-C12-C22-Validator.png` |
 
 ### 4.2.7 Kelas Profile
 
@@ -722,7 +722,7 @@ Tabel 4.2.8b. Ringkasan Cakupan Kelas C12
 | Daftar operasi public pada DPPL | `authLogin()`, `getCurrentUser()`, `validateEmail()`, `processRegistration()`, `saveProfile()`, `savePreference()`, `fetchUserProfile()`, `fetchUserPreference()` |
 | Operasi yang diuji | Seluruh operasi DPPL. `validateEmail()` diwujudkan di `lib/validator.ts` dan diuji pada 4.2.12. Ditambah `logout()` dan seluruh fungsi `authAdapter` (atribut `authAdapter` pada DPPL) |
 | ID Algoritma yang tercakup | Algo-C12-01 (`processRegistration()`, `savePreference()`, `fetchUserProfile()`) |
-| Coverage (wajib ≥ 70%) | `userController.ts`: 99,03% baris, 94,23% cabang, 97,58% *statement*; `authAdapter.ts`: 100% baris dan cabang (`@vitest/coverage-v8`, bukti `C12-unit.png` dan `coverage-david.png` pada 4.6) |
+| Coverage (wajib ≥ 70%) | `userController.ts`: 99,03% baris, 94,23% cabang, 97,58% *statement*; `authAdapter.ts`: 100% baris dan cabang (`@vitest/coverage-v8`, bukti `C12-unit.png` dan `coverage-C05-C09-C12-C22-Validator.png` pada 4.6) |
 
 ### 4.2.9 Kelas SessionControl
 
@@ -782,7 +782,7 @@ Tabel 4.2.9b. Ringkasan Cakupan Kelas C13
 | Daftar operasi public pada DPPL | `processSessionCreation()`, `validateSessionTime()`, `validateScheduleConflict()`, `validateCapacity()`, `editSession()` (diwujudkan `processSessionUpdate()`), `deleteSession()` (diwujudkan `processSessionDeletion()`), `processRegistration()`, `validateParticipantSchedule()`, `cancelSession()`, `processSessionConfirmation()` (diwujudkan `processSessionCompletion()` pada `sessionHistoryController.ts`) |
 | Operasi yang diuji | `processSessionCreation()`, `processSessionUpdate()`, `processSessionDeletion()` (C13-UT01 s.d. C13-UT18), `joinSession()` (realisasi `processRegistration()` pada rancangan), `processRegistration()` (pembungkus yang meneruskan ke `joinSession()`), dan `cancelSession()`. `joinSession()` memakai `Session.checkCapacity()` dan `Session.addParticipant()` sedangkan galat dari *trigger* basis data (`SESSION_FULL`, `PARTICIPANT_SCHEDULE_CONFLICT`) dipetakan menjadi kode galat *controller* |
 | ID Algoritma yang tercakup | Algo-C13-01 (pembuatan sesi beserta validasi waktu, kapasitas, dan konflik jadwal), Algo-C13-04 (`processRegistration`) |
-| Coverage (wajib ≥ 70%) | `controllers/sessionController.ts`: 92,42% baris, 87,2% cabang, 85,18% *statement*, 100% fungsi; `controllers/sessionParticipationController.ts`: 92,68% baris, 92,5% cabang, 89,69% *statement*, 100% fungsi (`@vitest/coverage-v8`). Bukti `C13-unit.png`, `C13-unit-a.png`, `C13-unit-b.png`, dan `coverage-markus-c04-c13.png` |
+| Coverage (wajib ≥ 70%) | `controllers/sessionController.ts`: 92,42% baris, 87,2% cabang, 85,18% *statement*, 100% fungsi; `controllers/sessionParticipationController.ts`: 92,68% baris, 92,5% cabang, 89,69% *statement*, 100% fungsi (`@vitest/coverage-v8`). Bukti `C13-unit-a.png`, `C13-unit-b.png`, `C13-unit-c.png`, dan `coverage-C04-C13.png` (`sessionParticipationController.ts`); angka `sessionController.ts` diambil dari keluaran `npx vitest run --coverage` yang sama |
 
 ### 4.2.10 Kelas FeedbackControl
 
@@ -828,7 +828,7 @@ Tabel 4.2.10b. Ringkasan Cakupan Kelas C14
 | Daftar operasi public pada DPPL | `checkFeedbackEligibility()`, `validateFeedback()`, `submitFeedback()`, `saveFeedback()`, `retrieveFeedbackBySession()` |
 | Operasi yang diuji | Seluruh operasi (5 dari 5). `validateFeedback()` diwujudkan sebagai `validateRating()` pada `lib/validator.ts` (C14-UT10, C14-UT11, VAL-UT08, VAL-UT09) ditambah batas panjang komentar 500 karakter (C14-UT12, C14-UT13). `saveFeedback()` diwujudkan sebagai `Feedback.create()` (C14-UT15, C14-UT16, C06-UT01 s.d. C06-UT03) |
 | ID Algoritma yang tercakup | Algo-C14-01 (pengajuan *feedback*: kelayakan, validasi rating, penyimpanan) dan Algo-C14-02 (pengambilan *feedback* sesi oleh Mentor beserta rata-rata dan distribusi rating) |
-| Coverage (wajib ≥ 70%) | `controllers/feedbackController.ts`: 100% baris, 97,43% cabang, 98,3% *statement*, 100% fungsi (`@vitest/coverage-v8`). Bukti `C14-unit.png` dan `coverage-markus.png` |
+| Coverage (wajib ≥ 70%) | `controllers/feedbackController.ts`: 100% baris, 97,43% cabang, 98,3% *statement*, 100% fungsi (`@vitest/coverage-v8`). Bukti `C14-unit.png` dan `coverage-C06-C07-C14-Validator.png` |
 
 <br>
 
@@ -870,7 +870,7 @@ Tabel 4.2.11b. Ringkasan Cakupan Kelas C22
 | Daftar operasi public pada DPPL | `create()`, `findById()`, `getNotificationsByUser()`, `markAsRead()`, `showContent()`, `getTime()`, `getNotificationId()`, `getSessionId()`, `getIsRead()`, `openApp()` |
 | Operasi yang diuji | `create()` sebagai `sendSessionReminders()` (fungsi SQL membuat notifikasi seluruh partisipan), `getNotificationsByUser()` sebagai `getUnreadSince()`, `markAsRead()`, `openApp()`, ditambah *controller* dan *route* cron. `showContent()` berada di `PopUpNotification` (diuji lewat UC09-TC01); *getter* menjadi properti `readonly`; `findById()` tidak dibutuhkan karena notifikasi selalu diambil per pengguna |
 | ID Algoritma yang tercakup | Algo-C22-01, Q-C22-01 (di dalam `send_session_reminders()`), Q-C22-03 (`markAsRead()` dengan filter pemilik), Q-C22-04 (dengan filter belum dibaca dan waktu) |
-| Coverage (wajib ≥ 70%) | `models/notification.ts`, `controllers/notificationController.ts`, `controllers/reminderController.ts`, `lib/adapters/cronAdapter.ts`, `app/api/cron/reminders/route.ts`: masing-masing 100% baris, cabang, dan fungsi. Bukti `C22-unit.png` dan `coverage-david.png` |
+| Coverage (wajib ≥ 70%) | `models/notification.ts`, `controllers/notificationController.ts`, `controllers/reminderController.ts`, `lib/adapters/cronAdapter.ts`, `app/api/cron/reminders/route.ts`: masing-masing 100% baris, cabang, dan fungsi. Bukti `C22-unit.png` dan `coverage-C05-C09-C12-C22-Validator.png` |
 
 ### 4.2.12 Validator
 
@@ -910,7 +910,7 @@ Tabel 4.2.12b. Ringkasan Cakupan Validator
 | Daftar operasi public pada DPPL | `validateEmail()` (C12), `isComplete()` (C09, diwujudkan sebagai `validatePreference()`), `validateFeedback()` (C14, diwujudkan sebagai `validateRating()`), `validateSessionTime()` dan `validateParticipantSchedule()` (C13, memakai `hasScheduleConflict()`) |
 | Operasi yang diuji | `validateEmail()`, `validatePreference()`, `validateRating()`, `hasScheduleConflict()`, `validateSessionTime()` |
 | ID Algoritma yang tercakup | Bagian validasi email pada Algo-C12-01, `isComplete()` pada Algo-C09-01, validasi rating pada Algo-C14-01, serta validasi waktu sesi dan irisan jadwal pada Algo-C13-01 dan Algo-C13-04 |
-| Coverage (wajib ≥ 70%) | `lib/validator.ts`: 100% baris, cabang, dan fungsi. Bukti `Validator-unit.png`, `Validator-unit-markus.png`, `coverage-david.png`, dan `coverage-markus.png` |
+| Coverage (wajib ≥ 70%) | `lib/validator.ts`: 100% baris, cabang, dan fungsi. Bukti `Validator-unit-a.png`, `Validator-unit-b.png`, `coverage-C05-C09-C12-C22-Validator.png`, dan `coverage-C06-C07-C14-Validator.png` |
 
 <br>
 
@@ -1147,8 +1147,6 @@ Tabel 4.4.9. Hasil Pengujian Use Case UC09
 | UC09-TC01 | KF09 | Normal (langkah 1: pengingat terkirim) | 1. Buat sesi uji yang dimulai 14 menit kemudian (20.49 WIB) dengan `mentee.satu` sebagai peserta.<br>2. Biarkan `mentee.satu` membuka aplikasi.<br>3. Tunggu hingga 20.52 WIB, lalu panggil `POST /api/cron/reminders` dengan `CRON_SECRET`.<br>4. Amati layar, lalu pindah ke Beranda. | Sesi mulai 21.03 WIB | Ketika 15 menit sebelum sesi dimulai, sistem mendeteksi pemicu waktu dan mengirim notifikasi pengingat ke akun partisipan | Tidak ada penjadwal yang memanggil *endpoint*: panggilan manual pukul 20.52 WIB masih menghasilkan `sent: 2`, artinya pengingat belum dikirim sejak sesi masuk jendela 15 menit pukul 20.49 WIB. Setelah dipanggil manual, notifikasi "Sesi dimulai 11 menit lagi" terbentuk untuk Mentor dan peserta (INT-TC09), tetapi *pop-up* baru tampil setelah pindah ke Beranda, tidak di halaman yang sedang terbuka (INT-TC34) | Fail. **Penyebab:** (1) belum ada penjadwal yang memanggil `/api/cron/reminders` setiap menit (KNF03-TC02); (2) langganan Realtime `notifications` tanpa token login (INT-TC34). **Usulan:** pasang Supabase Cron (`pg_cron` + `pg_net`) atau Vercel Cron setiap 1 menit, dan perbaiki `realtimeAdapter.ts` seperti pada UC08-TC02 |
 | UC09-TC02 | KF09 | Normal (langkah 2: menekan notifikasi) | 1. Pada *pop-up* pengingat klik "Lihat Detail". | Notifikasi sesi uji | Sistem mengarahkan pengguna ke halaman detail sesi | Pengguna diarahkan ke `/sessions/73454a03-...` yang menampilkan topik, tanggal, jam 21.03–22.03 WIB, format, tautan, peserta, dan tombol "Buka Ruang Obrolan". Notifikasi ditandai `is_read = true` | Pass |
 
-*[Anggota lain menambahkan subbab 4.4.10 s.d. 4.4.15 di sini.]*
-
 <br>
 
 ### 4.4.10 Use Case Membatalkan Keikutsertaan Sesi
@@ -1162,7 +1160,7 @@ Tabel 4.4.10. Hasil Pengujian Use Case UC10
 
 | ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| UC10-TC01 | KF15 | Normal | 1. Buka detail sesi terdaftar yang belum dimulai.<br>2. Klik "Batalkan Keikutsertaan".<br>3. Klik "Ya, Batalkan". | Sesi terdaftar yang belum dimulai | Sistem menampilkan detail sesi dengan tombol pembatalan, lalu pesan konfirmasi; setelah dikonfirmasi, sistem menghapus Mentee dari daftar pendaftar dan menampilkan "Berhasil Membatalkan Keikutsertaan" | Detail sesi menampilkan tombol "Batalkan Keikutsertaan" di bawah "Buka Ruang Obrolan". Setelah diklik tampil konfirmasi "Yakin ingin membatalkan keikutsertaanmu di sesi ini?" dengan tombol "Kembali" dan "Ya, Batalkan". Setelah "Ya, Batalkan", Mentee dikeluarkan dari daftar peserta: basis data menunjukkan sesi "Latihan Biasa" tidak lagi memiliki peserta (0/1) dan baris `session_participants` milik `mentee.satu` sudah terhapus. Aplikasi menampilkan pesan "Berhasil Membatalkan Keikutsertaan" (`ParticipantSessionPanel`) | Pass |
+| UC10-TC01 | KF15 | Normal | 1. Buka detail sesi terdaftar yang belum dimulai.<br>2. Klik "Batalkan Keikutsertaan".<br>3. Klik "Ya, Batalkan". | Sesi terdaftar yang belum dimulai | Sistem menampilkan detail sesi dengan tombol pembatalan, lalu pesan konfirmasi; setelah dikonfirmasi, sistem menghapus Mentee dari daftar pendaftar dan menampilkan "Berhasil Membatalkan Keikutsertaan" | Detail sesi menampilkan tombol "Batalkan Keikutsertaan" di bawah "Buka Ruang Obrolan". Setelah diklik tampil konfirmasi "Yakin ingin membatalkan keikutsertaanmu di sesi ini?" dengan tombol "Kembali" dan "Ya, Batalkan". Setelah "Ya, Batalkan", Mentee dikeluarkan dari daftar peserta: basis data menunjukkan sesi "Latihan Biasa" tidak lagi memiliki peserta (0/1) dan baris `session_participants` milik `mentee.satu` sudah terhapus. Pengujian ulang pada sesi "Latihan RPL A" (21/11/2026, 20.00–21.00 WIB) menampilkan pesan "Berhasil Membatalkan Keikutsertaan" dan peserta menjadi 0/5 | Pass |
 | UC10-TC02 | KF15 | Alternatif 1: Mentee Tidak Jadi Membatalkan | 1. Buka detail sesi terdaftar yang belum dimulai.<br>2. Klik "Batalkan Keikutsertaan".<br>3. Klik "Kembali". | Sesi terdaftar yang belum dimulai | Sistem menutup pesan konfirmasi dan keikutsertaan tidak berubah | Dialog konfirmasi tertutup, tombol "Batalkan Keikutsertaan" tampil kembali, dan kapasitas tetap 1/1 peserta | Pass |
 
 
@@ -1255,9 +1253,9 @@ Tabel 4.6. Bukti Hasil Pengujian
 | ID Pengujian | Bukti Hasil Pengujian |
 | :--- | :--- |
 | C04-UT01 – C04-UT15, C11-UT01 – C11-UT07, C16-UT01 – C16-UT06 | <img src="./assets/C04-C11-C16-unit.png" width="90%"> |
-| C04-UT16 – C04-UT32 | <img src="./assets/C04-unit.png" width="90%"> |
-| C04-UT33 – C04-UT55 | <img src="./assets/C04-unit-markus.png" width="90%"> |
-| C04-UT56 – C04-UT63 | <img src="./assets/C04-unit-matthew.png" width="90%"> |
+| C04-UT16 – C04-UT32 | <img src="./assets/C04-unit-a.png" width="90%"> |
+| C04-UT33 – C04-UT55 | <img src="./assets/C04-unit-b.png" width="90%"> |
+| C04-UT56 – C04-UT63 | <img src="./assets/C04-unit-c.png" width="90%"> |
 | C05-UT01 – C05-UT16 | <img src="./assets/C05-unit.png" width="90%"> |
 | C06-UT01 – C06-UT07 | <img src="./assets/C06-unit.png" width="90%"> |
 | C07-UT01 – C07-UT12 | <img src="./assets/C07-unit.png" width="90%"> |
@@ -1265,16 +1263,16 @@ Tabel 4.6. Bukti Hasil Pengujian
 | C09-UT01 – C09-UT07 | <img src="./assets/C09-unit.png" width="90%"> |
 | C10-UT01 – C10-UT10 | <img src="./assets/C10-unit.png" width="90%"> |
 | C12-UT01 – C12-UT46 | <img src="./assets/C12-unit.png" width="90%"> |
-| C13-UT01 – C13-UT18 | <img src="./assets/C13-unit.png" width="90%"> |
-| C13-UT19 – C13-UT39 | <img src="./assets/C13-unit-a.png" width="45%"> <img src="./assets/C13-unit-b.png" width="45%"> |
+| C13-UT01 – C13-UT18 | <img src="./assets/C13-unit-a.png" width="90%"> |
+| C13-UT19 – C13-UT39 | <img src="./assets/C13-unit-b.png" width="45%"> <img src="./assets/C13-unit-c.png" width="45%"> |
 | C14-UT01 – C14-UT23 | <img src="./assets/C14-unit.png" width="90%"> |
 | C22-UT01 – C22-UT19 | <img src="./assets/C22-unit.png" width="90%"> |
-| VAL-UT01 – VAL-UT07 | <img src="./assets/Validator-unit.png" width="90%"> |
-| VAL-UT08 – VAL-UT17 | <img src="./assets/Validator-unit-markus.png" width="90%"> |
-| C04 (`matchSession`, `searchSession`), C11, C16 (coverage) | <img src="./assets/coverage-hugo.png" width="90%"> |
-| C12, C09, C05, C22, Validator (coverage) | <img src="./assets/coverage-david.png" width="90%"> |
-| Coverage C04, C13 | <img src="./assets/coverage-markus-c04-c13.png" width="90%"> |
-| Coverage C06, C07, C14, Validator | <img src="./assets/coverage-markus.png" width="90%"> |
+| VAL-UT01 – VAL-UT07 | <img src="./assets/Validator-unit-a.png" width="90%"> |
+| VAL-UT08 – VAL-UT17 | <img src="./assets/Validator-unit-b.png" width="90%"> |
+| C04 (`matchSession`, `searchSession`), C11, C16 (coverage) | <img src="./assets/coverage-C04-C11-C16.png" width="90%"> |
+| C12, C09, C05, C22, Validator (coverage) | <img src="./assets/coverage-C05-C09-C12-C22-Validator.png" width="90%"> |
+| Coverage C04, C13 | <img src="./assets/coverage-C04-C13.png" width="90%"> |
+| Coverage C06, C07, C14, Validator | <img src="./assets/coverage-C06-C07-C14-Validator.png" width="90%"> |
 | INT-TC01, INT-TC02 | Lihat UC01-TC01 dan UC01-TC02 |
 | INT-TC03 – INT-TC06 | <img src="./assets/INT-auth-db.png" width="90%"> |
 | INT-TC07 – INT-TC10, INT-TC16 | <img src="./assets/INT-cron.png" width="90%"> |
@@ -1302,7 +1300,7 @@ Tabel 4.6. Bukti Hasil Pengujian
 | UC08-TC03 | <img src="./assets/UC08-TC03.png" width="45%"> |
 | UC09-TC01 | <img src="./assets/UC09-TC01.png" width="45%"><br>*Pop-up* baru tampil setelah pindah ke Beranda; keluaran cron pada INT-cron.png |
 | UC09-TC02 | <img src="./assets/UC09-TC02.png" width="45%"> |
-| UC10-TC01, UC10-TC02 | <img src="./assets/UC10-TC01-a.png" width="30%"> <img src="./assets/UC10-TC01-b.png" width="30%"> <img src="./assets/UC10-TC01-c.png" width="30%"><br>Tombol "Batalkan Keikutsertaan", dialog konfirmasi dengan pilihan "Kembali" dan "Ya, Batalkan", dan pesan "Berhasil Membatalkan Keikutsertaan" |
+| UC10-TC01, UC10-TC02 | <img src="./assets/UC10-TC01-a.png" width="30%"> <img src="./assets/UC10-TC01-b.png" width="30%"> <img src="./assets/UC10-TC01-c.png" width="30%"><br>Tombol "Batalkan Keikutsertaan", dialog konfirmasi dengan pilihan "Kembali" dan "Ya, Batalkan", dan pesan "Berhasil Membatalkan Keikutsertaan" (pengujian ulang pada sesi "Latihan RPL A") |
 | UC12-TC04 | <img src="./assets/UC12-TC04.png" width="30%"> <img src="./assets/UC12-TC04-a.png" width="30%"> <img src="./assets/UC12-TC04-c.png" width="30%"><br>(a) 18.33–05.33 lintas hari; (b) 10.00–22.05 (12 jam 5 menit); (c) 07.00–19.30 (12 jam 30 menit): ketiganya ditolak |
 | UC13-TC01 | <img src="./assets/UC13-TC01.png" width="90%"><br>Daftar *feedback*, rata-rata, dan distribusi rating sesi "Diskusi Basis Data" |
 | UC14-TC01 | <img src="./assets/UC14-TC01.png" width="45%"> |
