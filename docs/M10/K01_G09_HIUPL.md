@@ -9,7 +9,7 @@ HASIL IMPLEMENTASI DAN UJI PERANGKAT LUNAK (HIUPL)
 
 ## PeerUP
 
-### <img alt="Arsitektur MVC PeerUP" src="./assets/Logo_PeerUP.jpeg" width="30%">
+### <img alt="Logo PeerUP" src="./assets/Logo_PeerUP.jpeg" width="30%">
 
 ### Untuk: Mikhael Andrian Yonatan
 
@@ -40,6 +40,8 @@ Dipersiapkan oleh:
   - [1.5 Referensi](#15-referensi)
   - [1.6 Deskripsi Umum Dokumen (Ikhtisar)](#16-deskripsi-umum-dokumen-ikhtisar)
 - [BAB 2: Deskripsi Umum Perangkat Lunak](#bab-2-deskripsi-umum-perangkat-lunak)
+  - [2.1 System Overview](#21-system-overview)
+  - [2.2 Pemodelan Use Case](#22-pemodelan-use-case)
 - [BAB 3: Implementasi](#bab-3-implementasi)
   - [3.1 Lingkungan Implementasi](#31-lingkungan-implementasi)
   - [3.2 Implementasi Modul](#32-implementasi-modul)
@@ -70,13 +72,13 @@ Dipersiapkan oleh:
 # BAB 1: Pendahuluan
 
 ## 1.1 Tujuan Penulisan Dokumen
-Dokumen Deskripsi Perancangan Perangkat Lunak (DPPL) ini ditulis untuk mendefinisikan secara lengkap, rinci, dan terstruktur perancangan arsitektur, realisasi *use case*, perancangan kelas, perancangan rinci kelas (operasi, atribut, algoritma, dan *query*), perancangan antarmuka, serta matriks kerunutan dari perangkat lunak **PeerUP**. Dokumen ini ditujukan bagi:
-1. **Tim Pengembang (Developer):** Sebagai acuan teknis utama dalam mengimplementasikan kode program, merancang basis data, dan mengintegrasikan antarmuka perangkat lunak.
-2. **Penguji Perangkat Lunak (Tester / QA):** Sebagai dasar pengujian untuk memvalidasi apakah seluruh fitur dan skenario telah berjalan sesuai spesifikasi perancangan.
-3. **Dosen dan/atau Asisten Pengampu IF2150:** Sebagai dokumen evaluasi akademik terhadap perancangan rekayasa perangkat lunak yang dilakukan oleh Kelompok ini.
+Dokumen Hasil Implementasi dan Uji Perangkat Lunak (HIUPL) ini mendokumentasikan hasil implementasi perangkat lunak **PeerUP** berdasarkan rancangan pada DPPL dan hasil pengujiannya terhadap kebutuhan pada SKPL. Dokumen ini memuat lingkungan implementasi, daftar modul, antarmuka, dan berkas yang telah dibuat, strategi dan kedalaman pengujian setiap kelas, hasil pengujian unit, integrasi, *use case*, dan kebutuhan non-fungsional beserta buktinya, serta matriks *traceability* dari kebutuhan hingga *test case*. Tujuannya adalah menunjukkan secara terverifikasi bahwa fitur yang diimplementasikan berjalan sesuai kebutuhan, bukan sekadar menyatakan bahwa fitur sudah berjalan. Dokumen ini ditujukan bagi:
+1. **Tim Pengembang (Developer):** Sebagai catatan implementasi dan acuan perbaikan atas *test case* yang belum lulus.
+2. **Penguji Perangkat Lunak (Tester / QA):** Sebagai acuan untuk menjalankan ulang pengujian dan memeriksa bukti hasilnya.
+3. **Dosen dan/atau Asisten Pengampu IF2150:** Sebagai dokumen evaluasi akademik terhadap hasil implementasi dan pengujian yang dilakukan oleh kelompok ini.
 
 ## 1.2 Lingkup Masalah
-**PeerUP** adalah platform web pembelajaran kolaboratif (*peer-to-peer tutoring*) yang dirancang untuk mengatasi ketimpangan akses bimbingan belajar berbiaya mahal serta isolasi sosial di kalangan pelajar dan mahasiswa. Di tengah maraknya platform *EdTech* berlangganan yang bersifat satu arah dan pencarian teman belajar manual yang tidak terstruktur, PeerUP hadir sebagai fasilitator otomatis yang mempertemukan *Mentee* (pelajar yang membutuhkan bimbingan) dengan *Mentor* (tutor sebaya) berdasarkan kecocokan materi, ketersediaan jadwal, dan format belajar (daring/luring), dilengkapi dengan fitur ruang obrolan grup sementara (*temporary group chat*), pengingat jadwal otomatis, serta sistem *feedback*.
+**PeerUP** adalah aplikasi web pembelajaran kolaboratif sebaya (*peer-to-peer tutoring*) bagi mahasiswa yang mempertemukan *Mentee* dengan *Mentor* berdasarkan kecocokan materi, jadwal, dan format belajar (daring/luring), dilengkapi pembuatan dan pengelolaan sesi, *group chat* sementara, pengingat jadwal otomatis, riwayat sesi, serta *feedback* (SKPL BAB 2). Aplikasi dibangun dengan Next.js dan bergantung pada layanan eksternal Supabase (Auth, PostgreSQL, Realtime, dan pemicu terjadwal/Cron) sesuai rancangan arsitektur MVC dan *Client-Server* pada DPPL BAB 2. Lingkup HIUPL ini adalah implementasi pada tag `v9.2` beserta pengujiannya terhadap KF01–KF21, KNF01–KNF05, `UC01`–`UC15`, dan kelas `C01`–`C24`.
 
 ## 1.3 Definisi, Istilah, dan Singkatan
 Semua definisi dan singkatan yang digunakan dalam dokumen ini beserta penjelasannya disajikan pada Tabel 1.3.
@@ -86,18 +88,33 @@ Tabel 1.3. Definisi Istilah dan Singkatan
 | Singkatan, Akronim, atau Istilah | Penjelasan |
 | :--- | :--- |
 | *P/L* | *Singkatan dari Perangkat Lunak, yaitu aplikasi yang memberikan perintah kepada komputer untuk menjalankan tugas tertentu.* |
-| *SKPL* | *Singkatan dari Spesifikasi Kebutuhan Perangkat Lunak, yaitu dokumen yang merangkum kriteria-kriteria yang diperlukan untuk membangun aplikasi menjalankan tugasnya.* |
+| *SKPL* | *Singkatan dari Spesifikasi Kebutuhan Perangkat Lunak, yaitu dokumen yang merangkum kebutuhan fungsional, non-fungsional, dan pemodelan use case perangkat lunak.* |
+| *APL* | *Singkatan dari Arsitektur Perangkat Lunak, yaitu dokumen yang mendeskripsikan style arsitektur, komponen, dan view arsitektur perangkat lunak.* |
 | *DPPL* | *Singkatan dari Deskripsi Perancangan Perangkat Lunak, yaitu dokumen yang merinci arsitektur, realisasi use case, spesifikasi rinci kelas, serta perancangan antarmuka perangkat lunak.* |
+| *HIUPL* | *Singkatan dari Hasil Implementasi dan Uji Perangkat Lunak, yaitu dokumen ini.* |
 | *KF* | *Singkatan dari Kebutuhan Fungsional.* |
 | *KNF* | *Singkatan dari Kebutuhan Non-Fungsional.* |
 | *UC* | *Singkatan dari Use Case.* |
-| *EARS* | *Easy Approach to Requirements Syntax, yaitu pola penulisan kebutuhan agar konsisten dan mudah diuji.* |
 | *Mentor / Tutor* | *Pengguna sebaya yang memiliki penguasaan materi lebih baik dan membuka sesi belajar untuk membimbing pengguna lain.* |
 | *Mentee* | *Pengguna (siswa/mahasiswa) yang mencari bantuan pemahaman materi dan bergabung ke dalam sesi belajar.* |
-| *Matchmaking* | *Proses pencocokan otomatis antara preferensi materi serta jadwal kosong Mentee dengan sesi belajar yang tersedia.* | 
+| *Matchmaking* | *Proses pencocokan otomatis antara preferensi materi serta jadwal kosong Mentee dengan sesi belajar yang tersedia.* |
 | *BaaS* | *Backend-as-a-Service, layanan cloud yang menyediakan infrastruktur backend siap pakai seperti basis data, autentikasi, dan komunikasi real-time.* |
+| *RLS* | *Row Level Security, aturan akses PostgreSQL per baris data yang membatasi data yang dapat dibaca atau diubah oleh setiap pengguna.* |
+| *TC* | *Test Case, yaitu satu kasus uji yang terdiri atas kondisi awal, langkah, data masukan, hasil yang diharapkan, hasil aktual, dan kesimpulan.* |
+| *UT* | *Unit Test, yaitu pengujian satu operasi atau fungsi pada satu kelas secara terisolasi dari komponen lain.* |
+| *INT* | *Integration Test, yaitu pengujian interaksi antarkomponen yang melewati batas arsitektur, seperti Controller ke Model, aplikasi ke basis data, dan aplikasi ke sistem eksternal.* |
+| *Normal, Boundary, Negative* | *Jenis test case: normal menguji masukan valid pada umumnya, boundary menguji nilai tepat pada batas yang masih valid atau tidak valid (misalnya kapasitas 1 dan 20, durasi 10 menit), dan negative menguji masukan tidak valid yang harus ditolak.* |
+| *Coverage* | *Code coverage, yaitu persentase kode yang dijalankan oleh test. Dokumen ini melaporkan line coverage (persentase baris yang dieksekusi) dan branch coverage (persentase cabang keputusan, benar dan salah, yang dijalani).* |
+| *White-box / Black-box* | *White-box menguji dengan melihat struktur internal kode (contohnya coverage), sedangkan black-box mencocokkan masukan dan keluaran dengan kebutuhan tanpa melihat kode.* |
+| *Mendalam, Sedang, Tidak perlu* | *Tingkat kedalaman pengujian kelas pada Subbab 4.1. Mendalam: unit test setiap operasi public, minimal 3 TC per operasi, coverage ≥ 70%. Sedang: operasi public utama, minimal 2 TC per operasi (boleh melalui pengujian integrasi). Tidak perlu: tanpa unit test khusus, teruji tidak langsung melalui TC use case.* |
+| *Pass / Fail* | *Kesimpulan test case: Pass jika hasil aktual sama dengan hasil yang diharapkan, Fail jika berbeda.* |
+| *Mock* | *Objek tiruan yang menggantikan komponen nyata (misalnya klien Supabase) agar unit dapat diuji tanpa layanan eksternal.* |
+| *Vitest* | *Framework pengujian otomatis untuk JavaScript/TypeScript yang dipakai untuk unit test dan integration test.* |
+| *PGlite* | *PostgreSQL yang berjalan di dalam proses Node.js, dipakai untuk menjalankan seluruh migrasi dan menguji trigger, fungsi, serta RLS tanpa server basis data terpisah.* |
 
 ## 1.4 Aturan Penomoran
+Pola ID dari dokumen sebelumnya tetap dipakai agar *traceability* tetap jelas. Pola ID pengujian ditambahkan pada lima baris terakhir Tabel 1.4.
+
 Tabel 1.4. Aturan Penomoran
 
 | Hal/Bagian | Penomoran | Keterangan |
@@ -113,22 +130,30 @@ Tabel 1.4. Aturan Penomoran
 | *Algoritma* | *Algo-CXX-YY* | *CXX menyatakan ID kelas dan YY menyatakan nomor urut algoritma pada kelas tersebut (contoh: Algo-C01-01).* |
 | *Query* | *Q-CXX-YY* | *CXX menyatakan ID kelas dan YY menyatakan nomor urut query pada kelas tersebut (contoh: Q-C01-01).* |
 | *Antarmuka* | *I-XX* | *XX menyatakan dua digit nomor urut rancangan layar antarmuka (contoh: I-01).* |
+| *Unit Test Kelas* | *CXX-UTYY* | *CXX menyatakan ID kelas yang diuji dan YY menyatakan nomor urut test case unit pada kelas tersebut (contoh: C05-UT01).* |
+| *Unit Test Validator* | *VAL-UTYY* | *YY menyatakan nomor urut test case unit untuk modul pendukung `lib/validator.ts`, yang tidak memiliki ID kelas pada DPPL (contoh: VAL-UT01).* |
+| *Integration Test* | *INT-TCYY* | *YY menyatakan nomor urut test case integrasi (contoh: INT-TC01).* |
+| *Use Case Test* | *UCXX-TCYY* | *UCXX menyatakan ID use case dan YY menyatakan nomor urut test case pada use case tersebut, satu atau lebih untuk setiap skenario normal dan alternatif (contoh: UC01-TC01).* |
+| *KNF Test* | *KNFXX-TCYY* | *KNFXX menyatakan ID KNF dan YY menyatakan nomor urut test case pada KNF tersebut (contoh: KNF01-TC01).* |
 
 ## 1.5 Referensi
-1. Dokumentasi Perangkat Lunak *Topic Brainstorming* (Tugas 1), *Requirement Gathering* (Tugas 2), *Use Case & Scenario Use Case* (Tugas 3), *Class Diagram* (Tugas 4), serta *Spesifikasi Kebutuhan Perangkat Lunak (SKPL)* Kelompok G09 IF2150 Rekayasa Perangkat Lunak.
-2. Mavin, A., Wilkinson, P., Harwood, A., & Novak, M. (2009). *Easy Approach to Requirements Syntax (EARS)*. 17th IEEE International Requirements Engineering Conference.
-3. Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP).
-4. Undang-Undang Republik Indonesia Nomor 1 Tahun 2024 tentang Perubahan Kedua atas UU ITE.
+1. Kelompok G09 K01. *Spesifikasi Kebutuhan Perangkat Lunak (SKPL) PeerUP* (Tugas 5), `docs/M5/K01_G09_SKPL.md`.
+2. Kelompok G09 K01. *Arsitektur Perangkat Lunak (APL) PeerUP* (Tugas 6), `docs/M6/K01_G09_APL.md`.
+3. Kelompok G09 K01. *Deskripsi Perancangan Perangkat Lunak (DPPL) PeerUP* (Tugas 7 dan Tugas 8), `docs/M8/K01_G09_DPPL2.md`.
+4. Kelompok G09 K01. *Laporan Implementasi PeerUP* (Tugas 9), `docs/M9/K01_G09_Implementasi.md`, serta kode sumber pada `src/` (tag `v9.2`).
+5. Dokumentasi Perangkat Lunak *Topic Brainstorming* (Tugas 1), *Requirement Gathering* (Tugas 2), *Use Case & Scenario Use Case* (Tugas 3), dan *Class Diagram* (Tugas 4) Kelompok G09 IF2150 Rekayasa Perangkat Lunak.
+6. Vercel. *Next.js Documentation* (versi 15). https://nextjs.org/docs
+7. Meta. *React Documentation* (versi 19). https://react.dev
+8. Supabase. *Supabase Documentation: Auth, Database, Realtime, Cron*. https://supabase.com/docs
+9. Tailwind Labs. *Tailwind CSS Documentation* (versi 4). https://tailwindcss.com/docs
+10. Vitest. *Vitest Documentation* dan *Coverage* (`@vitest/coverage-v8`). https://vitest.dev/guide/coverage
+11. ElectricSQL. *PGlite Documentation*. https://pglite.dev/docs
+12. Google. *Chrome DevTools Documentation*. https://developer.chrome.com/docs/devtools
+13. Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP).
+14. Undang-Undang Republik Indonesia Nomor 1 Tahun 2024 tentang Perubahan Kedua atas UU ITE.
 
 ## 1.6 Deskripsi Umum Dokumen (Ikhtisar)
-Dokumen DPPL ini dibagi menjadi tujuh bab utama:
-- **BAB 1: Pendahuluan**, menjelaskan tujuan penulisan dokumen, lingkup masalah, definisi dan singkatan, aturan penomoran, referensi, serta ikhtisar dokumen.
-- **BAB 2: Perancangan Arsitektur**, menguraikan rancangan lingkungan implementasi, *style/pattern* arsitektur acuan (MVC & *Client-Server*), identifikasi komponen/modul/subsistem, serta model arsitektur (*Development View* dan *Physical View*).
-- **BAB 3: Realisasi Use Case**, menyajikan identifikasi kelas perancangan, *Sequence Diagram* (skenario normal dan alternatif), serta diagram kelas untuk setiap *use case* (`UC01`–`UC15`).
-- **BAB 4: Diagram Kelas Keseluruhan**, memuat diagram kelas perancangan keseluruhan beserta tabel daftar kelas, atribut, dan operasinya.
-- **BAB 5: Perancangan Rinci Kelas**, merinci spesifikasi operasi, atribut, algoritma (*pseudocode*), serta *query* basis data untuk seluruh kelas (`C01`–`C24`).
-- **BAB 6: Perancangan Antarmuka**, menyajikan rancangan layar antarmuka (`I-01`–`I-16`) beserta spesifikasi objek antarmukanya.
-- **BAB 7: Matriks Kerunutan**, memetakan keterlacakan antara setiap kelas perancangan (`C01`–`C24`) dengan *use case* yang diimplementasikannya.
+Dokumen HIUPL ini terdiri atas lima bab. **BAB 1 Pendahuluan** menjelaskan tujuan, lingkup, istilah (termasuk istilah pengujian), aturan penomoran ID pengujian, dan referensi. **BAB 2 Deskripsi Umum Perangkat Lunak** memberikan *system overview* PeerUP, batasan sistem, sistem eksternal, dan *use case diagram*. **BAB 3 Implementasi** mencatat lingkungan implementasi, modul dan kelas yang diimplementasikan beserta berkasnya, antarmuka `I-01`–`I-16` yang telah dibuat, serta berkas lain seperti konfigurasi, skema basis data, dan berkas pengujian. **BAB 4 Hasil Pengujian** memuat strategi dan kedalaman pengujian setiap kelas, hasil pengujian unit beserta *coverage*, pengujian integrasi, pengujian setiap skenario *use case*, pengujian KNF, dan bukti tangkapan layar. **BAB 5 Traceability** memetakan setiap KF ke KNF, *use case*, kelas perancangan, berkas implementasi, dan *test case*.
 
 <br>
 
@@ -136,16 +161,56 @@ Dokumen DPPL ini dibagi menjadi tujuh bab utama:
 
 # BAB 2: Deskripsi Umum Perangkat Lunak
 
-Bagian ini diisi dengan *System Overview*, dalam bentuk gambar dan narasi yang memberikan gambaran tentang aplikasi dan konteksnya. **Batasan dan keterkaitan** antara sistem yang dibangun dengan sistem lain di luarnya harus jelas. Deskripsi umum sistem perlu dilengkapi dengan pemodelan kasus yang dihadapi, seperti *use case diagram*. Berikan narasi yang jelas untuk setiap gambar yang ditampilkan.
+## 2.1 System Overview
 
-Bagian ini dapat menyalin atau meringkas dari dokumen SKPL atau DPPL.
+PeerUP adalah aplikasi web yang memfasilitasi pembelajaran kolaboratif sebaya (*peer-to-peer tutoring*) bagi mahasiswa. Pengguna mendaftar dengan email berdomain universitas, lalu mengatur profil serta preferensi materi, waktu, dan format belajar. *Mentor* membuat sesi belajar dengan topik, jadwal, format daring/luring, dan kapasitas peserta. *Mentee* mendapatkan rekomendasi sesi hasil *matchmaking* yang sesuai preferensinya, lalu bergabung ke sesi tersebut. Setiap sesi memiliki *group chat* sementara untuk koordinasi, dan peserta menerima pengingat otomatis 15 menit sebelum sesi dimulai. Setelah sesi selesai, sesi dikonfirmasi, *Mentee* memberikan *feedback*, dan sesi tercatat pada riwayat.
+
+Sistem mengikuti pola MVC di atas arsitektur *Client-Server* (DPPL BAB 2). *View* (halaman Next.js dan komponen React) berjalan pada *web browser* pengguna, sedangkan *Controller* (Server Actions) dan *Model* berjalan pada server Next.js. Gambar 2.1 memperlihatkan batas sistem PeerUP dan sistem eksternal di luarnya.
 
 <p align="center">
-<img alt="System Overview / Use Case Diagram" src="./assets/contoh-uc-diagram.webp" width="90%">
+<img alt="Physical View PeerUP" src="./assets/Physical-View.png" width="80%">
 </p>
 <p align="center">
-<i>Gambar 2.1. Use Case Diagram [Nama P/L]</i>
+<i>Gambar 2.1. System Overview (Physical View) PeerUP</i>
 </p>
+
+Gambar 2.1 memperlihatkan tiga kelompok node:
+1. **Perangkat pengguna:** *web browser* modern yang memuat antarmuka PeerUP dan menangani interaksi pengguna. Browser berkomunikasi dengan aplikasi Next.js melalui HTTPS, dan dengan Supabase Realtime melalui WSS untuk menerima pesan *group chat* dan notifikasi secara langsung.
+2. **Aplikasi Next.js (batas sistem PeerUP):** menjalankan *View*, *Controller*, *Model*, *adapter*, dan *route* `app/api/cron/` yang memproses pengingat dan pembersihan *group chat*. Rancangan menempatkan aplikasi pada Vercel. Pada tahap implementasi dan pengujian ini, aplikasi dijalankan secara lokal (`npm run dev`) dan belum di-*deploy* (Subbab 3.1).
+3. **Supabase Cloud Services (sistem eksternal):** Supabase Auth untuk registrasi, *login*, dan *hash* kata sandi; PostgreSQL untuk data persisten beserta *trigger* dan RLS; Supabase Realtime untuk pengiriman pembaruan berbasis WebSocket; serta Supabase Cron untuk memicu *route* cron secara terjadwal.
+
+Kode PeerUP hanya berinteraksi dengan sistem eksternal melalui `lib/supabase/` dan *adapter* (`authAdapter`, `realtimeAdapter`, `cronAdapter`), sehingga batas tersebut menjadi titik pengujian integrasi pada Subbab 4.3. Batasan utama sistem (SKPL Subbab 2.4) meliputi: registrasi hanya dengan email domain universitas; kapasitas sesi 1–20 peserta; sesi tidak lintas hari dengan durasi 10 menit hingga 12 jam; jadwal sesi tidak boleh beririsan untuk Mentor maupun Mentee yang sama; *group chat* dibersihkan 48 jam setelah sesi berakhir; dan kata sandi disimpan dalam bentuk *hash*.
+
+## 2.2 Pemodelan Use Case
+
+<p align="center">
+<img alt="Use Case Diagram PeerUP" src="./assets/Use-Case-Diagram.webp" width="70%">
+</p>
+<p align="center">
+<i>Gambar 2.2. Use Case Diagram PeerUP</i>
+</p>
+
+Gambar 2.2 menunjukkan dua aktor PeerUP, yaitu *Mentee* (`AK01`) dan *Mentor* (`AK02`), serta lima belas *use case* di dalam batas sistem. Keduanya dapat mendaftarkan akun dan autentikasi (`UC01`), mengelola preferensi profil (`UC02`), mengonfirmasi keterlaksanaan sesi (`UC05`), melihat riwayat sesi (`UC06`), berkomunikasi pada *group chat* sementara (`UC08`), menerima notifikasi sesi (`UC09`), membuka beranda (`UC14`), dan melihat profil (`UC15`). Hanya *Mentor* yang dapat membuat (`UC03`), mengedit (`UC12`), dan menghapus sesi (`UC11`) serta melihat *feedback* sesinya (`UC13`). Hanya *Mentee* yang dapat mencari dan bergabung ke sesi (`UC04`), membatalkan keikutsertaan (`UC10`), dan memberikan penilaian sehabis sesi (`UC07`). Rincian setiap *use case* dan skenarionya mengacu pada SKPL BAB 4 dan menjadi dasar pengujian *use case* pada Subbab 4.4.
+
+Tabel 2.1. Daftar Use Case PeerUP
+
+| ID UC | Nama Use Case | Aktor | ID KF |
+| :--- | :--- | :--- | :--- |
+| *UC01* | *Mendaftarkan Akun dan Autentikasi* | *Mentor, Mentee* | *KF01, KF02* |
+| *UC02* | *Mengelola Preferensi Profil* | *Mentor, Mentee* | *KF03, KF04* |
+| *UC03* | *Membuat Sesi Belajar* | *Mentor* | *KF05, KF06, KF14, KF20* |
+| *UC04* | *Mencari dan Bergabung ke Sesi* | *Mentee* | *KF07, KF08, KF13, KF21* |
+| *UC05* | *Mengonfirmasi Keterlaksanaan Sesi* | *Mentor, Mentee* | *KF10* |
+| *UC06* | *Melihat Riwayat Sesi* | *Mentor, Mentee* | *KF11, KF18* |
+| *UC07* | *Memberikan Penilaian Sehabis Sesi* | *Mentee* | *KF10* |
+| *UC08* | *Berkomunikasi Menggunakan Grup Obrolan Sementara* | *Mentor, Mentee* | *KF12* |
+| *UC09* | *Menerima Notifikasi Sesi* | *Mentor, Mentee* | *KF09* |
+| *UC10* | *Membatalkan Keikutsertaan Sesi* | *Mentee* | *KF15* |
+| *UC11* | *Menghapus Sesi* | *Mentor* | *KF16* |
+| *UC12* | *Mengedit Sesi* | *Mentor* | *KF06, KF14, KF17, KF20* |
+| *UC13* | *Melihat Feedback Sesi* | *Mentor* | *KF18* |
+| *UC14* | *Membuka Beranda Utama* | *Mentor, Mentee* | *KF07* |
+| *UC15* | *Melihat Profil* | *Mentor, Mentee* | *KF19* |
 
 <br>
 
