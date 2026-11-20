@@ -9,7 +9,7 @@ HASIL IMPLEMENTASI DAN UJI PERANGKAT LUNAK (HIUPL)
 
 ## PeerUP
 
-### <img alt="Arsitektur MVC PeerUP" src="./assets/Logo_PeerUP.jpeg" width="30%">
+### <img alt="Logo PeerUP" src="./assets/Logo_PeerUP.jpeg" width="30%">
 
 ### Untuk: Mikhael Andrian Yonatan
 
@@ -40,6 +40,8 @@ Dipersiapkan oleh:
   - [1.5 Referensi](#15-referensi)
   - [1.6 Deskripsi Umum Dokumen (Ikhtisar)](#16-deskripsi-umum-dokumen-ikhtisar)
 - [BAB 2: Deskripsi Umum Perangkat Lunak](#bab-2-deskripsi-umum-perangkat-lunak)
+  - [2.1 System Overview](#21-system-overview)
+  - [2.2 Pemodelan Use Case](#22-pemodelan-use-case)
 - [BAB 3: Implementasi](#bab-3-implementasi)
   - [3.1 Lingkungan Implementasi](#31-lingkungan-implementasi)
   - [3.2 Implementasi Modul](#32-implementasi-modul)
@@ -70,13 +72,13 @@ Dipersiapkan oleh:
 # BAB 1: Pendahuluan
 
 ## 1.1 Tujuan Penulisan Dokumen
-Dokumen Deskripsi Perancangan Perangkat Lunak (DPPL) ini ditulis untuk mendefinisikan secara lengkap, rinci, dan terstruktur perancangan arsitektur, realisasi *use case*, perancangan kelas, perancangan rinci kelas (operasi, atribut, algoritma, dan *query*), perancangan antarmuka, serta matriks kerunutan dari perangkat lunak **PeerUP**. Dokumen ini ditujukan bagi:
-1. **Tim Pengembang (Developer):** Sebagai acuan teknis utama dalam mengimplementasikan kode program, merancang basis data, dan mengintegrasikan antarmuka perangkat lunak.
-2. **Penguji Perangkat Lunak (Tester / QA):** Sebagai dasar pengujian untuk memvalidasi apakah seluruh fitur dan skenario telah berjalan sesuai spesifikasi perancangan.
-3. **Dosen dan/atau Asisten Pengampu IF2150:** Sebagai dokumen evaluasi akademik terhadap perancangan rekayasa perangkat lunak yang dilakukan oleh Kelompok ini.
+Dokumen Hasil Implementasi dan Uji Perangkat Lunak (HIUPL) ini mendokumentasikan hasil implementasi perangkat lunak **PeerUP** berdasarkan rancangan pada DPPL dan hasil pengujiannya terhadap kebutuhan pada SKPL. Dokumen ini memuat lingkungan implementasi, daftar modul, antarmuka, dan berkas yang telah dibuat, strategi dan kedalaman pengujian setiap kelas, hasil pengujian unit, integrasi, *use case*, dan kebutuhan non-fungsional beserta buktinya, serta matriks *traceability* dari kebutuhan hingga *test case*. Tujuannya adalah menunjukkan secara terverifikasi bahwa fitur yang diimplementasikan berjalan sesuai kebutuhan, bukan sekadar menyatakan bahwa fitur sudah berjalan. Dokumen ini ditujukan bagi:
+1. **Tim Pengembang (Developer):** Sebagai catatan implementasi dan acuan perbaikan atas *test case* yang belum lulus.
+2. **Penguji Perangkat Lunak (Tester / QA):** Sebagai acuan untuk menjalankan ulang pengujian dan memeriksa bukti hasilnya.
+3. **Dosen dan/atau Asisten Pengampu IF2150:** Sebagai dokumen evaluasi akademik terhadap hasil implementasi dan pengujian yang dilakukan oleh kelompok ini.
 
 ## 1.2 Lingkup Masalah
-**PeerUP** adalah platform web pembelajaran kolaboratif (*peer-to-peer tutoring*) yang dirancang untuk mengatasi ketimpangan akses bimbingan belajar berbiaya mahal serta isolasi sosial di kalangan pelajar dan mahasiswa. Di tengah maraknya platform *EdTech* berlangganan yang bersifat satu arah dan pencarian teman belajar manual yang tidak terstruktur, PeerUP hadir sebagai fasilitator otomatis yang mempertemukan *Mentee* (pelajar yang membutuhkan bimbingan) dengan *Mentor* (tutor sebaya) berdasarkan kecocokan materi, ketersediaan jadwal, dan format belajar (daring/luring), dilengkapi dengan fitur ruang obrolan grup sementara (*temporary group chat*), pengingat jadwal otomatis, serta sistem *feedback*.
+**PeerUP** adalah aplikasi web pembelajaran kolaboratif sebaya (*peer-to-peer tutoring*) bagi mahasiswa yang mempertemukan *Mentee* dengan *Mentor* berdasarkan kecocokan materi, jadwal, dan format belajar (daring/luring), dilengkapi pembuatan dan pengelolaan sesi, *group chat* sementara, pengingat jadwal otomatis, riwayat sesi, serta *feedback* (SKPL BAB 2). Aplikasi dibangun dengan Next.js dan bergantung pada layanan eksternal Supabase (Auth, PostgreSQL, Realtime, dan pemicu terjadwal/Cron) sesuai rancangan arsitektur MVC dan *Client-Server* pada DPPL BAB 2. Lingkup HIUPL ini adalah implementasi pada tag `v9.2` beserta pengujiannya terhadap KF01–KF21, KNF01–KNF05, `UC01`–`UC15`, dan kelas `C01`–`C24`.
 
 ## 1.3 Definisi, Istilah, dan Singkatan
 Semua definisi dan singkatan yang digunakan dalam dokumen ini beserta penjelasannya disajikan pada Tabel 1.3.
@@ -86,18 +88,33 @@ Tabel 1.3. Definisi Istilah dan Singkatan
 | Singkatan, Akronim, atau Istilah | Penjelasan |
 | :--- | :--- |
 | *P/L* | *Singkatan dari Perangkat Lunak, yaitu aplikasi yang memberikan perintah kepada komputer untuk menjalankan tugas tertentu.* |
-| *SKPL* | *Singkatan dari Spesifikasi Kebutuhan Perangkat Lunak, yaitu dokumen yang merangkum kriteria-kriteria yang diperlukan untuk membangun aplikasi menjalankan tugasnya.* |
+| *SKPL* | *Singkatan dari Spesifikasi Kebutuhan Perangkat Lunak, yaitu dokumen yang merangkum kebutuhan fungsional, non-fungsional, dan pemodelan use case perangkat lunak.* |
+| *APL* | *Singkatan dari Arsitektur Perangkat Lunak, yaitu dokumen yang mendeskripsikan style arsitektur, komponen, dan view arsitektur perangkat lunak.* |
 | *DPPL* | *Singkatan dari Deskripsi Perancangan Perangkat Lunak, yaitu dokumen yang merinci arsitektur, realisasi use case, spesifikasi rinci kelas, serta perancangan antarmuka perangkat lunak.* |
+| *HIUPL* | *Singkatan dari Hasil Implementasi dan Uji Perangkat Lunak, yaitu dokumen ini.* |
 | *KF* | *Singkatan dari Kebutuhan Fungsional.* |
 | *KNF* | *Singkatan dari Kebutuhan Non-Fungsional.* |
 | *UC* | *Singkatan dari Use Case.* |
-| *EARS* | *Easy Approach to Requirements Syntax, yaitu pola penulisan kebutuhan agar konsisten dan mudah diuji.* |
 | *Mentor / Tutor* | *Pengguna sebaya yang memiliki penguasaan materi lebih baik dan membuka sesi belajar untuk membimbing pengguna lain.* |
 | *Mentee* | *Pengguna (siswa/mahasiswa) yang mencari bantuan pemahaman materi dan bergabung ke dalam sesi belajar.* |
-| *Matchmaking* | *Proses pencocokan otomatis antara preferensi materi serta jadwal kosong Mentee dengan sesi belajar yang tersedia.* | 
+| *Matchmaking* | *Proses pencocokan otomatis antara preferensi materi serta jadwal kosong Mentee dengan sesi belajar yang tersedia.* |
 | *BaaS* | *Backend-as-a-Service, layanan cloud yang menyediakan infrastruktur backend siap pakai seperti basis data, autentikasi, dan komunikasi real-time.* |
+| *RLS* | *Row Level Security, aturan akses PostgreSQL per baris data yang membatasi data yang dapat dibaca atau diubah oleh setiap pengguna.* |
+| *TC* | *Test Case, yaitu satu kasus uji yang terdiri atas kondisi awal, langkah, data masukan, hasil yang diharapkan, hasil aktual, dan kesimpulan.* |
+| *UT* | *Unit Test, yaitu pengujian satu operasi atau fungsi pada satu kelas secara terisolasi dari komponen lain.* |
+| *INT* | *Integration Test, yaitu pengujian interaksi antarkomponen yang melewati batas arsitektur, seperti Controller ke Model, aplikasi ke basis data, dan aplikasi ke sistem eksternal.* |
+| *Normal, Boundary, Negative* | *Jenis test case: normal menguji masukan valid pada umumnya, boundary menguji nilai tepat pada batas yang masih valid atau tidak valid (misalnya kapasitas 1 dan 20, durasi 10 menit), dan negative menguji masukan tidak valid yang harus ditolak.* |
+| *Coverage* | *Code coverage, yaitu persentase kode yang dijalankan oleh test. Dokumen ini melaporkan line coverage (persentase baris yang dieksekusi) dan branch coverage (persentase cabang keputusan, benar dan salah, yang dijalani).* |
+| *White-box / Black-box* | *White-box menguji dengan melihat struktur internal kode (contohnya coverage), sedangkan black-box mencocokkan masukan dan keluaran dengan kebutuhan tanpa melihat kode.* |
+| *Mendalam, Sedang, Tidak perlu* | *Tingkat kedalaman pengujian kelas pada Subbab 4.1. Mendalam: unit test setiap operasi public, minimal 3 TC per operasi, coverage ≥ 70%. Sedang: operasi public utama, minimal 2 TC per operasi (boleh melalui pengujian integrasi). Tidak perlu: tanpa unit test khusus, teruji tidak langsung melalui TC use case.* |
+| *Pass / Fail* | *Kesimpulan test case: Pass jika hasil aktual sama dengan hasil yang diharapkan, Fail jika berbeda.* |
+| *Mock* | *Objek tiruan yang menggantikan komponen nyata (misalnya klien Supabase) agar unit dapat diuji tanpa layanan eksternal.* |
+| *Vitest* | *Framework pengujian otomatis untuk JavaScript/TypeScript yang dipakai untuk unit test dan integration test.* |
+| *PGlite* | *PostgreSQL yang berjalan di dalam proses Node.js, dipakai untuk menjalankan seluruh migrasi dan menguji trigger, fungsi, serta RLS tanpa server basis data terpisah.* |
 
 ## 1.4 Aturan Penomoran
+Pola ID dari dokumen sebelumnya tetap dipakai agar *traceability* tetap jelas. Pola ID pengujian ditambahkan pada lima baris terakhir Tabel 1.4.
+
 Tabel 1.4. Aturan Penomoran
 
 | Hal/Bagian | Penomoran | Keterangan |
@@ -113,22 +130,30 @@ Tabel 1.4. Aturan Penomoran
 | *Algoritma* | *Algo-CXX-YY* | *CXX menyatakan ID kelas dan YY menyatakan nomor urut algoritma pada kelas tersebut (contoh: Algo-C01-01).* |
 | *Query* | *Q-CXX-YY* | *CXX menyatakan ID kelas dan YY menyatakan nomor urut query pada kelas tersebut (contoh: Q-C01-01).* |
 | *Antarmuka* | *I-XX* | *XX menyatakan dua digit nomor urut rancangan layar antarmuka (contoh: I-01).* |
+| *Unit Test Kelas* | *CXX-UTYY* | *CXX menyatakan ID kelas yang diuji dan YY menyatakan nomor urut test case unit pada kelas tersebut (contoh: C05-UT01).* |
+| *Unit Test Validator* | *VAL-UTYY* | *YY menyatakan nomor urut test case unit untuk modul pendukung `lib/validator.ts`, yang tidak memiliki ID kelas pada DPPL (contoh: VAL-UT01).* |
+| *Integration Test* | *INT-TCYY* | *YY menyatakan nomor urut test case integrasi (contoh: INT-TC01).* |
+| *Use Case Test* | *UCXX-TCYY* | *UCXX menyatakan ID use case dan YY menyatakan nomor urut test case pada use case tersebut, satu atau lebih untuk setiap skenario normal dan alternatif (contoh: UC01-TC01).* |
+| *KNF Test* | *KNFXX-TCYY* | *KNFXX menyatakan ID KNF dan YY menyatakan nomor urut test case pada KNF tersebut (contoh: KNF01-TC01).* |
 
 ## 1.5 Referensi
-1. Dokumentasi Perangkat Lunak *Topic Brainstorming* (Tugas 1), *Requirement Gathering* (Tugas 2), *Use Case & Scenario Use Case* (Tugas 3), *Class Diagram* (Tugas 4), serta *Spesifikasi Kebutuhan Perangkat Lunak (SKPL)* Kelompok G09 IF2150 Rekayasa Perangkat Lunak.
-2. Mavin, A., Wilkinson, P., Harwood, A., & Novak, M. (2009). *Easy Approach to Requirements Syntax (EARS)*. 17th IEEE International Requirements Engineering Conference.
-3. Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP).
-4. Undang-Undang Republik Indonesia Nomor 1 Tahun 2024 tentang Perubahan Kedua atas UU ITE.
+1. Kelompok G09 K01. *Spesifikasi Kebutuhan Perangkat Lunak (SKPL) PeerUP* (Tugas 5), `docs/M5/K01_G09_SKPL.md`.
+2. Kelompok G09 K01. *Arsitektur Perangkat Lunak (APL) PeerUP* (Tugas 6), `docs/M6/K01_G09_APL.md`.
+3. Kelompok G09 K01. *Deskripsi Perancangan Perangkat Lunak (DPPL) PeerUP* (Tugas 7 dan Tugas 8), `docs/M8/K01_G09_DPPL2.md`.
+4. Kelompok G09 K01. *Laporan Implementasi PeerUP* (Tugas 9), `docs/M9/K01_G09_Implementasi.md`, serta kode sumber pada `src/` (tag `v9.2`).
+5. Dokumentasi Perangkat Lunak *Topic Brainstorming* (Tugas 1), *Requirement Gathering* (Tugas 2), *Use Case & Scenario Use Case* (Tugas 3), dan *Class Diagram* (Tugas 4) Kelompok G09 IF2150 Rekayasa Perangkat Lunak.
+6. Vercel. *Next.js Documentation* (versi 15). https://nextjs.org/docs
+7. Meta. *React Documentation* (versi 19). https://react.dev
+8. Supabase. *Supabase Documentation: Auth, Database, Realtime, Cron*. https://supabase.com/docs
+9. Tailwind Labs. *Tailwind CSS Documentation* (versi 4). https://tailwindcss.com/docs
+10. Vitest. *Vitest Documentation* dan *Coverage* (`@vitest/coverage-v8`). https://vitest.dev/guide/coverage
+11. ElectricSQL. *PGlite Documentation*. https://pglite.dev/docs
+12. Google. *Chrome DevTools Documentation*. https://developer.chrome.com/docs/devtools
+13. Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP).
+14. Undang-Undang Republik Indonesia Nomor 1 Tahun 2024 tentang Perubahan Kedua atas UU ITE.
 
 ## 1.6 Deskripsi Umum Dokumen (Ikhtisar)
-Dokumen DPPL ini dibagi menjadi tujuh bab utama:
-- **BAB 1: Pendahuluan**, menjelaskan tujuan penulisan dokumen, lingkup masalah, definisi dan singkatan, aturan penomoran, referensi, serta ikhtisar dokumen.
-- **BAB 2: Perancangan Arsitektur**, menguraikan rancangan lingkungan implementasi, *style/pattern* arsitektur acuan (MVC & *Client-Server*), identifikasi komponen/modul/subsistem, serta model arsitektur (*Development View* dan *Physical View*).
-- **BAB 3: Realisasi Use Case**, menyajikan identifikasi kelas perancangan, *Sequence Diagram* (skenario normal dan alternatif), serta diagram kelas untuk setiap *use case* (`UC01`â€“`UC15`).
-- **BAB 4: Diagram Kelas Keseluruhan**, memuat diagram kelas perancangan keseluruhan beserta tabel daftar kelas, atribut, dan operasinya.
-- **BAB 5: Perancangan Rinci Kelas**, merinci spesifikasi operasi, atribut, algoritma (*pseudocode*), serta *query* basis data untuk seluruh kelas (`C01`â€“`C24`).
-- **BAB 6: Perancangan Antarmuka**, menyajikan rancangan layar antarmuka (`I-01`â€“`I-16`) beserta spesifikasi objek antarmukanya.
-- **BAB 7: Matriks Kerunutan**, memetakan keterlacakan antara setiap kelas perancangan (`C01`â€“`C24`) dengan *use case* yang diimplementasikannya.
+Dokumen HIUPL ini terdiri atas lima bab. **BAB 1 Pendahuluan** menjelaskan tujuan, lingkup, istilah (termasuk istilah pengujian), aturan penomoran ID pengujian, dan referensi. **BAB 2 Deskripsi Umum Perangkat Lunak** memberikan *system overview* PeerUP, batasan sistem, sistem eksternal, dan *use case diagram*. **BAB 3 Implementasi** mencatat lingkungan implementasi, modul dan kelas yang diimplementasikan beserta berkasnya, antarmuka `I-01`–`I-16` yang telah dibuat, serta berkas lain seperti konfigurasi, skema basis data, dan berkas pengujian. **BAB 4 Hasil Pengujian** memuat strategi dan kedalaman pengujian setiap kelas, hasil pengujian unit beserta *coverage*, pengujian integrasi, pengujian setiap skenario *use case*, pengujian KNF, dan bukti tangkapan layar. **BAB 5 Traceability** memetakan setiap KF ke KNF, *use case*, kelas perancangan, berkas implementasi, dan *test case*.
 
 <br>
 
@@ -136,16 +161,56 @@ Dokumen DPPL ini dibagi menjadi tujuh bab utama:
 
 # BAB 2: Deskripsi Umum Perangkat Lunak
 
-Bagian ini diisi dengan *System Overview*, dalam bentuk gambar dan narasi yang memberikan gambaran tentang aplikasi dan konteksnya. **Batasan dan keterkaitan** antara sistem yang dibangun dengan sistem lain di luarnya harus jelas. Deskripsi umum sistem perlu dilengkapi dengan pemodelan kasus yang dihadapi, seperti *use case diagram*. Berikan narasi yang jelas untuk setiap gambar yang ditampilkan.
+## 2.1 System Overview
 
-Bagian ini dapat menyalin atau meringkas dari dokumen SKPL atau DPPL.
+PeerUP adalah aplikasi web yang memfasilitasi pembelajaran kolaboratif sebaya (*peer-to-peer tutoring*) bagi mahasiswa. Pengguna mendaftar dengan email berdomain universitas, lalu mengatur profil serta preferensi materi, waktu, dan format belajar. *Mentor* membuat sesi belajar dengan topik, jadwal, format daring/luring, dan kapasitas peserta. *Mentee* mendapatkan rekomendasi sesi hasil *matchmaking* yang sesuai preferensinya, lalu bergabung ke sesi tersebut. Setiap sesi memiliki *group chat* sementara untuk koordinasi, dan peserta menerima pengingat otomatis 15 menit sebelum sesi dimulai. Setelah sesi selesai, sesi dikonfirmasi, *Mentee* memberikan *feedback*, dan sesi tercatat pada riwayat.
+
+Sistem mengikuti pola MVC di atas arsitektur *Client-Server* (DPPL BAB 2). *View* (halaman Next.js dan komponen React) berjalan pada *web browser* pengguna, sedangkan *Controller* (Server Actions) dan *Model* berjalan pada server Next.js. Gambar 2.1 memperlihatkan batas sistem PeerUP dan sistem eksternal di luarnya.
 
 <p align="center">
-<img alt="System Overview / Use Case Diagram" src="./assets/contoh-uc-diagram.webp" width="90%">
+<img alt="Physical View PeerUP" src="./assets/Physical-View.png" width="80%">
 </p>
 <p align="center">
-<i>Gambar 2.1. Use Case Diagram [Nama P/L]</i>
+<i>Gambar 2.1. System Overview (Physical View) PeerUP</i>
 </p>
+
+Gambar 2.1 memperlihatkan tiga kelompok node:
+1. **Perangkat pengguna:** *web browser* modern yang memuat antarmuka PeerUP dan menangani interaksi pengguna. Browser berkomunikasi dengan aplikasi Next.js melalui HTTPS, dan dengan Supabase Realtime melalui WSS untuk menerima pesan *group chat* dan notifikasi secara langsung.
+2. **Aplikasi Next.js (batas sistem PeerUP):** menjalankan *View*, *Controller*, *Model*, *adapter*, dan *route* `app/api/cron/` yang memproses pengingat dan pembersihan *group chat*. Rancangan menempatkan aplikasi pada Vercel. Pada tahap implementasi dan pengujian ini, aplikasi dijalankan secara lokal (`npm run dev`) dan belum di-*deploy* (Subbab 3.1).
+3. **Supabase Cloud Services (sistem eksternal):** Supabase Auth untuk registrasi, *login*, dan *hash* kata sandi; PostgreSQL untuk data persisten beserta *trigger* dan RLS; Supabase Realtime untuk pengiriman pembaruan berbasis WebSocket; serta Supabase Cron untuk memicu *route* cron secara terjadwal.
+
+Kode PeerUP hanya berinteraksi dengan sistem eksternal melalui `lib/supabase/` dan *adapter* (`authAdapter`, `realtimeAdapter`, `cronAdapter`), sehingga batas tersebut menjadi titik pengujian integrasi pada Subbab 4.3. Batasan utama sistem (SKPL Subbab 2.4) meliputi: registrasi hanya dengan email domain universitas; kapasitas sesi 1–20 peserta; sesi tidak lintas hari dengan durasi 10 menit hingga 12 jam; jadwal sesi tidak boleh beririsan untuk Mentor maupun Mentee yang sama; *group chat* dibersihkan 48 jam setelah sesi berakhir; dan kata sandi disimpan dalam bentuk *hash*.
+
+## 2.2 Pemodelan Use Case
+
+<p align="center">
+<img alt="Use Case Diagram PeerUP" src="./assets/Use-Case-Diagram.webp" width="70%">
+</p>
+<p align="center">
+<i>Gambar 2.2. Use Case Diagram PeerUP</i>
+</p>
+
+Gambar 2.2 menunjukkan dua aktor PeerUP, yaitu *Mentee* (`AK01`) dan *Mentor* (`AK02`), serta lima belas *use case* di dalam batas sistem. Keduanya dapat mendaftarkan akun dan autentikasi (`UC01`), mengelola preferensi profil (`UC02`), mengonfirmasi keterlaksanaan sesi (`UC05`), melihat riwayat sesi (`UC06`), berkomunikasi pada *group chat* sementara (`UC08`), menerima notifikasi sesi (`UC09`), membuka beranda (`UC14`), dan melihat profil (`UC15`). Hanya *Mentor* yang dapat membuat (`UC03`), mengedit (`UC12`), dan menghapus sesi (`UC11`) serta melihat *feedback* sesinya (`UC13`). Hanya *Mentee* yang dapat mencari dan bergabung ke sesi (`UC04`), membatalkan keikutsertaan (`UC10`), dan memberikan penilaian sehabis sesi (`UC07`). Rincian setiap *use case* dan skenarionya mengacu pada SKPL BAB 4 dan menjadi dasar pengujian *use case* pada Subbab 4.4.
+
+Tabel 2.1. Daftar Use Case PeerUP
+
+| ID UC | Nama Use Case | Aktor | ID KF |
+| :--- | :--- | :--- | :--- |
+| *UC01* | *Mendaftarkan Akun dan Autentikasi* | *Mentor, Mentee* | *KF01, KF02* |
+| *UC02* | *Mengelola Preferensi Profil* | *Mentor, Mentee* | *KF03, KF04* |
+| *UC03* | *Membuat Sesi Belajar* | *Mentor* | *KF05, KF06, KF14, KF20* |
+| *UC04* | *Mencari dan Bergabung ke Sesi* | *Mentee* | *KF07, KF08, KF13, KF21* |
+| *UC05* | *Mengonfirmasi Keterlaksanaan Sesi* | *Mentor, Mentee* | *KF10* |
+| *UC06* | *Melihat Riwayat Sesi* | *Mentor, Mentee* | *KF11, KF18* |
+| *UC07* | *Memberikan Penilaian Sehabis Sesi* | *Mentee* | *KF10* |
+| *UC08* | *Berkomunikasi Menggunakan Grup Obrolan Sementara* | *Mentor, Mentee* | *KF12* |
+| *UC09* | *Menerima Notifikasi Sesi* | *Mentor, Mentee* | *KF09* |
+| *UC10* | *Membatalkan Keikutsertaan Sesi* | *Mentee* | *KF15* |
+| *UC11* | *Menghapus Sesi* | *Mentor* | *KF16* |
+| *UC12* | *Mengedit Sesi* | *Mentor* | *KF06, KF14, KF17, KF20* |
+| *UC13* | *Melihat Feedback Sesi* | *Mentor* | *KF18* |
+| *UC14* | *Membuka Beranda Utama* | *Mentor, Mentee* | *KF07* |
+| *UC15* | *Melihat Profil* | *Mentor, Mentee* | *KF19* |
 
 <br>
 
@@ -175,7 +240,7 @@ Perbedaan dari Subbab 2.1 DPPL:
 
 1. *Scheduled Task*: DPPL merencanakan Supabase Cron. Pada implementasi, pemicu terjadwal berupa *route* `POST /api/cron/reminders` dan `POST /api/cron/chat-cleanup` yang dilindungi `CRON_SECRET` (Tabel B.1 M9 nomor 10). Hingga tag `v9.2` belum ada penjadwal yang terpasang (lihat KNF03-TC02).
 2. *Hosting*: aplikasi belum di-*deploy* ke Vercel. Pengujian dijalankan dengan `npm run dev` di `http://localhost:3000`.
-3. Basis data uji: panduan tim memakai Supabase lokal (`npm run db:start`, membutuhkan Docker). Docker tidak tersedia pada laptop penguji, sehingga pengujian UC01, UC02, UC08, UC09, KNF01, KNF03, KNF04, dan integrasi aplikasiâ€“Supabase dilakukan terhadap proyek Supabase *hosted* milik tim dengan akun seed (`mentor.demo`, `mentee.satu`) dan akun uji baru `hiupl.uji@mahasiswa.itb.ac.id`. Pengujian *trigger*, fungsi, dan RLS tetap memakai PGlite dengan seluruh migrasi.
+3. Basis data uji: panduan tim memakai Supabase lokal (`npm run db:start`, membutuhkan Docker). Docker tidak tersedia pada laptop penguji, sehingga pengujian UC01, UC02, UC08, UC09, KNF01, KNF03, KNF04, dan integrasi aplikasi–Supabase dilakukan terhadap proyek Supabase *hosted* milik tim dengan akun seed (`mentor.demo`, `mentee.satu`) dan akun uji baru `hiupl.uji@mahasiswa.itb.ac.id`. Pengujian *trigger*, fungsi, dan RLS tetap memakai PGlite dengan seluruh migrasi.
 
 ## 3.2 Implementasi Modul
 
@@ -185,30 +250,10 @@ Tabel 3.2. Implementasi Modul
 
 | No | ID Kelas | Nama Modul/Kelas | Nama File Fisik | Nama File Executable |
 | :--- | :--- | :--- | :--- | :--- |
-| 1 | C01 | User | `src/models/user.ts`; `src/controllers/userController.ts`; `src/controllers/chatController.ts` | - |
-| 2 | C02 | Mentor | `src/models/session.ts`; `src/models/feedback.ts` | - |
-| 3 | C03 | Mentee | `src/models/session.ts`; `src/controllers/feedbackController.ts` | - |
-| 4 | C04 | Session | `src/models/session.ts`; `src/supabase/migrations/20261112000000_delete_session.sql`; `src/supabase/migrations/20261116000000_session_time_rules.sql` | - |
-| 5 | C05 | GroupChat | `src/models/groupChat.ts`; `src/supabase/migrations/20261114000000_group_chat_expiry.sql` | - |
-| 6 | C06 | Feedback | `src/models/feedback.ts`; `src/supabase/migrations/20261102000000_init.sql` | - |
-| 7 | C07 | SessionHistory | `src/models/sessionHistory.ts`; `src/models/sessionHistoryTypes.ts`; `src/controllers/sessionHistoryController.ts` | - |
-| 8 | C08 | ChatMessage | `src/models/chatMessage.ts`; `src/supabase/migrations/20261102000000_init.sql` | - |
-| 9 | C09 | Preference | `src/models/preference.ts`; `src/lib/validator.ts` | - |
-| 10 | C10 | Profile | `src/models/profile.ts` | - |
-| 11 | C11 | Dashboard | `src/app/dashboard/page.tsx`; `src/app/discover/page.tsx`; `src/components/ParticipantSessionPanel.tsx` | - |
-| 12 | C12 | UserControl | `src/controllers/userController.ts`; `src/lib/adapters/authAdapter.ts`; `src/lib/validator.ts` | - |
-| 13 | C13 | SessionControl | `src/controllers/sessionController.ts`; `src/controllers/sessionParticipationController.ts`; `src/controllers/sessionHistoryController.ts`; `src/lib/validator.ts` | - |
-| 14 | C14 | FeedbackControl | `src/controllers/feedbackController.ts`; `src/lib/validator.ts` | - |
-| 15 | C15 | LoginPage | `src/app/login/page.tsx`; `src/components/LoginForm.tsx`; `src/app/register/page.tsx`; `src/components/RegisterForm.tsx` | - |
-| 16 | C16 | ProfilePage | `src/app/profile/page.tsx`; `src/app/profile/[id]/page.tsx`; `src/app/profile/not-found.tsx`; `src/app/profile/preferences/page.tsx`; `src/components/ProfileView.tsx`; `src/components/PreferenceForm.tsx`; `src/components/AvailabilityEditor.tsx` | - |
-| 17 | C17 | SessionPage | `src/app/sessions/[id]/page.tsx` | - |
-| 18 | C18 | HostSessionPage | `src/app/sessions/new/page.tsx`; `src/components/HostSessionPanel.tsx`; `src/app/sessions/[id]/edit/page.tsx`; `src/components/EditSessionPanel.tsx`; `src/components/DeleteSessionButton.tsx`; `src/components/SessionFeedbackView.tsx` | - |
-| 19 | C19 | ParticipantSessionPage | `src/components/ParticipantSessionPanel.tsx` | - |
-| 20 | C20 | FeedbackForm | `src/components/FeedbackForm.tsx`; `src/app/sessions/[id]/feedback/page.tsx` | - |
-| 21 | C21 | GroupChatPage | `src/app/sessions/[id]/chat/page.tsx`; `src/components/ChatRoom.tsx`; `src/lib/adapters/realtimeAdapter.ts`; `src/controllers/chatController.ts` | - |
-| 22 | C22 | Notification | `src/models/notification.ts`; `src/supabase/migrations/20261113000000_session_reminders.sql`; `src/controllers/reminderController.ts`; `src/controllers/notificationController.ts`; `src/app/api/cron/reminders/route.ts`; `src/lib/adapters/cronAdapter.ts` | - |
-| 23 | C23 | PopUpNotification | `src/components/PopUpNotification.tsx`; `src/app/layout.tsx`; `src/lib/adapters/realtimeAdapter.ts` | - |
-| 24 | C24 | HistoryPage | `src/app/history/page.tsx`; `src/components/SessionHistoryView.tsx` | - |
+| 1 | *[C01]* | *[Nama modul/kelas]* | *[path/ke/file]* | *[Nama file executable, atau - jika tidak ada]* |
+| 2 | *[C02]* | *[Nama modul/kelas]* | *[path/ke/file]* | *[...]* |
+| ... | *...* | *...* | *...* | *...* |
+
 ## 3.3 Implementasi Antarmuka
 
 Daftar antarmuka yang telah diimplementasikan. Gunakan ID dan nama layar yang sama dengan ID dan nama layar pada tugas DPPL.
@@ -246,7 +291,7 @@ Tabel 3.4. File Lain
 | 13 | `src/lib/supabase/client.ts` | Pembuat klien Supabase sisi peramban, dipakai `realtimeAdapter` |
 | 14 | `src/lib/supabase/env.ts` | Membaca dan memvalidasi `NEXT_PUBLIC_SUPABASE_URL` dan `NEXT_PUBLIC_SUPABASE_ANON_KEY` |
 | 15 | `src/lib/routes.ts` | Daftar *path* autentikasi (`/login`, `/register`) yang dipakai *middleware* dan tata letak |
-| 16 | `src/models/types.ts` | Tipe baris tabel, tipe data domain, dan konstanta bersama (kapasitas 1â€“20, rating 1â€“5, pengingat 15 menit, retensi obrolan 48 jam) |
+| 16 | `src/models/types.ts` | Tipe baris tabel, tipe data domain, dan konstanta bersama (kapasitas 1–20, rating 1–5, pengingat 15 menit, retensi obrolan 48 jam) |
 | 17 | `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/globals.css`, `src/app/favicon.ico` | Tata letak akar (memasang `Sidebar` dan `PopUpNotification`), pengalihan `/` ke `/dashboard`, gaya global Tailwind, dan ikon situs |
 | 18 | `src/components/ui.tsx`, `src/components/Sidebar.tsx` | Kelas gaya bersama (input, tombol) dan navigasi samping dengan tombol keluar |
 | 19 | `src/app/api/cron/chat-cleanup/route.ts`, `src/controllers/chatCleanupController.ts` | *Route* cron yang dilindungi `CRON_SECRET` untuk menutup grup obrolan kedaluwarsa melalui `GroupChat.closeExpired()` |
@@ -323,7 +368,7 @@ Tabel 4.2.1. Hasil Pengujian Unit Kelas C12
 | C12-UT13 | `getCurrentUser()` | Negatif | Kueri `users`/`profiles` gagal | Tetap mengembalikan data sesi (tidak melempar) | "falls back to the session when the database query fails" lulus | Pass |
 | C12-UT14 | `savePreference()` | Normal | Tag `[" Kalkulus ", "kalkulus", "Struktur  Data", ""]` | Tersimpan `["Kalkulus", "Struktur Data"]`: di-*trim*, spasi ganda dirapikan, duplikat (tanpa membedakan huruf) dan tag kosong dibuang | "saves trimmed, de-duplicated tags with the chosen format" lulus | Pass |
 | C12-UT15 | `savePreference()` | Normal | Slot ketersediaan tidak urut dan ganda | Slot unik, terurut per hari dan jam | "saves availability slots sorted by day and time without duplicates" lulus | Pass |
-| C12-UT16 | `savePreference()` | Batas | Slot `08:00â€“08:00` (selesai = mulai) dan `08:00â€“07:30` | `INVALID_AVAILABILITY` | "rejects slots whose end time is not after the start time" lulus | Pass |
+| C12-UT16 | `savePreference()` | Batas | Slot `08:00–08:00` (selesai = mulai) dan `08:00–07:30` | `INVALID_AVAILABILITY` | "rejects slots whose end time is not after the start time" lulus | Pass |
 | C12-UT17 | `savePreference()` | Negatif | Hari `7`, hari `1.5`, jam `8:00`, jam `24:00`, slot tanpa jam selesai | `INVALID_AVAILABILITY` | "rejects malformed slots" lulus | Pass |
 | C12-UT18 | `savePreference()` | Batas | 51 slot (batas 50) | `INVALID_AVAILABILITY` | "rejects too many slots" lulus | Pass |
 | C12-UT19 | `savePreference()` | Negatif | Tag hanya spasi, format kosong, atau tanpa slot | `INCOMPLETE_PREFERENCE` tanpa akses basis data | "rejects missing tags, format, or availability without touching the database" lulus | Pass |
@@ -362,7 +407,7 @@ Tabel 4.2.1b. Ringkasan Cakupan Kelas C12
 | Daftar operasi public pada DPPL | `authLogin()`, `getCurrentUser()`, `validateEmail()`, `processRegistration()`, `saveProfile()`, `savePreference()`, `fetchUserProfile()`, `fetchUserPreference()` |
 | Operasi yang diuji | Seluruh operasi DPPL. `validateEmail()` diwujudkan di `lib/validator.ts` dan diuji pada 4.2.2. Ditambah `logout()` dan seluruh fungsi `authAdapter` (atribut `authAdapter` pada DPPL) |
 | ID Algoritma yang tercakup | Algo-C12-01 (`processRegistration()`, `savePreference()`, `fetchUserProfile()`) |
-| Coverage (wajib â‰¥ 70%) | `userController.ts`: 99,03% baris, 94,23% cabang, 97,58% *statement*; `authAdapter.ts`: 100% baris dan cabang (`@vitest/coverage-v8`, bukti `C12-unit.png` dan `coverage-david.png` pada 4.6) |
+| Coverage (wajib ≥ 70%) | `userController.ts`: 99,03% baris, 94,23% cabang, 97,58% *statement*; `authAdapter.ts`: 100% baris dan cabang (`@vitest/coverage-v8`, bukti `C12-unit.png` dan `coverage-david.png` pada 4.6) |
 
 ### 4.2.2 Validator (validasi email dan preferensi)
 
@@ -392,7 +437,7 @@ Tabel 4.2.2b. Ringkasan Cakupan Validator (bagian email dan preferensi)
 | Daftar operasi public pada DPPL | `validateEmail()` (C12), `isComplete()` (C09, diwujudkan sebagai `validatePreference()`) |
 | Operasi yang diuji | `validateEmail()`, `validatePreference()` |
 | ID Algoritma yang tercakup | Bagian validasi email pada Algo-C12-01 dan `isComplete()` pada Algo-C09-01 |
-| Coverage (wajib â‰¥ 70%) | `lib/validator.ts`: 100% baris, cabang, dan fungsi (seluruh berkas, termasuk fungsi milik anggota lain). Bukti `Validator-unit.png` dan `coverage-david.png` |
+| Coverage (wajib ≥ 70%) | `lib/validator.ts`: 100% baris, cabang, dan fungsi (seluruh berkas, termasuk fungsi milik anggota lain). Bukti `Validator-unit.png` dan `coverage-david.png` |
 
 ### 4.2.3 Kelas Preference
 
@@ -420,7 +465,7 @@ Tabel 4.2.3b. Ringkasan Cakupan Kelas C09
 | Daftar operasi public pada DPPL | `getPreferenceByUser()`, `getPreference()`, `getPreferenceDetails()`, `updatePreference()`, `isComplete()`, `getMaterialTag()`, `getAvailability()`, `getSessionFormatPreference()`, `getUserId()` |
 | Operasi yang diuji | `getPreferenceByUser()`, `updatePreference()`, `getPreferenceDetails()`; `isComplete()` sebagai `validatePreference()` (VAL-UT05 s.d. VAL-UT07). `getPreference()` digabung ke `getPreferenceByUser()`, sedangkan *getter* menjadi properti `readonly` (Tabel B.5 M9) |
 | ID Algoritma yang tercakup | Algo-C09-01, Q-C09-01, Q-C09-02 (diwujudkan sebagai *upsert*) |
-| Coverage (wajib â‰¥ 70%) | `models/preference.ts`: 100% baris, cabang, dan fungsi. Bukti `C09-unit.png` dan `coverage-david.png` |
+| Coverage (wajib ≥ 70%) | `models/preference.ts`: 100% baris, cabang, dan fungsi. Bukti `C09-unit.png` dan `coverage-david.png` |
 
 ### 4.2.4 Kelas Profile
 
@@ -479,7 +524,7 @@ Tabel 4.2.5b. Ringkasan Cakupan Kelas C05
 | Daftar operasi public pada DPPL | `findBySession()`, `findById()`, `getId()`, `isActive()`, `isMember()`, `getMessages()`, `searchMessage()`, `displayMessage()`, `editMessage()`, `deleteMessage()` |
 | Operasi yang diuji | `findBySession()`, `isActive()`, `findMenteeIds()`, `closeExpired()`; `getMessages()` sebagai `ChatMessage.findByGroupChat()` (C08-UT04 s.d. C08-UT06); `isMember()` diwujudkan sebagai fungsi SQL `is_session_member()` pada RLS dan diuji pada INT-TC13 s.d. INT-TC15. `findById()`/`getId()` digantikan properti `idGroupChat`; `displayMessage()` berada di `ChatRoom`. `searchMessage()`, `editMessage()`, `deleteMessage()` tidak diimplementasikan (DPPL revisi D) |
 | ID Algoritma yang tercakup | Algo-C05-01, Q-C05-01, Q-C05-05 (melalui `close_expired_group_chats()`) |
-| Coverage (wajib â‰¥ 70%) | `models/groupChat.ts`: 100%; `controllers/chatController.ts`: 100% baris, 85% cabang; `controllers/chatCleanupController.ts` dan `app/api/cron/chat-cleanup/route.ts`: 100%. Bukti `C05-unit.png` dan `coverage-david.png` |
+| Coverage (wajib ≥ 70%) | `models/groupChat.ts`: 100%; `controllers/chatController.ts`: 100% baris, 85% cabang; `controllers/chatCleanupController.ts` dan `app/api/cron/chat-cleanup/route.ts`: 100%. Bukti `C05-unit.png` dan `coverage-david.png` |
 
 ### 4.2.6 Kelas ChatMessage
 
@@ -541,7 +586,7 @@ Tabel 4.2.7b. Ringkasan Cakupan Kelas C22
 | Daftar operasi public pada DPPL | `create()`, `findById()`, `getNotificationsByUser()`, `markAsRead()`, `showContent()`, `getTime()`, `getNotificationId()`, `getSessionId()`, `getIsRead()`, `openApp()` |
 | Operasi yang diuji | `create()` sebagai `sendSessionReminders()` (fungsi SQL membuat notifikasi seluruh partisipan), `getNotificationsByUser()` sebagai `getUnreadSince()`, `markAsRead()`, `openApp()`, ditambah *controller* dan *route* cron. `showContent()` berada di `PopUpNotification` (diuji lewat UC09-TC01); *getter* menjadi properti `readonly`; `findById()` tidak dibutuhkan karena notifikasi selalu diambil per pengguna |
 | ID Algoritma yang tercakup | Algo-C22-01, Q-C22-01 (di dalam `send_session_reminders()`), Q-C22-03 (`markAsRead()` dengan filter pemilik), Q-C22-04 (dengan filter belum dibaca dan waktu) |
-| Coverage (wajib â‰¥ 70%) | `models/notification.ts`, `controllers/notificationController.ts`, `controllers/reminderController.ts`, `lib/adapters/cronAdapter.ts`, `app/api/cron/reminders/route.ts`: masing-masing 100% baris, cabang, dan fungsi. Bukti `C22-unit.png` dan `coverage-david.png` |
+| Coverage (wajib ≥ 70%) | `models/notification.ts`, `controllers/notificationController.ts`, `controllers/reminderController.ts`, `lib/adapters/cronAdapter.ts`, `app/api/cron/reminders/route.ts`: masing-masing 100% baris, cabang, dan fungsi. Bukti `C22-unit.png` dan `coverage-david.png` |
 
 *[Anggota lain melanjutkan subbab 4.2.8 dan seterusnya untuk kelas Mendalam/Sedang miliknya dengan pola yang sama.]*
 
@@ -555,7 +600,7 @@ Antarmuka diambil dari Tabel 2.3 dan Development View DPPL2 (paket *Application/
 
 Pengujian memakai komponen nyata dengan dua cara:
 
-1. **Aplikasi dan Supabase *hosted***: `npm run dev` (Next.js lokal) yang terhubung ke proyek Supabase tim (Auth, PostgreSQL, Realtime), diakses lewat peramban, `curl`, dan skrip Node.js `@supabase/supabase-js` dengan akun seed. Supabase lokal tidak dapat dijalankan karena Docker tidak tersedia (Subbab 3.1). Data uji yang dibuat: akun `hiupl.uji@mahasiswa.itb.ac.id` dan sesi "Uji HIUPL Obrolan dan Notifikasi" (ID `73454a03-dc92-4202-ae74-7efde03ac4b3`, Mentor `mentor.demo`, peserta `mentee.satu`, 19 November 2026 21.03â€“22.03 WIB).
+1. **Aplikasi dan Supabase *hosted***: `npm run dev` (Next.js lokal) yang terhubung ke proyek Supabase tim (Auth, PostgreSQL, Realtime), diakses lewat peramban, `curl`, dan skrip Node.js `@supabase/supabase-js` dengan akun seed. Supabase lokal tidak dapat dijalankan karena Docker tidak tersedia (Subbab 3.1). Data uji yang dibuat: akun `hiupl.uji@mahasiswa.itb.ac.id` dan sesi "Uji HIUPL Obrolan dan Notifikasi" (ID `73454a03-dc92-4202-ae74-7efde03ac4b3`, Mentor `mentor.demo`, peserta `mentee.satu`, 19 November 2026 21.03–22.03 WIB).
 2. **PostgreSQL *in-memory* (PGlite)**: `src/tests/support/database.ts` menjalankan **seluruh berkas migrasi asli** lalu menguji *trigger*, fungsi, dan kebijakan RLS dengan peran `authenticated` dan `service_role` yang sebenarnya. Tidak ada *mock* pada lapisan basis data. Perintah: `npx vitest run tests/groupChat.test.ts tests/sessionReminders.test.ts tests/sessionCapacityGuard.test.ts tests/sessionTimeRules.test.ts` (4 berkas, 18 test, seluruhnya lulus).
 
 Tabel 4.3.1. Daftar Antarmuka Antarkomponen
@@ -563,11 +608,11 @@ Tabel 4.3.1. Daftar Antarmuka Antarkomponen
 | ID Antarmuka | Komponen Asal | Komponen Tujuan | Jenis Batas | Test Case |
 | :--- | :--- | :--- | :--- | :--- |
 | INT-IF01 | UserController (`processRegistration()`, `authLogin()`) melalui AuthAdapter | Supabase Auth | Aplikasi - Sistem eksternal | INT-TC01 s.d. INT-TC04 |
-| INT-IF02 | UserController â†’ User, Profile, Preference (Model) | PostgreSQL Supabase (`users`, `profiles`, `preferences`, RLS) | Controller - Model - Basis data | INT-TC05, INT-TC06 |
-| INT-IF03 | Penjadwal/`curl` â†’ CronAdapter (`/api/cron/reminders`) â†’ reminderController â†’ Notification | Fungsi SQL `send_session_reminders()`, tabel `notifications` | Sistem eksternal - Aplikasi - Basis data | INT-TC07 s.d. INT-TC15 |
-| INT-IF04 | Penjadwal/`curl` â†’ CronAdapter (`/api/cron/chat-cleanup`) â†’ chatCleanupController â†’ GroupChat | Fungsi SQL `close_expired_group_chats()` | Sistem eksternal - Aplikasi - Basis data | INT-TC16 s.d. INT-TC19 |
-| INT-IF05 | ChatController â†’ GroupChat, ChatMessage (Model) | Tabel `group_chats`, `chat_messages` (*trigger* pembuatan grup, RLS `is_session_member()`) | Controller - Model - Basis data | INT-TC20 s.d. INT-TC26 |
-| INT-IF06 | SessionControl (`sessionController.ts`, `sessionParticipationController.ts`) â†’ Session (Model) | *Trigger* dan *constraint* tabel `sessions`, `session_participants` | Controller - Model - Basis data | INT-TC27 s.d. INT-TC29 |
+| INT-IF02 | UserController → User, Profile, Preference (Model) | PostgreSQL Supabase (`users`, `profiles`, `preferences`, RLS) | Controller - Model - Basis data | INT-TC05, INT-TC06 |
+| INT-IF03 | Penjadwal/`curl` → CronAdapter (`/api/cron/reminders`) → reminderController → Notification | Fungsi SQL `send_session_reminders()`, tabel `notifications` | Sistem eksternal - Aplikasi - Basis data | INT-TC07 s.d. INT-TC15 |
+| INT-IF04 | Penjadwal/`curl` → CronAdapter (`/api/cron/chat-cleanup`) → chatCleanupController → GroupChat | Fungsi SQL `close_expired_group_chats()` | Sistem eksternal - Aplikasi - Basis data | INT-TC16 s.d. INT-TC19 |
+| INT-IF05 | ChatController → GroupChat, ChatMessage (Model) | Tabel `group_chats`, `chat_messages` (*trigger* pembuatan grup, RLS `is_session_member()`) | Controller - Model - Basis data | INT-TC20 s.d. INT-TC26 |
+| INT-IF06 | SessionControl (`sessionController.ts`, `sessionParticipationController.ts`) → Session (Model) | *Trigger* dan *constraint* tabel `sessions`, `session_participants` | Controller - Model - Basis data | INT-TC27 s.d. INT-TC29 |
 | INT-IF07 | RealtimeAdapter `subscribeToChatMessages()` (dipakai `ChatRoom`) | Supabase Realtime (`postgres_changes` pada `chat_messages`) | Aplikasi - Sistem eksternal | INT-TC30 s.d. INT-TC33 |
 | INT-IF08 | RealtimeAdapter `subscribeToNotifications()` (dipakai `PopUpNotification`) | Supabase Realtime (`postgres_changes` pada `notifications`) | Aplikasi - Sistem eksternal | INT-TC34 |
 | INT-IF09 | `middleware.ts` | Supabase Auth (sesi berbasis *cookie*) | Aplikasi - Sistem eksternal | INT-TC35 |
@@ -583,12 +628,12 @@ Tabel 4.3.2. Hasil Pengujian Integrasi
 | INT-TC03 | INT-IF01 | Gagal: email non-universitas lewat aplikasi | Registrasi `hiupl.uji@gmail.com` (UC01-TC03), lalu periksa `auth.users` dengan `auth.admin.listUsers()` | Permintaan tidak sampai ke Supabase Auth; tidak ada akun baru | 0 akun `hiupl.uji@gmail.com` di `auth.users` dan 0 baris di `public.users`; seluruh 6 akun di `auth.users` berdomain `.ac.id` | Pass |
 | INT-TC04 | INT-IF01 | Gagal: email non-universitas langsung ke Supabase Auth | `supabase.auth.signUp({ email: "bypass.knf04@example.com" })` memakai *anon key* publik (melewati aplikasi) | Supabase Auth menolak domain non-universitas | **Diterima**: akun dibuat dengan sesi aktif, tanpa baris `public.users`, dan dapat membaca tabel `sessions` (4 baris). Akun uji langsung dihapus. Lihat KNF04-TC02 | Fail |
 | INT-TC05 | INT-IF02 | Normal: data registrasi tersimpan | Setelah INT-TC01, baca `users` dan `profiles` langsung lewat PostgREST sebagai akun tersebut | Baris berisi username, email, nama, universitas, dan program studi yang sama dengan masukan | `users` = `hiupl_uji`, `hiupl.uji@mahasiswa.itb.ac.id`; `profiles` = Uji HIUPL, Institut Teknologi Bandung, Teknik Informatika | Pass |
-| INT-TC06 | INT-IF02 | Normal: preferensi tersimpan dan terbaca ulang | Simpan preferensi lewat `/profile/preferences` (UC02-TC01), lalu baca `preferences` langsung | `material_tag`, `availability`, dan `session_format_preference` sama dengan isian | `["Struktur Data","Basis Data"]`, `[{day:1, 19:00â€“21:00}]`, `DARING`; halaman Profil menampilkan nilai yang sama | Pass |
+| INT-TC06 | INT-IF02 | Normal: preferensi tersimpan dan terbaca ulang | Simpan preferensi lewat `/profile/preferences` (UC02-TC01), lalu baca `preferences` langsung | `material_tag`, `availability`, dan `session_format_preference` sama dengan isian | `["Struktur Data","Basis Data"]`, `[{day:1, 19:00–21:00}]`, `DARING`; halaman Profil menampilkan nilai yang sama | Pass |
 | INT-TC07 | INT-IF03 | Gagal: tanpa *secret* | `curl -X POST /api/cron/reminders` tanpa header | HTTP 401, fungsi SQL tidak dipanggil | `{"error":"unauthorized"}` HTTP 401 | Pass |
 | INT-TC08 | INT-IF03 | Gagal: *secret* salah | Header `Authorization: Bearer salah` | HTTP 401 | `{"error":"unauthorized"}` HTTP 401 | Pass |
 | INT-TC09 | INT-IF03 | Normal: kirim pengingat | Sesi uji mulai 21.03 WIB; `curl` dengan `Bearer $CRON_SECRET` pukul 20.52.40 WIB | HTTP 200; satu notifikasi untuk Mentor dan setiap peserta | `{"ok":true,"sent":2}`; tabel `notifications` berisi "Sesi dimulai 11 menit lagi" untuk `mentor.demo` dan `mentee.satu` | Pass |
 | INT-TC10 | INT-IF03 | Batas: dipanggil ulang | Panggilan kedua segera setelah INT-TC09 | Tidak ada notifikasi ganda | `{"ok":true,"sent":0}`; tetap satu notifikasi per akun | Pass |
-| INT-TC11 | INT-IF03 | Normal (PGlite) | Sesi mulai 10 menit lagi dengan 2 peserta | 3 notifikasi (Mentor + 2 peserta) berjudul "Sesi dimulai 10 menit lagi", isi "Struktur Data Â· 19.00 WIB" | "notifies the mentor and every participant of a session starting within 15 minutes" lulus | Pass |
+| INT-TC11 | INT-IF03 | Normal (PGlite) | Sesi mulai 10 menit lagi dengan 2 peserta | 3 notifikasi (Mentor + 2 peserta) berjudul "Sesi dimulai 10 menit lagi", isi "Struktur Data · 19.00 WIB" | "notifies the mentor and every participant of a session starting within 15 minutes" lulus | Pass |
 | INT-TC12 | INT-IF03 | Batas (PGlite) | Sesi mulai 4,5 menit dan tepat 15 menit lagi | Keduanya diingatkan (2 notifikasi) dengan sisa menit yang sebenarnya | "uses the minutes actually left, including the 15-minute edge" lulus | Pass |
 | INT-TC13 | INT-IF03 | Gagal (PGlite) | Sesi 16 menit lagi, sudah dimulai 1 menit lalu, sudah diingatkan, atau berstatus `SELESAI` | Tidak ada notifikasi | "skips sessions that are too far ahead, already started, already reminded, or not scheduled" lulus | Pass |
 | INT-TC14 | INT-IF03 | Batas (PGlite) | Fungsi dipanggil dua kali | Setiap sesi diingatkan sekali, `reminder_sent = true` | "reminds each session only once" lulus | Pass |
@@ -630,14 +675,14 @@ Pengujian use case dilakukan pada seluruh skenario normal dan alternatif sesuai 
 
 **ID Use Case:** UC01  
 **Nama Use Case:** Mendaftarkan Akun dan Autentikasi  
-**Lingkungan:** `npm run dev` (http://localhost:3000) dengan proyek Supabase *hosted*, peramban berbasis Chromium 1280Ã—860, 19 November 2026 sekitar 20.40 WIB.
+**Lingkungan:** `npm run dev` (http://localhost:3000) dengan proyek Supabase *hosted*, peramban berbasis Chromium 1280×860, 19 November 2026 sekitar 20.40 WIB.
 
 Tabel 4.4.1. Hasil Pengujian Use Case UC01
 
 | ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| UC01-TC01 | KF01 | Normal (langkah 1â€“2: registrasi) | 1. Buka `/register`.<br>2. Isi email, username, kata sandi, nama, universitas, dan program studi, lalu centang persetujuan data.<br>3. Klik "Simpan". | Email: `hiupl.uji@mahasiswa.itb.ac.id`<br>Username: `hiupl_uji`<br>Kata sandi: `password123`<br>Nama: Uji HIUPL<br>Universitas: Institut Teknologi Bandung<br>Prodi: Teknik Informatika | Sistem memvalidasi email universitas, merekam persetujuan data, membuat akun baru, lalu **mengarahkan pengguna ke halaman Login** | Akun berhasil dibuat (baris `auth.users`, `users`, dan `profiles` ada, lihat INT-TC01 dan INT-TC05). Namun pengguna **langsung masuk dan diarahkan ke Beranda** ("Halo, Uji HIUPL!"), bukan ke halaman Login | Fail. **Penyebab:** konfirmasi email Supabase Auth nonaktif sehingga `signUp()` langsung membuat sesi, dan `RegisterForm` menjalankan `router.replace("/")` ketika `needsConfirmation = false`. **Usulan:** panggil `signOut()` setelah registrasi lalu arahkan ke `/login` dengan pesan sukses, atau revisi langkah 2 skenario SKPL menjadi "langsung masuk ke Beranda" bila perilaku ini disepakati |
-| UC01-TC02 | KF02 | Normal (langkah 3â€“4: login) | 1. Klik ikon Keluar.<br>2. Pada `/login` masukkan email dan kata sandi.<br>3. Klik "Masuk". | Email: `hiupl.uji@mahasiswa.itb.ac.id`<br>Kata sandi: `password123` | Sistem memverifikasi kredensial, memberikan hak akses, dan menampilkan Beranda | Pengguna dialihkan ke `/dashboard` dengan sapaan "Halo, Uji HIUPL!", nama dan email tampil di *sidebar* | Pass |
+| UC01-TC01 | KF01 | Normal (langkah 1–2: registrasi) | 1. Buka `/register`.<br>2. Isi email, username, kata sandi, nama, universitas, dan program studi, lalu centang persetujuan data.<br>3. Klik "Simpan". | Email: `hiupl.uji@mahasiswa.itb.ac.id`<br>Username: `hiupl_uji`<br>Kata sandi: `password123`<br>Nama: Uji HIUPL<br>Universitas: Institut Teknologi Bandung<br>Prodi: Teknik Informatika | Sistem memvalidasi email universitas, merekam persetujuan data, membuat akun baru, lalu **mengarahkan pengguna ke halaman Login** | Akun berhasil dibuat (baris `auth.users`, `users`, dan `profiles` ada, lihat INT-TC01 dan INT-TC05). Namun pengguna **langsung masuk dan diarahkan ke Beranda** ("Halo, Uji HIUPL!"), bukan ke halaman Login | Fail. **Penyebab:** konfirmasi email Supabase Auth nonaktif sehingga `signUp()` langsung membuat sesi, dan `RegisterForm` menjalankan `router.replace("/")` ketika `needsConfirmation = false`. **Usulan:** panggil `signOut()` setelah registrasi lalu arahkan ke `/login` dengan pesan sukses, atau revisi langkah 2 skenario SKPL menjadi "langsung masuk ke Beranda" bila perilaku ini disepakati |
+| UC01-TC02 | KF02 | Normal (langkah 3–4: login) | 1. Klik ikon Keluar.<br>2. Pada `/login` masukkan email dan kata sandi.<br>3. Klik "Masuk". | Email: `hiupl.uji@mahasiswa.itb.ac.id`<br>Kata sandi: `password123` | Sistem memverifikasi kredensial, memberikan hak akses, dan menampilkan Beranda | Pengguna dialihkan ke `/dashboard` dengan sapaan "Halo, Uji HIUPL!", nama dan email tampil di *sidebar* | Pass |
 | UC01-TC03 | KF01 | Alternatif 1: Email Universitas Tidak Valid | 1. Buka `/register`.<br>2. Isi data dengan email publik dan centang persetujuan.<br>3. Klik "Simpan". | Email: `hiupl.uji@gmail.com`<br>Username: `hiupl_gmail`<br>Kata sandi: `password123` | Sistem menolak masukan dan menampilkan "Harap gunakan email institusi universitas yang valid" | Tampil *alert* "Pendaftaran gagal. Harap gunakan email universitas yang valid." dan pesan "Harap gunakan email universitas yang valid" di bawah kolom email. Tidak ada akun yang dibuat (INT-TC03). Teks sedikit berbeda dari SKPL ("institusi universitas" menjadi "universitas") tanpa mengubah makna | Pass |
 
 ### 4.4.2 Use Case Mengelola Preferensi Profil
@@ -650,7 +695,7 @@ Tabel 4.4.2. Hasil Pengujian Use Case UC02
 
 | ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| UC02-TC01 | KF03, KF04 | Normal | 1. Buka "Profil", klik "Edit Preferensi".<br>2. Tambahkan dua tag materi (Enter), pilih format "Daring", klik "Tambah Slot" dan isi hari serta jam.<br>3. Klik "Simpan".<br>4. Kembali ke "Profil". | Tag: Struktur Data, Basis Data<br>Format: Daring<br>Slot: Senin 19.00â€“21.00 | Sistem memvalidasi, menyimpan tag, format, dan kalender ke basis data, lalu menampilkan "Preferensi berhasil disimpan" | Tampil "Preferensi berhasil disimpan". Halaman Profil menampilkan tag Struktur Data dan Basis Data, format Daring, serta ketersediaan Senin 19:00â€“21:00. Baris `preferences` di basis data sama (INT-TC06) | Pass |
+| UC02-TC01 | KF03, KF04 | Normal | 1. Buka "Profil", klik "Edit Preferensi".<br>2. Tambahkan dua tag materi (Enter), pilih format "Daring", klik "Tambah Slot" dan isi hari serta jam.<br>3. Klik "Simpan".<br>4. Kembali ke "Profil". | Tag: Struktur Data, Basis Data<br>Format: Daring<br>Slot: Senin 19.00–21.00 | Sistem memvalidasi, menyimpan tag, format, dan kalender ke basis data, lalu menampilkan "Preferensi berhasil disimpan" | Tampil "Preferensi berhasil disimpan". Halaman Profil menampilkan tag Struktur Data dan Basis Data, format Daring, serta ketersediaan Senin 19:00–21:00. Baris `preferences` di basis data sama (INT-TC06) | Pass |
 | UC02-TC02 | KF03, KF04 | Alternatif 1: Menyimpan Preferensi Tanpa Memilih Preferensi | 1. Buka "Profil", klik "Edit Preferensi".<br>2. Biarkan tag, format, dan slot kosong.<br>3. Klik "Simpan". | Semua pilihan kosong | Sistem menunda penyimpanan dan menampilkan "Silahkan Isi Semua Pilihan Preferensi" | Tampil *alert* "Silahkan Isi Semua Pilihan Preferensi" dan tidak ada data tersimpan (Profil tetap "Belum ada tag materi") | Pass |
 
 *[Anggota lain menambahkan subbab 4.4.3 s.d. 4.4.7 di sini, sesuai nomor use case.]*
@@ -660,7 +705,7 @@ Tabel 4.4.2. Hasil Pengujian Use Case UC02
 **ID Use Case:** UC08  
 **Nama Use Case:** Berkomunikasi Menggunakan Grup Obrolan Sementara  
 **Akun:** `mentee.satu` di peramban; `mentor.demo` mengirim pesan dari klien `supabase-js` terpisah sebagai anggota grup kedua.  
-**Data:** sesi uji "Uji HIUPL Obrolan dan Notifikasi" (19 November 2026 21.03â€“22.03 WIB) dan sesi seed "Kalkulus" (6 November 2026, sudah lebih dari 48 jam).
+**Data:** sesi uji "Uji HIUPL Obrolan dan Notifikasi" (19 November 2026 21.03–22.03 WIB) dan sesi seed "Kalkulus" (6 November 2026, sudah lebih dari 48 jam).
 
 Tabel 4.4.8. Hasil Pengujian Use Case UC08
 
@@ -681,7 +726,7 @@ Tabel 4.4.9. Hasil Pengujian Use Case UC09
 | ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | UC09-TC01 | KF09 | Normal (langkah 1: pengingat terkirim) | 1. Buat sesi uji yang dimulai 14 menit kemudian (20.49 WIB) dengan `mentee.satu` sebagai peserta.<br>2. Biarkan `mentee.satu` membuka aplikasi.<br>3. Tunggu hingga 20.52 WIB, lalu panggil `POST /api/cron/reminders` dengan `CRON_SECRET`.<br>4. Amati layar, lalu pindah ke Beranda. | Sesi mulai 21.03 WIB | Ketika 15 menit sebelum sesi dimulai, sistem mendeteksi pemicu waktu dan mengirim notifikasi pengingat ke akun partisipan | Tidak ada penjadwal yang memanggil *endpoint*: panggilan manual pukul 20.52 WIB masih menghasilkan `sent: 2`, artinya pengingat belum dikirim sejak sesi masuk jendela 15 menit pukul 20.49 WIB. Setelah dipanggil manual, notifikasi "Sesi dimulai 11 menit lagi" terbentuk untuk Mentor dan peserta (INT-TC09), tetapi *pop-up* baru tampil setelah pindah ke Beranda, tidak di halaman yang sedang terbuka (INT-TC34) | Fail. **Penyebab:** (1) belum ada penjadwal yang memanggil `/api/cron/reminders` setiap menit (KNF03-TC02); (2) langganan Realtime `notifications` tanpa token login (INT-TC34). **Usulan:** pasang Supabase Cron (`pg_cron` + `pg_net`) atau Vercel Cron setiap 1 menit, dan perbaiki `realtimeAdapter.ts` seperti pada UC08-TC02 |
-| UC09-TC02 | KF09 | Normal (langkah 2: menekan notifikasi) | 1. Pada *pop-up* pengingat klik "Lihat Detail". | Notifikasi sesi uji | Sistem mengarahkan pengguna ke halaman detail sesi | Pengguna diarahkan ke `/sessions/73454a03-...` yang menampilkan topik, tanggal, jam 21.03â€“22.03 WIB, format, tautan, peserta, dan tombol "Buka Ruang Obrolan". Notifikasi ditandai `is_read = true` | Pass |
+| UC09-TC02 | KF09 | Normal (langkah 2: menekan notifikasi) | 1. Pada *pop-up* pengingat klik "Lihat Detail". | Notifikasi sesi uji | Sistem mengarahkan pengguna ke halaman detail sesi | Pengguna diarahkan ke `/sessions/73454a03-...` yang menampilkan topik, tanggal, jam 21.03–22.03 WIB, format, tautan, peserta, dan tombol "Buka Ruang Obrolan". Notifikasi ditandai `is_read = true` | Pass |
 
 *[Anggota lain menambahkan subbab 4.4.10 s.d. 4.4.15 di sini.]*
 
@@ -697,8 +742,8 @@ Tabel 4.5. Hasil Pengujian KNF
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | KNF01-TC01 | KNF01 | *Security* | Kolom `auth.users.encrypted_password` berisi hash bcrypt (awalan `$2a$`/`$2b$`, panjang 60), bukan *plain-text* | Supabase Studio, SQL Editor: `select email, left(encrypted_password, 4) as awalan, length(encrypted_password) as panjang, encrypted_password = 'password123' as plain from auth.users;` | Seluruh 6 akun di `auth.users` memiliki `encrypted_password` berawalan `$2a$` (bcrypt) dengan panjang 60 karakter. Kolom `plain` bernilai `false` untuk keenam akun, termasuk 4 akun yang kata sandinya diketahui `password123` (`mentor.demo`, `mentee.satu`, `mentee.dua`, `hiupl.uji`), sehingga kata sandi tidak tersimpan sebagai *plain-text* | Pass |
 | KNF01-TC02 | KNF01 | *Security* | Tidak ada kolom kata sandi pada skema `public`; aplikasi tidak menyimpan kata sandi | Membaca satu baris `public.users` dengan *service role* untuk melihat seluruh kolom; `grep -rin password src/supabase/migrations/`; menelusuri kode: kata sandi hanya diteruskan ke `supabase.auth.signUp()`/`signInWithPassword()` di `authAdapter.ts` | Kolom `public.users`: `id_user, username, email, data_consent_at, created_at`. `grep` tidak menemukan kolom kata sandi pada 8 migrasi. Kata sandi tidak pernah ditulis ke tabel aplikasi | Pass |
-| KNF03-TC01 | KNF03 | *Reliability* | â‰¥ 99% partisipan sesi yang jatuh tempo menerima tepat satu notifikasi | Uji integrasi PGlite (migrasi asli): 100 sesi dengan waktu mulai tersebar 1â€“15 menit lagi, masing-masing 1 Mentor + 2 peserta (300 penerima), lalu `send_session_reminders(now, 15)` dua kali (`tests/sessionReminders.test.ts`, "KNF03 delivery rate") | 300 dari 300 notifikasi terbentuk (**100%**), 300 pasangan (sesi, pengguna) unik, panggilan kedua 0 notifikasi (tanpa duplikat). Pada Supabase *hosted* (INT-TC09) 2 dari 2 partisipan menerima notifikasi | Pass |
-| KNF03-TC02 | KNF03 | *Reliability* (ketepatan waktu) | Pengingat terkirim tepat saat sesi masuk jendela 15 menit, tanpa tindakan manual | Sesi uji dibuat pukul 20.49 WIB (mulai 21.03 WIB, sudah di dalam jendela 15 menit). *Endpoint* tidak dipanggil selama 3 menit, lalu dipanggil manual dan hasilnya diperiksa; konfigurasi repositori juga diperiksa | Panggilan `curl` manual pukul 20.52 WIB masih menghasilkan `sent: 2` dengan judul "Sesi dimulai 11 menit lagi". Artinya selama 20.49â€“20.52 WIB belum ada pemanggilan apa pun, karena fungsi hanya mengirim untuk sesi dengan `reminder_sent = false`. Repositori juga tidak memuat penjadwal (`pg_cron`, `vercel.json`, atau Supabase Cron) | Fail. **Penyebab:** *route* cron sudah ada tetapi tidak ada penjadwal yang memanggilnya. **Usulan:** jadwalkan `POST /api/cron/reminders` dan `/api/cron/chat-cleanup` setiap 1 menit dengan Supabase Cron (`pg_cron` + `pg_net`) atau Vercel Cron setelah *deploy*, lalu ulangi KNF03-TC02 |
+| KNF03-TC01 | KNF03 | *Reliability* | ≥ 99% partisipan sesi yang jatuh tempo menerima tepat satu notifikasi | Uji integrasi PGlite (migrasi asli): 100 sesi dengan waktu mulai tersebar 1–15 menit lagi, masing-masing 1 Mentor + 2 peserta (300 penerima), lalu `send_session_reminders(now, 15)` dua kali (`tests/sessionReminders.test.ts`, "KNF03 delivery rate") | 300 dari 300 notifikasi terbentuk (**100%**), 300 pasangan (sesi, pengguna) unik, panggilan kedua 0 notifikasi (tanpa duplikat). Pada Supabase *hosted* (INT-TC09) 2 dari 2 partisipan menerima notifikasi | Pass |
+| KNF03-TC02 | KNF03 | *Reliability* (ketepatan waktu) | Pengingat terkirim tepat saat sesi masuk jendela 15 menit, tanpa tindakan manual | Sesi uji dibuat pukul 20.49 WIB (mulai 21.03 WIB, sudah di dalam jendela 15 menit). *Endpoint* tidak dipanggil selama 3 menit, lalu dipanggil manual dan hasilnya diperiksa; konfigurasi repositori juga diperiksa | Panggilan `curl` manual pukul 20.52 WIB masih menghasilkan `sent: 2` dengan judul "Sesi dimulai 11 menit lagi". Artinya selama 20.49–20.52 WIB belum ada pemanggilan apa pun, karena fungsi hanya mengirim untuk sesi dengan `reminder_sent = false`. Repositori juga tidak memuat penjadwal (`pg_cron`, `vercel.json`, atau Supabase Cron) | Fail. **Penyebab:** *route* cron sudah ada tetapi tidak ada penjadwal yang memanggilnya. **Usulan:** jadwalkan `POST /api/cron/reminders` dan `/api/cron/chat-cleanup` setiap 1 menit dengan Supabase Cron (`pg_cron` + `pg_net`) atau Vercel Cron setelah *deploy*, lalu ulangi KNF03-TC02 |
 | KNF04-TC01 | KNF04 | *Security* | Registrasi email non-universitas ditolak dan tidak ada akun baru | Registrasi `hiupl.uji@gmail.com` lewat `/register` (UC01-TC03), lalu periksa `auth.users` (`auth.admin.listUsers()`) dan `public.users` dengan *service role* | Ditolak dengan pesan "Harap gunakan email universitas yang valid". 0 baris di `auth.users` dan `public.users`; seluruh 6 akun di `auth.users` berdomain `.ac.id` | Pass |
 | KNF04-TC02 | KNF04 | *Security* | Akun non-universitas tidak dapat dibuat melalui jalur mana pun | Memanggil `supabase.auth.signUp()` langsung dengan *anon key* publik (yang memang dikirim ke peramban) memakai `bypass.knf04@example.com` | **Akun dibuat** dengan sesi aktif, tanpa baris `public.users`, dan dapat membaca tabel `sessions` (4 baris). Akun uji dihapus segera setelah pengujian | Fail. **Penyebab:** validasi domain hanya dilakukan `processRegistration()`; Supabase Auth menerima pendaftaran publik dari klien mana pun. **Usulan:** tolak domain non-`.ac.id` di sisi Supabase dengan *Before User Created Hook* atau *trigger* pada `auth.users`, atau nonaktifkan *public sign-up* dan buat akun hanya dari server dengan *service role*; tambahkan juga syarat baris `public.users` pada kebijakan RLS |
 | KNF02-TC01 | KNF02 | *Response time* | *[Diisi Hugo]* | *[...]* | *[...]* | *[...]* |
@@ -716,20 +761,20 @@ Tabel 4.6. Bukti Hasil Pengujian
 
 | ID Pengujian | Bukti Hasil Pengujian |
 | :--- | :--- |
-| C12-UT01 â€“ C12-UT46 | <img src="./assets/C12-unit.png" width="90%"> |
-| VAL-UT01 â€“ VAL-UT07 | <img src="./assets/Validator-unit.png" width="90%"> |
-| C09-UT01 â€“ C09-UT07 | <img src="./assets/C09-unit.png" width="90%"> |
-| C10-UT01 â€“ C10-UT10 | <img src="./assets/C10-unit.png" width="90%"> |
-| C05-UT01 â€“ C05-UT16 | <img src="./assets/C05-unit.png" width="90%"> |
-| C08-UT01 â€“ C08-UT10 | <img src="./assets/C08-unit.png" width="90%"> |
-| C22-UT01 â€“ C22-UT19 | <img src="./assets/C22-unit.png" width="90%"> |
+| C12-UT01 – C12-UT46 | <img src="./assets/C12-unit.png" width="90%"> |
+| VAL-UT01 – VAL-UT07 | <img src="./assets/Validator-unit.png" width="90%"> |
+| C09-UT01 – C09-UT07 | <img src="./assets/C09-unit.png" width="90%"> |
+| C10-UT01 – C10-UT10 | <img src="./assets/C10-unit.png" width="90%"> |
+| C05-UT01 – C05-UT16 | <img src="./assets/C05-unit.png" width="90%"> |
+| C08-UT01 – C08-UT10 | <img src="./assets/C08-unit.png" width="90%"> |
+| C22-UT01 – C22-UT19 | <img src="./assets/C22-unit.png" width="90%"> |
 | C12, C09, C05, C22, Validator (coverage) | <img src="./assets/coverage-david.png" width="90%"> |
 | INT-TC01, INT-TC02 | Lihat UC01-TC01 dan UC01-TC02 |
-| INT-TC03 â€“ INT-TC06 | <img src="./assets/INT-auth-db.png" width="90%"> |
-| INT-TC07 â€“ INT-TC10, INT-TC16 | <img src="./assets/INT-cron.png" width="90%"> |
-| INT-TC11 â€“ INT-TC15, INT-TC17 â€“ INT-TC25, INT-TC27 â€“ INT-TC29 | <img src="./assets/INT-pglite.png" width="90%"> |
+| INT-TC03 – INT-TC06 | <img src="./assets/INT-auth-db.png" width="90%"> |
+| INT-TC07 – INT-TC10, INT-TC16 | <img src="./assets/INT-cron.png" width="90%"> |
+| INT-TC11 – INT-TC15, INT-TC17 – INT-TC25, INT-TC27 – INT-TC29 | <img src="./assets/INT-pglite.png" width="90%"> |
 | INT-TC26 | Lihat UC08-TC01 dan UC08-TC02 |
-| INT-TC30 â€“ INT-TC33 | <img src="./assets/INT-realtime.png" width="90%"><br>Tampilan peramban: UC08-TC02 |
+| INT-TC30 – INT-TC33 | <img src="./assets/INT-realtime.png" width="90%"><br>Tampilan peramban: UC08-TC02 |
 | INT-TC34 | Lihat UC09-TC01 |
 | INT-TC35 | <img src="./assets/INT-middleware.png" width="90%"> |
 | UC01-TC01 | <img src="./assets/UC01-TC01-a.png" width="45%"> <img src="./assets/UC01-TC01-b.png" width="45%"><br>Formulir registrasi terisi; setelah "Simpan" pengguna langsung masuk ke Beranda |
