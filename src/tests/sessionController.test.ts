@@ -169,6 +169,12 @@ describe("processSessionCreation", () => {
         ok: false,
         error: "SESSION_NOT_FOUND",
       });
+
+      session.deleteSession.mockResolvedValue(null);
+      await expect(processSessionDeletion(idSession)).resolves.toEqual({
+        ok: false,
+        error: "SESSION_NOT_FOUND",
+      });
     });
 
     it("reports persistence failures", async () => {
