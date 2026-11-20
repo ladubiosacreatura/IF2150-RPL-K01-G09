@@ -1228,43 +1228,25 @@ Tabel 4.6. Bukti Hasil Pengujian
 
 | ID Pengujian | Bukti Hasil Pengujian |
 | :--- | :--- |
-| C12-UT01 – C12-UT46 | <img src="./assets/C12-unit.png" width="90%"> |
-| VAL-UT01 – VAL-UT07 | <img src="./assets/Validator-unit.png" width="90%"> |
-| VAL-UT08 – VAL-UT17 | <img src="./assets/Validator-unit-markus.png" width="90%"> |
-| C06-UT01 – C06-UT07 | <img src="./assets/C06-unit.png" width="90%"> |
-| C07-UT01 – C07-UT12 | <img src="./assets/C07-unit.png" width="90%"> |
-| C14-UT01 – C14-UT23 | <img src="./assets/C14-unit.png" width="90%"> |
-| Coverage C06, C07, C14, Validator | <img src="./assets/coverage-markus.png" width="90%"> |
 | C04-UT01 – C04-UT15, C11-UT01 – C11-UT07, C16-UT01 – C16-UT06 | <img src="./assets/C04-C11-C16-unit.png" width="90%"> |
-| C04 (`matchSession`, `searchSession`), C11, C16 (coverage) | <img src="./assets/coverage-hugo.png" width="90%"> |
-| UC04-TC01 | <img src="./assets/UC04-TC01-a.png" width="45%"> <img src="./assets/UC04-TC01-b.png" width="45%"><br>Detail sesi peserta dan pesan "Berhasil bergabung" setelah bergabung ke "Aljabar Linear Session" |
-| UC04-TC02 | <img src="./assets/UC04-TC02.png" width="45%"> |
-| UC14-TC01 | <img src="./assets/UC14-TC01.png" width="45%"> |
-| UC14-TC02 | <img src="./assets/UC14-TC02.png" width="45%"> |
-| UC15-TC01 | <img src="./assets/UC15-TC01-a.png" width="45%"> <img src="./assets/UC15-TC01-b.png" width="45%"><br>Profil sendiri (`mentee.satu`, dengan tombol edit) dan profil pengguna lain (`mentor.demo`, tanpa tombol edit) |
-| UC15-TC02 | <img src="./assets/UC15-TC02.png" width="45%"> |
-| KNF02-TC01 | <img src="./assets/KNF02-TC01.png" width="90%"><br>Pengukuran Chrome DevTools Network pada `/dashboard` (5 kali ukur: rata-rata 743,8 ms, maks 949 ms) |
 | C04-UT21 – C04-UT37 | <img src="./assets/C04-unit.png" width="90%"> |
 | C04-UT38 – C04-UT60 | <img src="./assets/C04-unit-markus.png" width="90%"> |
-| Coverage C04, C13 | <img src="./assets/coverage-markus-c04-c13.png" width="90%"> |
-| C13-UT21 – C13-UT41 | <img src="./assets/C13-unit-a.png" width="45%"> <img src="./assets/C13-unit-b.png" width="45%"> |
-| UC04-TC04 | <img src="./assets/UC04-TC04.png" width="45%"><br>Sesi berkapasitas 1/1 menampilkan pesan "Sesi penuh" dan tombol bergabung nonaktif |
-| UC10-TC01, UC10-TC02 | <img src="./assets/UC10-TC01-a.png" width="30%"> <img src="./assets/UC10-TC01-b.png" width="30%"> <img src="./assets/UC10-TC01-c.png" width="30%"><br>Tombol "Batalkan Keikutsertaan", dialog konfirmasi dengan pilihan "Kembali" dan "Ya, Batalkan", dan pesan "Berhasil Membatalkan Keikutsertaan" |
-| UC03-TC05 | <img src="./assets/UC03-TC05-a.png" width="30%"> <img src="./assets/UC03-TC05-b.png" width="30%"> <img src="./assets/UC03-TC05-c.png" width="30%"><br>(a) 21.30–03.00, jam selesai lebih awal dari jam mulai (lintas hari); (b) 10.00–10.05 (5 menit); (c) 07.00–19.30 (12,5 jam): ketiganya ditolak |
-| UC04-TC03 | <img src="./assets/UC04-TC03.png" width="90%"><br>`mentee.satu` ditolak saat bergabung ke "Latihan RPL B" karena sudah mengikuti "Latihan RPL A" pada jam yang sama |
-| UC06-TC01 | <img src="./assets/UC06-TC01.png" width="90%"><br>Riwayat `mentee.satu` dikelompokkan Berlangsung, Terlaksana, dan Dibatalkan |
-| UC06-TC02 | <img src="./assets/UC06-TC02.png" width="90%"><br>Akun tanpa sesi menampilkan "Belum ada sesi" |
-| UC07-TC01 | <img src="./assets/UC07-TC01.png" width="90%"><br>Dialog "Terima kasih atas feedback Anda" setelah memberi 5 bintang |
-| UC07-TC02 | <img src="./assets/UC07-TC02.png" width="90%"><br>"Kirim" tanpa bintang ditolak; tombol "Nanti" untuk menutup tanpa menyimpan |
-| UC12-TC04 | <img src="./assets/UC12-TC04.png" width="30%"> <img src="./assets/UC12-TC04-a.png" width="30%"> <img src="./assets/UC12-TC04-c.png" width="30%"><br>(a) 18.33–05.33 lintas hari; (b) 10.00–22.05 (12 jam 5 menit); (c) 07.00–19.30 (12 jam 30 menit): ketiganya ditolak |
-| UC13-TC01 | <img src="./assets/UC13-TC01.png" width="90%"><br>Daftar *feedback*, rata-rata, dan distribusi rating sesi "Diskusi Basis Data" |
-| KNF05-TC01 | <img src="./assets/KNF05-TC01.png" width="90%"><br>Contoh satu kali muat ulang `/history` pada Chrome DevTools (Network) |
+| C05-UT01 – C05-UT16 | <img src="./assets/C05-unit.png" width="90%"> |
+| C06-UT01 – C06-UT07 | <img src="./assets/C06-unit.png" width="90%"> |
+| C07-UT01 – C07-UT12 | <img src="./assets/C07-unit.png" width="90%"> |
+| C08-UT01 – C08-UT10 | <img src="./assets/C08-unit.png" width="90%"> |
 | C09-UT01 – C09-UT07 | <img src="./assets/C09-unit.png" width="90%"> |
 | C10-UT01 – C10-UT10 | <img src="./assets/C10-unit.png" width="90%"> |
-| C05-UT01 – C05-UT16 | <img src="./assets/C05-unit.png" width="90%"> |
-| C08-UT01 – C08-UT10 | <img src="./assets/C08-unit.png" width="90%"> |
+| C12-UT01 – C12-UT46 | <img src="./assets/C12-unit.png" width="90%"> |
+| C13-UT21 – C13-UT41 | <img src="./assets/C13-unit-a.png" width="45%"> <img src="./assets/C13-unit-b.png" width="45%"> |
+| C14-UT01 – C14-UT23 | <img src="./assets/C14-unit.png" width="90%"> |
 | C22-UT01 – C22-UT19 | <img src="./assets/C22-unit.png" width="90%"> |
+| VAL-UT01 – VAL-UT07 | <img src="./assets/Validator-unit.png" width="90%"> |
+| VAL-UT08 – VAL-UT17 | <img src="./assets/Validator-unit-markus.png" width="90%"> |
+| C04 (`matchSession`, `searchSession`), C11, C16 (coverage) | <img src="./assets/coverage-hugo.png" width="90%"> |
 | C12, C09, C05, C22, Validator (coverage) | <img src="./assets/coverage-david.png" width="90%"> |
+| Coverage C04, C13 | <img src="./assets/coverage-markus-c04-c13.png" width="90%"> |
+| Coverage C06, C07, C14, Validator | <img src="./assets/coverage-markus.png" width="90%"> |
 | INT-TC01, INT-TC02 | Lihat UC01-TC01 dan UC01-TC02 |
 | INT-TC03 – INT-TC06 | <img src="./assets/INT-auth-db.png" width="90%"> |
 | INT-TC07 – INT-TC10, INT-TC16 | <img src="./assets/INT-cron.png" width="90%"> |
@@ -1278,16 +1260,33 @@ Tabel 4.6. Bukti Hasil Pengujian
 | UC01-TC03 | <img src="./assets/UC01-TC03.png" width="45%"> |
 | UC02-TC01 | <img src="./assets/UC02-TC01-a.png" width="45%"> <img src="./assets/UC02-TC01-b.png" width="45%"><br>Pesan "Preferensi berhasil disimpan"; halaman Profil setelah disimpan |
 | UC02-TC02 | <img src="./assets/UC02-TC02.png" width="45%"> |
+| UC03-TC05 | <img src="./assets/UC03-TC05-a.png" width="30%"> <img src="./assets/UC03-TC05-b.png" width="30%"> <img src="./assets/UC03-TC05-c.png" width="30%"><br>(a) 21.30–03.00, jam selesai lebih awal dari jam mulai (lintas hari); (b) 10.00–10.05 (5 menit); (c) 07.00–19.30 (12,5 jam): ketiganya ditolak |
+| UC04-TC01 | <img src="./assets/UC04-TC01-a.png" width="45%"> <img src="./assets/UC04-TC01-b.png" width="45%"><br>Detail sesi peserta dan pesan "Berhasil bergabung" setelah bergabung ke "Aljabar Linear Session" |
+| UC04-TC02 | <img src="./assets/UC04-TC02.png" width="45%"> |
+| UC04-TC03 | <img src="./assets/UC04-TC03.png" width="90%"><br>`mentee.satu` ditolak saat bergabung ke "Latihan RPL B" karena sudah mengikuti "Latihan RPL A" pada jam yang sama |
+| UC04-TC04 | <img src="./assets/UC04-TC04.png" width="45%"><br>Sesi berkapasitas 1/1 menampilkan pesan "Sesi penuh" dan tombol bergabung nonaktif |
+| UC06-TC01 | <img src="./assets/UC06-TC01.png" width="90%"><br>Riwayat `mentee.satu` dikelompokkan Berlangsung, Terlaksana, dan Dibatalkan |
+| UC06-TC02 | <img src="./assets/UC06-TC02.png" width="90%"><br>Akun tanpa sesi menampilkan "Belum ada sesi" |
+| UC07-TC01 | <img src="./assets/UC07-TC01.png" width="90%"><br>Dialog "Terima kasih atas feedback Anda" setelah memberi 5 bintang |
+| UC07-TC02 | <img src="./assets/UC07-TC02.png" width="90%"><br>"Kirim" tanpa bintang ditolak; tombol "Nanti" untuk menutup tanpa menyimpan |
 | UC08-TC01 | <img src="./assets/UC08-TC01-a.png" width="45%"> <img src="./assets/UC08-TC01-b.png" width="45%"><br>Tombol "Buka Ruang Obrolan" di Beranda; grup obrolan beserta riwayat pesan |
 | UC08-TC02 | <img src="./assets/UC08-TC02-a.png" width="45%"> <img src="./assets/UC08-TC02-b.png" width="45%"><br>Pesan sendiri langsung tampil; balasan Mentor (sudah tersimpan) tidak tampil tanpa muat ulang |
 | UC08-TC03 | <img src="./assets/UC08-TC03.png" width="45%"> |
 | UC09-TC01 | <img src="./assets/UC09-TC01.png" width="45%"><br>*Pop-up* baru tampil setelah pindah ke Beranda; keluaran cron pada INT-cron.png |
 | UC09-TC02 | <img src="./assets/UC09-TC02.png" width="45%"> |
+| UC10-TC01, UC10-TC02 | <img src="./assets/UC10-TC01-a.png" width="30%"> <img src="./assets/UC10-TC01-b.png" width="30%"> <img src="./assets/UC10-TC01-c.png" width="30%"><br>Tombol "Batalkan Keikutsertaan", dialog konfirmasi dengan pilihan "Kembali" dan "Ya, Batalkan", dan pesan "Berhasil Membatalkan Keikutsertaan" |
+| UC12-TC04 | <img src="./assets/UC12-TC04.png" width="30%"> <img src="./assets/UC12-TC04-a.png" width="30%"> <img src="./assets/UC12-TC04-c.png" width="30%"><br>(a) 18.33–05.33 lintas hari; (b) 10.00–22.05 (12 jam 5 menit); (c) 07.00–19.30 (12 jam 30 menit): ketiganya ditolak |
+| UC13-TC01 | <img src="./assets/UC13-TC01.png" width="90%"><br>Daftar *feedback*, rata-rata, dan distribusi rating sesi "Diskusi Basis Data" |
+| UC14-TC01 | <img src="./assets/UC14-TC01.png" width="45%"> |
+| UC14-TC02 | <img src="./assets/UC14-TC02.png" width="45%"> |
+| UC15-TC01 | <img src="./assets/UC15-TC01-a.png" width="45%"> <img src="./assets/UC15-TC01-b.png" width="45%"><br>Profil sendiri (`mentee.satu`, dengan tombol edit) dan profil pengguna lain (`mentor.demo`, tanpa tombol edit) |
+| UC15-TC02 | <img src="./assets/UC15-TC02.png" width="45%"> |
 | KNF01-TC01 | <img src="./assets/KNF01-TC01.png" width="70%"><br>Hasil kueri pada SQL Editor Supabase Dashboard |
 | KNF01-TC02 | <img src="./assets/KNF01-TC02.png" width="90%"> |
+| KNF02-TC01 | <img src="./assets/KNF02-TC01.png" width="90%"><br>Pengukuran Chrome DevTools Network pada `/dashboard` (5 kali ukur: rata-rata 743,8 ms, maks 949 ms) |
 | KNF03-TC01, KNF03-TC02 | <img src="./assets/KNF03.png" width="90%"> |
 | KNF04-TC01, KNF04-TC02 | <img src="./assets/KNF04.png" width="90%"><br>Tampilan penolakan: UC01-TC03 |
-| *...* | *...* |
+| KNF05-TC01 | <img src="./assets/KNF05-TC01.png" width="90%"><br>Contoh satu kali muat ulang `/history` pada Chrome DevTools (Network) |
 
 <br>
 
