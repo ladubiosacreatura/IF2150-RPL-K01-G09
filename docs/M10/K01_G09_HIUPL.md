@@ -250,9 +250,30 @@ Tabel 3.2. Implementasi Modul
 
 | No | ID Kelas | Nama Modul/Kelas | Nama File Fisik | Nama File Executable |
 | :--- | :--- | :--- | :--- | :--- |
-| 1 | *[C01]* | *[Nama modul/kelas]* | *[path/ke/file]* | *[Nama file executable, atau - jika tidak ada]* |
-| 2 | *[C02]* | *[Nama modul/kelas]* | *[path/ke/file]* | *[...]* |
-| ... | *...* | *...* | *...* | *...* |
+| 1 | C01 | User | `src/models/user.ts`; `src/controllers/userController.ts`; `src/controllers/chatController.ts` | - |
+| 2 | C02 | Mentor | `src/models/session.ts`; `src/models/feedback.ts` | - |
+| 3 | C03 | Mentee | `src/models/session.ts`; `src/controllers/feedbackController.ts` | - |
+| 4 | C04 | Session | `src/models/session.ts`; `src/supabase/migrations/20261112000000_delete_session.sql`; `src/supabase/migrations/20261116000000_session_time_rules.sql` | - |
+| 5 | C05 | GroupChat | `src/models/groupChat.ts`; `src/supabase/migrations/20261114000000_group_chat_expiry.sql` | - |
+| 6 | C06 | Feedback | `src/models/feedback.ts`; `src/supabase/migrations/20261102000000_init.sql` | - |
+| 7 | C07 | SessionHistory | `src/models/sessionHistory.ts`; `src/models/sessionHistoryTypes.ts`; `src/controllers/sessionHistoryController.ts` | - |
+| 8 | C08 | ChatMessage | `src/models/chatMessage.ts`; `src/supabase/migrations/20261102000000_init.sql` | - |
+| 9 | C09 | Preference | `src/models/preference.ts`; `src/lib/validator.ts` | - |
+| 10 | C10 | Profile | `src/models/profile.ts` | - |
+| 11 | C11 | Dashboard | `src/app/dashboard/page.tsx`; `src/app/discover/page.tsx`; `src/components/ParticipantSessionPanel.tsx` | - |
+| 12 | C12 | UserControl | `src/controllers/userController.ts`; `src/lib/adapters/authAdapter.ts`; `src/lib/validator.ts` | - |
+| 13 | C13 | SessionControl | `src/controllers/sessionController.ts`; `src/controllers/sessionParticipationController.ts`; `src/controllers/sessionHistoryController.ts`; `src/lib/validator.ts` | - |
+| 14 | C14 | FeedbackControl | `src/controllers/feedbackController.ts`; `src/lib/validator.ts` | - |
+| 15 | C15 | LoginPage | `src/app/login/page.tsx`; `src/components/LoginForm.tsx`; `src/app/register/page.tsx`; `src/components/RegisterForm.tsx` | - |
+| 16 | C16 | ProfilePage | `src/app/profile/page.tsx`; `src/app/profile/[id]/page.tsx`; `src/app/profile/not-found.tsx`; `src/app/profile/preferences/page.tsx`; `src/components/ProfileView.tsx`; `src/components/PreferenceForm.tsx`; `src/components/AvailabilityEditor.tsx` | - |
+| 17 | C17 | SessionPage | `src/app/sessions/[id]/page.tsx` | - |
+| 18 | C18 | HostSessionPage | `src/app/sessions/new/page.tsx`; `src/components/HostSessionPanel.tsx`; `src/app/sessions/[id]/edit/page.tsx`; `src/components/EditSessionPanel.tsx`; `src/components/DeleteSessionButton.tsx`; `src/components/SessionFeedbackView.tsx` | - |
+| 19 | C19 | ParticipantSessionPage | `src/components/ParticipantSessionPanel.tsx` | - |
+| 20 | C20 | FeedbackForm | `src/components/FeedbackForm.tsx`; `src/app/sessions/[id]/feedback/page.tsx` | - |
+| 21 | C21 | GroupChatPage | `src/app/sessions/[id]/chat/page.tsx`; `src/components/ChatRoom.tsx`; `src/lib/adapters/realtimeAdapter.ts`; `src/controllers/chatController.ts` | - |
+| 22 | C22 | Notification | `src/models/notification.ts`; `src/supabase/migrations/20261113000000_session_reminders.sql`; `src/controllers/reminderController.ts`; `src/controllers/notificationController.ts`; `src/app/api/cron/reminders/route.ts`; `src/lib/adapters/cronAdapter.ts` | - |
+| 23 | C23 | PopUpNotification | `src/components/PopUpNotification.tsx`; `src/app/layout.tsx`; `src/lib/adapters/realtimeAdapter.ts` | - |
+| 24 | C24 | HistoryPage | `src/app/history/page.tsx`; `src/components/SessionHistoryView.tsx` | - |
 
 ## 3.3 Implementasi Antarmuka
 
