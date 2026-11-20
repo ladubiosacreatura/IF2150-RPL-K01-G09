@@ -75,6 +75,10 @@ describe("validateRating", () => {
     expect([1, 3, 5].every(validateRating)).toBe(true);
     expect([0, 6, 4.5].some(validateRating)).toBe(false);
   });
+
+  it("rejects negative and non-numeric ratings", () => {
+    expect([-1, Number.NaN, Number.POSITIVE_INFINITY].some(validateRating)).toBe(false);
+  });
 });
 
 describe("hasScheduleConflict", () => {
@@ -87,6 +91,18 @@ describe("hasScheduleConflict", () => {
 
   it("allows back-to-back sessions", () => {
     expect(hasScheduleConflict({ start: at(11), end: at(12) }, existing)).toBe(false);
+  });
+
+  it("allows a session that ends exactly when an existing one starts", () => {
+    expect(hasScheduleConflict({ start: at(8), end: at(9) }, existing)).toBe(false);
+  });
+
+  it("detects a session inside an existing one", () => {
+    expect(hasScheduleConflict({ start: at(9), end: at(10) }, existing)).toBe(true);
+  });
+
+  it("allows any session when the user has no other sessions", () => {
+    expect(hasScheduleConflict({ start: at(9), end: at(11) }, [])).toBe(false);
   });
 });
 
