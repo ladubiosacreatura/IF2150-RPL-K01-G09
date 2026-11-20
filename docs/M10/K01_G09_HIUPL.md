@@ -609,7 +609,90 @@ Tabel 4.2.7b. Ringkasan Cakupan Kelas C22
 | ID Algoritma yang tercakup | Algo-C22-01, Q-C22-01 (di dalam `send_session_reminders()`), Q-C22-03 (`markAsRead()` dengan filter pemilik), Q-C22-04 (dengan filter belum dibaca dan waktu) |
 | Coverage (wajib ≥ 70%) | `models/notification.ts`, `controllers/notificationController.ts`, `controllers/reminderController.ts`, `lib/adapters/cronAdapter.ts`, `app/api/cron/reminders/route.ts`: masing-masing 100% baris, cabang, dan fungsi. Bukti `C22-unit.png` dan `coverage-david.png` |
 
-*[Anggota lain melanjutkan subbab 4.2.8 dan seterusnya untuk kelas Mendalam/Sedang miliknya dengan pola yang sama.]*
+### 4.2.8 Kelas Session
+
+**ID Kelas:** C04
+
+**Nama Kelas:** Session (`src/models/session.ts`)
+
+**Tingkat:** Mendalam
+
+**Berkas test:** `src/tests/session.test.ts`
+
+Tabel 4.2.8. Pengujian Unit Kelas C04
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C04-UT01 | `checkCapacity()` | Normal | Jumlah peserta 0 dan 4; kapasitas 5 | `true` | "is true while participants are below capacity" lulus | Pass |
+| C04-UT02 | `checkCapacity()` | Batas | Jumlah peserta sama dengan kapasitas (5) atau melebihinya (6) | `false` | "is false once the capacity is reached or exceeded" lulus | Pass |
+| C04-UT03 | `checkCapacity()` | Negatif | Kapasitas tersimpan di luar rentang 1–20 (0 dan 21) | `false` | "is false whe""n the stored capacity is outside 1-20" lulus | Pass |
+| C04-UT04 | `addParticipant()` | Normal | Tambahkan mentee `m1` ke sesi `s1` | Baris `{ id_session: "s1", id_mentee: "m1" }` dimasukkan ke `session_participants` | "inserts the mentee into session_participants" lulus | Pass |
+| C04-UT05 | `addParticipant()` | Negatif | *Trigger* basis data mengembalikan `P0001` dengan pesan `SESSION_FULL` | Melempar `SessionFullError` | "maps the database capacity guard to SessionFullError" lulus | Pass |
+| C04-UT06 | `addParticipant()` | Negatif | Basis data mengembalikan kode duplikat `23505`, lalu galat lain `XX000` | Duplikat dipetakan ke `SessionAlreadyJoinedError`; galat lain diteruskan | "maps a duplicate row to SessionAlreadyJoinedError and keeps other errors" lulus | Pass |
+| C04-UT07 | `removeParticipant()` | Normal | Hapus pendaftaran mentee `m1` pada sesi `s1`; basis data mengembalikan satu baris | Memfilter berdasarkan `id_session` dan `id_mentee`, lalu mengembalikan `true` | "deletes only the mentee's own registration and reports whether a row was removed" lulus | Pass |
+| C04-UT08 | `removeParticipant()` | Batas | Tidak ada baris pendaftaran yang terhapus | Mengembalikan `false` | "throws database errors" lulus | Pass |
+| C04-UT09 | `removeParticipant()` | Negatif | Penghapusan ditolak basis data | Melempar galat basis data | "throws database errors" lulus | Pass |
+| C04-UT10 | `createSession()` | Normal | ID mentor, data sesi valid, dan tanggal jadwal | Menyimpan data sesi ke kolom yang sesuai dan memetakan baris hasil menjadi objek `Session` | "inserts session details and maps the saved row" lulus | Pass |
+| C04-UT11 | `createSession()` | Negatif | Constraint basis data menolak jadwal bertabrakan (`23P01`); galat basis data lain | Konflik dipetakan ke `SessionScheduleConflictError`; galat lain diteruskan | "maps overlap conflicts and propagates other database errors" lulus | Pass |
+| C04-UT12 | `updateSession()` | Normal | ID sesi, ID mentor, detail sesi baru, dan jadwal | Memperbarui kolom sesi dengan filter ID sesi dan pemilik, lalu memetakan baris hasil | "updates session details and maps the saved row" lulus | Pass |
+| C04-UT13 | `updateSession()` | Batas | Tidak ada sesi dengan ID dan pemilik tersebut | Mengembalikan `null` | "returns null when the session is missing" lulus | Pass |
+| C04-UT14 | `updateSession()` | Negatif | Constraint jadwal bertabrakan (`23P01`); galat basis data lain | Konflik dipetakan ke `SessionScheduleConflictError`; galat lain diteruskan | "maps overlap conflicts and propagates other database errors" lulus | Pass |
+| C04-UT15 | `deleteSession()` | Normal | ID sesi; RPC mengembalikan jumlah peserta 2 | Memanggil `delete_session` dengan `p_session`; mengembalikan 2 | "calls the deletion RPC and returns the number of removed participants" lulus | Pass |
+| C04-UT16 | `deleteSession()` | Batas | Sesi tidak ditemukan; RPC mengembalikan `null` | Mengembalikan `null` | "returns null when the session is missing" lulus | Pass |
+| C04-UT17 | `deleteSession()` | Negatif | RPC gagal atau mengembalikan jumlah peserta dengan tipe tidak valid | Melempar galat basis data atau galat format hasil | "rejects an unexpected participant count response" lulus | Pass |
+
+Tabel 4.2.8b. Ringkasan Cakupan Kelas C04
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `saveSession()`, `getSessionById()`, `getSessionsByMentorInRange()`, `getSessionsByParticipantInRange()`, `getAvailableSessions()`, `getUpcomingByUser()`, `getArchivedByUser()`, `findStartingBetween()`, `addParticipant()`, `removeParticipant()`, `checkCapacity()`, `isParticipant()`, `isOwnedBy()`, `involves()`, `hasStarted()`, `needsConfirmation()`, `getSessionDetails()`, `getSessionStatus()`, `setStatus()`, `getStatus()`, `isCompleted()`, `markAsDeleted()` (Tabel 5.4.1 DPPL2; operasi implementasi dapat berbeda setelah revisi) |
+| Operasi yang diuji | `checkCapacity()`, `addParticipant()`, `removeParticipant()`, `createSession()`, `updateSession()`, dan `deleteSession()` pada `session.test.ts`. Perubahan status konfirmasi ditangani oleh alur riwayat sesi; aturan kapasitas dan waktu juga diuji terpisah pada PGlite di Subbab 4.3. |
+| ID Algoritma yang tercakup | Pemeriksaan kapasitas pada proses pendaftaran sesi |
+| Kesimpulan | Seluruh 17 test case pada operasi yang diuji dinyatakan `Pass`. Pengujian langsung mencakup pemeriksaan kapasitas, partisipasi, pembuatan, pengubahan, dan penghapusan sesi. Perubahan status konfirmasi dan operasi public lainnya belum tercakup sebagai unit test C04 pada tabel ini. |
+| Coverage (wajib ≥ 70%) | Belum diisi; lengkapi setelah laporan `@vitest/coverage-v8` tersedia. |
+
+### 4.2.9 Kelas SessionControl
+
+**ID Kelas:** C13
+
+**Nama Kelas:** SessionControl (`src/controllers/sessionController.ts`)
+
+**Tingkat:** Mendalam
+
+**Berkas test:** `src/tests/sessionController.test.ts`
+
+Tabel 4.2.9. Pengujian Unit Kelas C13
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C13-UT01 | `processSessionCreation()` | Normal | Mentor login; topik dan deskripsi berspasi; jadwal, format daring, kapasitas valid | Membuat sesi untuk mentor tersebut; teks di-*trim* dan hasil berisi ID sesi | "creates a session for the authenticated user with normalized text" lulus | Pass |
+| C13-UT02 | `processSessionCreation()` | Negatif | Tidak ada pengguna login | `UNAUTHORIZED`; model tidak dipanggil | "rejects unauthenticated callers" lulus | Pass |
+| C13-UT03 | `processSessionCreation()` | Batas/Negatif | Kapasitas 0, 21, atau pecahan | `INVALID_CAPACITY`; model tidak dipanggil | "rejects capacities outside the supported range or that are not integers" lulus | Pass |
+| C13-UT04 | `processSessionCreation()` | Negatif | Tanggal kalender tidak valid (`2026-02-30`) | `INVALID_SCHEDULE`; model tidak dipanggil | "rejects invalid calendar dates" lulus | Pass |
+| C13-UT05 | `processSessionCreation()` | Batas/Negatif | Sesi telah dimulai atau waktu selesai sama dengan/sebelum waktu mulai | `INVALID_SCHEDULE`; model tidak dipanggil | "rejects sessions that have already started or end before they start" lulus | Pass |
+| C13-UT06 | `processSessionCreation()` | Batas | Sesi lintas tengah malam, berdurasi kurang dari 10 menit, atau lebih dari 12 jam | `INVALID_SCHEDULE`; model tidak dipanggil | "rejects sessions that cross midnight or fall outside 10 minutes to 12 hours" lulus | Pass |
+| C13-UT07 | `processSessionCreation()` | Negatif | Jadwal sesi bertabrakan dengan sesi lain | `OVERLAPPING_SESSION` | "reports overlapping sessions with a specific conflict result" lulus | Pass |
+| C13-UT08 | `processSessionCreation()` | Negatif | Penyimpanan sesi gagal | `SESSION_CREATION_FAILED` | "reports persistence failures without returning a successful result" lulus | Pass |
+| C13-UT09 | `processSessionUpdate()` | Normal | Mentor pemilik mengubah detail sesi dengan input valid dan teks berspasi | Memastikan kepemilikan, meneruskan data yang telah dinormalisasi ke model, lalu mengembalikan ID sesi | "updates the authenticated mentor's session with normalized details" lulus | Pass |
+| C13-UT10 | `processSessionUpdate()` | Batas/Negatif | Perubahan membuat jadwal lintas tengah malam atau melebihi 12 jam | `INVALID_SCHEDULE`; pembaruan model tidak dipanggil | "rejects edits that make the session cross midnight or exceed 12 hours" lulus | Pass |
+| C13-UT11 | `processSessionUpdate()` | Negatif | Tidak login atau sesi bukan milik/tidak ditemukan untuk mentor | `UNAUTHORIZED` atau `SESSION_NOT_FOUND`; sesi tidak diperbarui | "rejects unauthenticated callers and sessions they do not own" lulus | Pass |
+| C13-UT12 | `processSessionUpdate()` | Batas | Kapasitas baru lebih kecil dari jumlah peserta terdaftar | `CAPACITY_BELOW_PARTICIPANTS`; sesi tidak diperbarui | "prevents reducing capacity below the number of joined participants" lulus | Pass |
+| C13-UT13 | `processSessionUpdate()` | Negatif | Tag materi kosong, tanggal tidak valid, atau tautan memakai protokol `javascript:` | Kode `INVALID_MATERIAL_TAG`, `INVALID_SCHEDULE`, atau `INVALID_MEETING_LINK`; sesi tidak diperbarui | "validates the material tag, schedule, and online meeting link" lulus | Pass |
+| C13-UT14 | `processSessionUpdate()` | Negatif | Jadwal bertabrakan atau penyimpanan gagal | `OVERLAPPING_SESSION` atau `SESSION_UPDATE_FAILED` | "reports overlapping schedules and update failures" lulus | Pass |
+| C13-UT15 | `processSessionDeletion()` | Normal | Mentor login menghapus sesi dengan ID valid; model mengembalikan jumlah peserta 2 | Penghapusan diteruskan ke model; hasil sukses berisi `participantCount: 2` | "deletes the authenticated mentor's session and returns the participant count" lulus | Pass |
+| C13-UT16 | `processSessionDeletion()` | Negatif | Tidak login atau ID sesi bukan UUID | `UNAUTHORIZED` atau `INVALID_SESSION_ID`; model tidak dipanggil | "rejects unauthenticated callers and invalid session IDs" lulus | Pass |
+| C13-UT17 | `processSessionDeletion()` | Negatif | Sesi tidak ditemukan atau bukan milik pengguna | `SESSION_NOT_FOUND` | "reports sessions the authenticated user does not own" lulus | Pass |
+| C13-UT18 | `processSessionDeletion()` | Negatif | Penyimpanan/penghapusan gagal | `SESSION_DELETE_FAILED` | "reports persistence failures" lulus | Pass |
+
+Tabel 4.2.9b. Ringkasan Cakupan Kelas C13
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `processSessionCreation()`, `editSession()` (diimplementasikan sebagai `processSessionUpdate()`), dan `deleteSession()` (diimplementasikan sebagai `processSessionDeletion()`) untuk lingkup `sessionController.ts` |
+| Operasi yang diuji | `processSessionCreation()`, `processSessionUpdate()`, dan `processSessionDeletion()`. Pengujian mem-*mock* `Session` dan `getCurrentUser()`, sehingga memverifikasi validasi, otorisasi pada controller, delegasi, dan pemetaan hasil/galat; operasi basis data diuji terpisah. Konfirmasi keterlaksanaan berada pada alur riwayat sesi, bukan `sessionController.ts`. |
+| ID Algoritma yang tercakup | Validasi pembuatan dan pengubahan sesi serta alur penghapusan sesi |
+| Kesimpulan | Seluruh 18 test case untuk pembuatan, pengubahan, dan penghapusan sesi dinyatakan `Pass`. Pengujian memverifikasi validasi masukan, otorisasi, delegasi ke model, serta pemetaan hasil dan galat. Konfirmasi keterlaksanaan tidak termasuk dalam lingkup `sessionController.ts` ini. |
+| Coverage (wajib ≥ 70%) | Belum diisi; lengkapi setelah laporan `@vitest/coverage-v8` tersedia. |
 
 <br>
 

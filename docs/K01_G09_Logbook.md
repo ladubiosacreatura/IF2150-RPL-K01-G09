@@ -186,5 +186,7 @@
 | *13-11-2026* | *Markus Christiano Simanjuntak* | *Menyinkronkan `main` ke `development` (PR #132), merge `development` ke `main` (PR #130), dan menerapkan migrasi yang tertinggal ke basis data Supabase bersama* | *0.5* | *Done* | *Supabase CLI tidak dapat login, migrasi diterapkan lewat SQL Editor* |
 | *13-11-2026* | *Fabian Amzar Susanto* | *Implementasi KF13 penolakan bergabung saat sesi penuh beserta unit test dan merge PR #128* | *2* | *Done* | *PR awal dibuat dari `main` sehingga perlu dipindahkan ke branch dari `development`* |
 | *13-11-2026* | *Fabian Amzar Susanto* | *Implementasi KF15 pembatalan keikutsertaan sesi beserta unit test dan merge PR #129* | *2* | *Done* | *-* |
+| *20-11-2026* | *Matthew Allen Reynaldo* | *Bab 3.2 dokumen HIUPL* | *2* | *Done* | *-* |
+| *20-11-2026* | *Matthew Allen Reynaldo* | *Unit testing C04 dan C13* | *3* | *Done* | *-* |
 
 ``Gunakan format penulisan Logbook yang sama untuk setiap Milestone dan pastikan pembuatan Daftar Isi juga sudah sesuai sebelum Logbook dikumpulkan. ``
